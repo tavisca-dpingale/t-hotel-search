@@ -1,0 +1,36 @@
+{
+  "name": "paper-input-date-picker",
+  "version": "0.22.0",
+  "authors": [
+    "Vinicius Patrinhani <patrinhani@ciandt.com>"
+  ],
+  "description": "An input date picker element based on Polymer 1.0, Paper Elements and Material Design guidelines.",
+  "keywords": [
+    "web-component",
+    "polymer",
+    "paper",
+    "material",
+    "forms",
+    "input",
+    "datepicker"
+  ],
+  "main": "paper-input-date-picker.html",
+  "license": "http://polymer.github.io/LICENSE.txt",
+  "homepage": "http://webpaperelements.github.io/paper-input-date-picker/",
+  "ignore": [
+    "/.*",
+    "/test/"
+  ],
+  "dependencies": {
+    "polymer": "Polymer/polymer#^1.1.0",
+    "paper-input": "PolymerElements/paper-input#^1.1.15",
+    "paper-icon-button": "PolymerElements/paper-icon-button#^1.1.2",
+    "moment": "~2.10.6",
+    "paper-dialog": "PolymerElements/paper-dialog#^1.1.0",
+    "iron-a11y-keys-behavior": "PolymerElements/iron-a11y-keys-behavior#^1.1.7"
+  },
+  "devDependencies": {
+    "iron-component-page": "PolymerElements/iron-component-page#^1.1.7",
+    "web-component-tester": "*"
+  }
+}

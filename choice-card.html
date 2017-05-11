@@ -1,0 +1,666 @@
+<link rel="import" href="bower_components/polymer/polymer.html">
+<link rel="import" href="choice-form.html">
+<!--
+This component is a form that fires an event with request object on click of dropdown option 'need more rooms or have children'. 
+
+This component use the component 'choice form'  containing values of all input fields of drop down for adult children and child age .
+
+Example:
+
+    <choice-card>
+    </choice-card>
+
+Note:
+The form handles below mentioned scenarios on its own.
+
+1. A minimum of 1 adult is required to book a hotel.
+2. Children are considered below 12yrs old.
+3. Child age is mandatory.
+
+-->
+<dom-module id="choice-card">
+    <template>
+        <style>
+             :host {
+                display: block;
+            }
+
+            .hidden {
+                display: none;
+            }
+
+            .unhidden {
+                display: block;
+            }
+
+            #linePaper {
+                width: 92%;
+                float: left;
+            }
+
+            #paperMaterial {
+                background-color: whitesmoke;
+                width: 500px;
+            }
+
+            #formDiv {
+                float: left;
+                width: 100%;
+            }
+
+            #delButton {
+                height: 35px;
+                width: 35px;
+            }
+
+            #button1 {
+                position: relative;
+            }
+
+            @media (min-width: 768px) and (max-width: 1024px) {
+                .head {
+                    float: left;
+                    width: 100%;
+                    margin-top: 20px;
+                    margin-left: 2%;
+                    height: 40px;
+                }
+                .button {
+                    margin-top: -115px;
+                    padding: 0px 0px;
+                }
+                .buttons {
+                    color: var(--color-for-button);
+                    float: right;
+                    margin-right: 10px;
+                    margin-top: 5px;
+                }
+                #button1 {
+                    color: var(--color-for-button);
+                    float: left;
+                    margin-right: 10px;
+                    margin-top: 20px;
+                    float: clear;
+                }
+                #button2 {
+                    float: left;
+                    display: block;
+                    margin-right: 10px;
+                    margin-top: 20px;
+                }
+                #line {
+                    width: 100%;
+                    border-bottom: 1px solid silver;
+                    height: 12px;
+                    margin: -20px 0 10px 20px;
+                }
+                #line span {
+                    background-color: var(--color-for-room);
+                    padding: 10px;
+                    font-size: 16px;
+                    margin-left: -40px;
+                    color: silver;
+                }
+                #deleteButton {
+                    float: right;
+                    margin-right: 10px;
+                }
+                #linePaper {
+                    width: 85%;
+                    float: left;
+                }
+            }
+
+            @media (max-width: 767px) {
+                .head {
+                    float: left;
+                    width: 100%;
+                    margin-top: 20px;
+                }
+                .button {
+                    margin-top: -20px;
+                    padding: 0px 0px;
+                }
+                #button1 {
+                    color: var(--color-for-button);
+                    position: initial;
+                    margin-right: 10px;
+                    margin-top: 20px;
+                }
+                #button2 {
+                    display: none;
+                }
+                #deleteButton {
+                    float: right;
+                    margin-top: -50px;
+                }
+                #line {
+                    width: 100%;
+                    border-bottom: 1px solid silver;
+                    height: 12px;
+                    margin: -20px 0 10px -13px;
+                }
+                #line span {
+                    background-color: var(--color-for-room);
+                    padding: 10px;
+                    font-size: 16px;
+                    margin-left: -10px;
+                    color: silver;
+                }
+            }
+
+            @media (min-width: 1024px) and (max-width:2200px) {
+                .head {
+                    float: left;
+                    width: 100%;
+                    margin-top: 20px;
+                    margin-left: 2%;
+                }
+                .button {
+                    margin-top: -20px;
+                    padding: 0px 0px;
+                }
+                .buttons {
+                    color: var(--color-for-button);
+                    float: right;
+                    margin-right: 10px;
+                    margin-top: 5px;
+                }
+                #button1 {
+                    color: var(--color-for-button);
+                    float: left;
+                    margin-right: 10px;
+                    margin-top: 20px;
+                    float: clear;
+                }
+                #button2 {
+                    float: left;
+                    display: block;
+                    margin-right: 10px;
+                    margin-top: 20px;
+                }
+                #deleteButton {
+                    float: right;
+                    margin-top: -50px;
+                }
+                #line {
+                    width: 100%;
+                    border-bottom: 1px solid silver;
+                    height: 12px;
+                    margin: -20px 0 10px -13px;
+                }
+                #line span {
+                    background-color: var(--color-for-room);
+                    padding: 10px;
+                    font-size: 16px;
+                    margin-left: -10px;
+                    color: silver;
+                }
+            }
+
+            @media all and (-ms-high-contrast:none) {
+                .head {
+                    float: left;
+                    width: 100%;
+                    margin-top: 20px;
+                }
+                #deleteButton {
+                    float: right;
+                    margin-top: -34px;
+                }
+                .button {
+                    margin-top: 4px;
+                    padding: 0px 0px;
+                }
+                #line {
+                    width: 100%;
+                    border-bottom: 1px solid silver;
+                    height: 12px;
+                    margin: 15px 0 10px -13px;
+                }
+                #line span {
+                    background-color: var(--color-for-room);
+                    padding: 10px;
+                    font-size: 16px;
+                    margin-left: -10px;
+                    color: silver;
+                }
+                #formDiv {
+                    margin-top: -15px;
+                }
+            }
+        </style>
+
+        <paper-material id="paperMaterial">
+            <div id="formDiv">
+                <form is="iron-form" id="form" method="post" action="/form/handler">
+                    <template is='dom-repeat' items='{{ rooms }}'>
+                        <div class="head">
+                            <paper-item id="linePaper" disabled>
+                                <div id="line"><span>{{roomLabel}}# {{_displayIndex(index)}}</span></div>
+                            </paper-item>
+                            <paper-item id="deleteButton" on-keydown="_onkeyPress">
+                                <paper-button toggles hidden="[[_isDeleteHidden]]" class=button on-click="_deleteRoom" id="delButton">
+                                    <img src="trash.svg" height="15px" width="15px">
+                                </paper-button>
+                            </paper-item>
+                        </div>
+                        <choice-form room="{{_displayIndex(index)}}" id="choiceRoom">{{ item.room }}</choice-form>
+                    </template>
+                </form>
+            </div>
+            <div class="buttons">
+                <paper-button id="button1" toggles on-tap='_addRoom' style="position: relative">Add Room</paper-button>
+                <paper-button id="button2" toggles on-click='_doneRoom' hidden$="{{showButton}}">Done</paper-button>
+            </div>
+            <div id="errfn" style="color:red"></div>
+        </paper-material>
+
+    </template>
+    <script>
+        //  (function () {
+        var idArray = [], childAge = [], totalData = [], roomIdArray = [], roomChildIdArray = [], roomCount;
+        var inputAdultCount, inputChildCount;
+
+        Polymer({
+            is: 'choice-card',
+            properties: {
+                /**
+           * Fired when the option from drop down list 'need more rooms or have children is clicked.
+           *
+           * @event 'need more rooms or have children'
+           */
+
+                /**
+                *@private
+                * This is an array of rooms.
+                * rooms can be set by setting an array of objects.
+                * Rooms can be added by clicking on add room button and can be deleted by clicking on trash icon 
+                * rooms form is displayed when user click on need more rooms or have children.
+                **/
+                rooms: {
+                    type: Array,
+                    notify: true
+                },
+
+                /**
+                *@private
+                 * This property is set to hidden attribute of delete button.
+                 * when room count is 1 then delete button should be hidden.
+                 * And this property is set to true for room 1.
+                 **/
+
+                _isDeleteHidden: {
+                    type: Boolean,
+                    computed: '_lte(rooms.length , 1)'
+                },
+                /**
+                *@private
+                 * Property to hide done button when screen is below 767px.
+                 * it is only useful for mobile screen.
+                 **/
+
+                showButton: {
+                    type: Boolean,
+                    value: function () {
+                        if (mq) {
+                            return true;
+                        }
+                        else {
+                            return false;
+                        }
+                    }
+                },
+                /**
+                *@private
+                **/
+                roomLabel: {
+                    type: String,
+                },
+
+                /**
+                *@private
+                *This property is set for total count of rooms.
+                **/
+
+                roomCount: {
+                    type: Number,
+                    value: 0
+                },
+
+                /**
+                *@private
+                 * This property is for data of room when there are children included.
+                 **/
+
+                totalData: {
+                    type: Array,
+                    notify: true
+                }
+            },
+
+            /**
+             * This is function for computed value of _isDeleteHidden property.
+             * This function is used for hide delete button when room count is 1.
+             **/
+
+            _lte: function (a, b) {
+                return a <= b;
+            },
+            /**
+            *
+            **/
+            _labelRoom: function (roomlabels) {
+                this.roomLabel = roomlabels;
+            },
+
+            /**: function
+            * Defines the array for rooms 
+            **/
+
+            ready: function () {
+                this.rooms = [];
+                this.idArray = [];
+                this.childAge = [];
+                this.totalData = [];
+                this.roomIdArray = [];
+                this.roomChildIdArray = [];
+                this.roomCount;
+                this.inputChildCount;
+                this.inputAdultCount;
+                this.push('rooms', { room: "" }); //to show intial 1 room which is compulsory to select.
+                this.roomCount = this.roomCount + 1;
+                var roomlabels = this.roomlabel;
+                this._labelRoom(roomlabels);
+            },
+
+            _onkeyPress: function (e) {
+                var keycode = e.keyCode;
+                if (this.roomCount > 1 && keycode === 13) {
+                    this._deleteRoom(e);
+                }
+            },
+
+            /**
+            *This function is used for Add Room button ,
+            *on click this function adds the room to form.
+            **/
+            _addRoom: function () {
+                if (this.roomCount < this.domHost.option.maxRoomCount) {
+                    this.push('rooms', { room: "" });
+                    this.push('totalData', { total: "" });
+                    this.roomCount = this.roomCount + 1;
+                    Polymer.RenderStatus.afterNextRender(this, function () {
+                        this.domHost.querySelector("#paperCard").scrollTop = this.domHost.querySelector("#paperCard").scrollHeight;
+                    });
+                }
+            },
+
+            /**
+            *Function to display index for rooms according to add and delete function.
+            **/
+
+            _displayIndex: function (index) {
+                index = index + 1;
+                return index;
+            },
+
+            /**
+            *This function is used for delete Room button (trash icon),
+            *on click this function delete the room to form.
+            **/
+
+            _deleteRoom: function (e) {
+                this.splice('rooms', e.model.index, 1);
+                var item = this.get(['totalData', e.model.index]);
+                var index = this.totalData.indexOf(item);
+                if (index != -1) {
+                    totalData.splice(index);
+                }
+                this.idArray = new Array();
+                if (idArray.length === 0) {
+                    this._idCal();
+                }
+                this._idDelCal(e.model.index);
+                idArray.splice(e.model.index, 1);
+                console.log(idArray);
+                var form = this.querySelector("#choiceRoom");
+                form._calResultOfRoom(e.model.index);
+                this.roomCount = this.roomCount - 1;
+            },
+            /**
+            *Function works for delete button .
+            *on click it count id's of adult, children and child age drop down to calculate data.
+            *it calculate id's runtime while clicking on delete button.
+            **/
+            _idDelCal: function (delIndex) {
+                inputChildCount = this.domHost.querySelectorAll(".inputChildCount");
+                roomChildIdArray = [];
+                roomIdArray = [];
+                roomCount = this.roomCount;
+                for (var i = delIndex + 1; i < roomCount; i++) {
+                    var countId = +2 + +inputChildCount[i].value;
+                    if (this.querySelector('#adult' + i) != null) {
+                        roomIdArray[0] = this.querySelector('#adult' + i).id = 'adult' + (i - 1);
+                        roomIdArray[1] = this.querySelector('#child' + i).id = 'child' + (i - 1);
+                        roomChildIdArray = new Array();
+                        for (var j = 0; j < inputChildCount[i].value; j++) {
+                            if (this.querySelector("#child" + (i + 1) + "_" + (j + 1)) != null) {
+                                roomChildIdArray[j] = this.querySelector("#child" + (i + 1) + "_" + (j + 1)).id = 'child' + (i) + '_' + (j + 1);
+                                this.querySelector("#size1" + (i + 1) + "_" + (j + 1)).id = 'size1' + (i) + '_' + (j + 1);
+                            }
+                        }
+                        roomIdArray[2] = roomChildIdArray;
+                        roomChildIdArray = new Array();
+
+                    }
+                    else {
+                        roomIdArray[0] = this.querySelector('#adult').id = 'adult' + (i - 1);
+                        roomIdArray[1] = this.querySelector('#child').id = 'child' + (i - 1);
+                        roomChildIdArray = new Array();
+                        for (var j = 0; j < inputChildCount[i].value; j++) {
+                            if (this.querySelector("#child" + (i + 1) + "_" + (j + 1)) != null) {
+                                roomChildIdArray[j] = this.querySelector("#child" + (i + 1) + "_" + (j + 1)).id = 'child' + (i) + '_' + (j + 1);
+                                this.querySelector("#size1" + (i + 1) + "_" + (j + 1)).id = 'size1' + (i) + '_' + (j + 1);
+                            }
+                        }
+                        roomIdArray[2] = roomChildIdArray;
+                        roomChildIdArray = new Array();
+                    }
+                    idArray[i] = JSON.stringify(roomIdArray);
+                    roomIdArray = new Array();
+                }
+                /**
+           *Function works for done button .
+           *on click it count id's of adult, children and child age drop down to calculate data.
+           *it calculate id's runtime while clicking on done button.
+           **/
+            },
+            _idCal: function () {
+                inputChildCount = this.domHost.querySelectorAll(".inputChildCount");
+                roomChildIdArray = [];
+                roomIdArray = [];
+                roomCount = this.roomCount;
+                for (var i = 0; i < roomCount; i++) {
+                    var countId = +2 + +inputChildCount[i].value;
+                    if (this.querySelector("#adult" + (i)) == null) {
+                        roomIdArray[0] = this.querySelector("#adult").id = 'adult' + i;
+                        roomIdArray[1] = this.querySelector("#child").id = 'child' + i;
+                        roomChildIdArray = new Array();
+                        for (var j = 0; j < inputChildCount[i].value; j++) {
+                            if (this.querySelector("#child" + (i + 1) + "_" + (j + 1)) != null) {
+                                roomChildIdArray[j] = this.querySelector("#child" + (i + 1) + "_" + (j + 1)).id;
+                            }
+                        }
+                        roomIdArray[2] = roomChildIdArray;
+                        roomChildIdArray = new Array();
+                    }
+                    else {
+                        roomIdArray[0] = this.querySelector('#adult' + (i)).id;
+                        roomIdArray[1] = this.querySelector('#child' + (i)).id;
+                        roomChildIdArray = new Array();
+                        for (var j = 0; j < inputChildCount[i].value; j++) {
+                            if (this.querySelector("#child" + (i + 1) + "_" + (j + 1)) != null) {
+                                roomChildIdArray[j] = this.querySelector("#child" + (i + 1) + "_" + (j + 1)).id;
+                            }
+                        }
+                        roomIdArray[2] = roomChildIdArray;
+                        roomChildIdArray = new Array();
+                    }
+
+                    idArray[i] = JSON.stringify(roomIdArray);
+                    roomIdArray = new Array();
+                }
+                // console.log(idArray);
+
+            },
+
+            /**
+            *Function works for done button .
+            *on click it count total adults, children nad rooms from the form.
+            *output gives to the dropdown to show it's content instead of 'need rooms or have children'
+            *it also provides the array containing adultCount, childCount and array for children ages for each room.
+            **/
+
+            _doneRoom: function (event) {
+                inputAdultCount = this.domHost.querySelectorAll(".inputAdultCount");
+                inputChildCount = this.domHost.querySelectorAll(".inputChildCount");
+                var dataAdult = [];
+                var dataChild = [];
+                var dataRoom = [];
+                var roomData = [];
+                var adultCount = 0;
+                var childCount = 0;
+                var validdata = true;
+                roomC = this.roomCount;
+                roomCount = this.roomCount;
+
+                for (var i = 0; i < roomCount; i++) {
+                    // loop through each adult input on the page   
+                    dataAdult[i] = inputAdultCount[i].value;
+                    adultCount = +adultCount + +dataAdult[i];
+                }
+                var inputAdult = JSON.stringify(adultCount);
+
+
+                for (var i = 0; i < roomCount; i++) {
+                    // loop through each child input on the page
+                    dataChild[i] = inputChildCount[i].value;
+                    childCount = +childCount + +dataChild[i];
+                }
+                var inputChild = JSON.stringify(childCount);
+                var focused = false;
+                 var totalCount = +adultCount + +childCount;
+                if (totalCount > this.domHost.option.traveller.totalRoomPaxCount) {
+                    validdata = false;
+                    this.querySelector("#errfn").innerHTML = "maximum allowed";
+                }
+                for (var i = 0; i < roomCount; i++) {
+                    // loop through each child input on the page  
+                    count = +2 + +inputChildCount[i].value;
+                    dataRoom[0] = inputAdultCount[i].value;
+                    dataRoom[1] = inputChildCount[i].value;
+                    childAge = new Array();
+                    for (var j = 0; j < inputChildCount[i].value; j++) {
+                        childAge[j] = this.querySelector("#child" + (i + 1) + "_" + (j + 1)).value;
+                        if (childAge[j] == undefined) {
+                            validdata = false;
+                            this.querySelector("#child" + (i + 1) + "_" + (j + 1)).invalid = true;
+                            this.querySelector("#size1" + (i + 1) + "_" + (j + 1)).style.visibility = "hidden";
+                            if (!focused) {
+                                this.querySelector("#child" + (i + 1) + "_" + (j + 1) + " input").focus();
+                                this.querySelector("#child" + (i + 1) + "_" + (j + 1) + " input").blur()
+                                focused = true;
+                            }
+                        }
+                    }
+                    dataRoom[2] = childAge;
+                    totalData[i] = JSON.stringify(dataRoom);
+                }
+                var form = this.querySelector("#choiceRoom");
+                form._calResultOfRoom();
+                if (validdata) {
+                    var Adults = [];
+                    var Children = [];
+                    var Age1 = [];
+                    var dataArray = [];
+                    var travellersdata = [];
+                    var choiceDropdown = this.domHost.choice;
+
+                    if (choiceDropdown >= 0 && choiceDropdown < 5) {
+                        var dropdownSelectionAdult = this.domHost.querySelector("#adult" + (choiceDropdown + 1) + "Room1").getAttribute("count-adult");
+                        roomCount = this.domHost.querySelector("#adult" + (choiceDropdown + 1) + "Room1").getAttribute("count-room");
+                        dataAdult = dropdownSelectionAdult.split(",");
+                        dataChild = 0;
+                    }
+                    for (var i = 0; i < roomCount; i++) {
+                        Adults[0] = dataAdult[i];
+                        Adults[1] = "Adult";
+                        var Age = [];
+                        Age = "";
+                        Adults[2] = Age;
+
+                        Children[0] = dataChild[i];
+                        Children[1] = "Child";
+                        childAge = new Array();
+                        if (i < inputChildCount.length) {
+                            for (var j = 0; j < inputChildCount[i].value; j++) {
+                                childAge[j] = this.querySelector("#child" + (i + 1) + "_" + (j + 1)).value;
+                            }
+                        }
+                        Age1 = childAge;
+                        Children[2] = Age1;
+
+                        dataArray[0] = Adults;
+                        dataArray[1] = Children;
+                        travellersdata[i] = JSON.stringify(dataArray);
+                    }
+
+                    this.domHost.travellersFinalData = travellersdata;
+
+                    if (idArray.length === 0) {
+                        this._idCal();
+                    }
+                    var output;
+                    if (inputAdult === "1") {
+                        output = inputAdult + ' Adult ';
+                    }
+                    else {
+                        output = inputAdult + ' Adults ';
+                    }
+                    if (inputChild === "0") {
+                        output = output + '';
+                    } else if (inputChild === "1") {
+                        output = output + inputChild + ' Child ';
+                    }
+                    else {
+                        output = output + inputChild + ' Children ';
+                    }
+                    if (roomCount === 1) {
+                        output = output + ' in ' + roomCount + ' Room';
+                    }
+                    else {
+                        output = output + ' in ' + roomCount + ' Rooms';
+                    }
+                    /*
+                    to change the textcontent of dropodown list from 'need more rooms or have children to 'x adult, y children in z rooms'.          
+                    */
+                    var need = this.domHost.querySelector("#paperCard");
+                    var room = this.domHost.querySelector("#needRoom");
+                    var toolbar = this.domHost.querySelector("#toolbarRoom");
+                    /*
+                    to toggle the paper-card used for 'need more room or have children form
+                    */
+                    room.textContent = "Need more rooms or have children?";
+                    if (need.style.visibility == 'visible' || need.style.visibility == '') {
+                        need.style.visibility = 'hidden';
+                        toolbar.style.visibility = 'hidden';
+                    }
+                    this.domHost.doneRoomCardOutput = output;
+                }
+                return validdata;
+            }
+        })
+        //  });
+    </script>
+</dom-module>

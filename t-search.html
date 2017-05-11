@@ -1,0 +1,848 @@
+<link rel="import" href="bower_components/polymer/polymer.html">
+<link rel="import" href="bower_components/iron-icons/iron-icons.html">
+<link rel="import" href="bower_components/paper-dialog/paper-dialog.html">
+<link rel="import" href="bower_components/paper-item/paper-item.html">
+<link rel="import" href="bower_components/paper-dropdown-menu/paper-dropdown-menu.html">
+<link rel="import" href="bower_components/iron-media-query/iron-media-query.html">
+<link rel="import" href="bower_components/paper-listbox/paper-listbox.html">
+<link rel="import" href="t-input-date-picker/t-input-date-picker.html">
+<link rel="import" href="t-search-style.html">
+<link rel="stylesheet" href="t-search-style.css">
+<link rel="import" href="choice-card.html">
+
+
+<!--
+This component is a form that fires an event with search request object on successfull submission. 
+
+There are two  properties that are required to run this form which initialize the location autosuggest. These are
+`data-url`, `query-params`.
+
+To preselect some value in the form pass the value of the property while initiating t-search.
+
+Example:
+
+    <t-search 
+        id="searchView" 
+        data-url="e.g BASEURL/api/content/autosuggest/" 
+        token-response="{{tokenResponse}}">
+    </t-search>
+
+### Styling
+Custom property                         | Description                                | Default
+----------------------------------------|--------------------------------------------|-------------
+ `--outer-container-color               |  Background color of outer container       |     #424D51
+  --search-button-color                 |  Color for search button                   |     #4CB050
+  --dropdown-element-link-color         |  Color for Link in travellers Drop down    |     #4CB050
+  --button-color-for-rooms              |  Color for buttons availabel in room card  |     #478BD7
+  --border-color-for-cards              |  Color for borders of cards                |     lightgray
+  --background-color-for-traveller-card |  Background color for travellers card      |     white 
+  --color-for-calendar-dates            |  Color for calendar dates                  |     #4CB050
+  --color-for-calendar-background       |  Background color for dialog of calendar   |     white
+  --color-for-calendar-selected-range   |  Selected dates range border color         |     #4CB050
+  --background-img-for-selected-date    |  Background image for selected dates       |     url('../t-input-date-picker/Green circle.svg')                                                                 
+  --background-img-for-today-date       |  Background image for today date           |     url('../t-input-date-picker/todayCircle.svg')
+
+Note:
+The form handles below mentioned scenarios on its own.
+
+1. You can't search for past dates.
+2. Minimum booking date difference is 1 day ie: user have to book hotel atleast for a day so check out date is always greater than check in.
+3. A minimum of 1 adult is required to book a hotel.
+4. Children are considered below 12yrs old.
+5. Child age is mandatory.
+
+
+@demo demo/index.html
+-->
+
+
+<dom-module id="t-search">
+  <template>
+    <style include="t-search-style">
+
+    </style>
+    <br/>
+
+    <iron-media-query query="(max-width: 380px)" query-matches="{{smallMobileView}}"></iron-media-query>
+    <iron-media-query query="(min-width: 380px) and (max-width:767px)" query-matches="{{mobileView}}"></iron-media-query>
+    <iron-media-query query="(min-width: 768px) and (max-width:1023px)" query-matches="{{tabletView}}"></iron-media-query>
+    <iron-media-query query="(min-width: 1024px) and (max-width: 1200px)" query-matches="{{desktopView}}"></iron-media-query>
+    <iron-media-query query="(min-width: 1200px)" query-matches="{{largeDesktopView}}"></iron-media-query>
+    <iron-media-query query="(max-width: 600px)" query-matches="{{mediumTablet}}"></iron-media-query>
+    <iron-media-query query="(max-width: 767px)" query-matches="{{mobilePhone}}"></iron-media-query>
+
+    <div class="item" smallMobileView$="{{smallMobileView}}" desktopView$="{{desktopView}}" tabletView$="{{tabletView}}" mobileView$="{{mobileView}}"
+      largeDesktopView$="{{_largeDesktopViewOther(largeDesktopView)}}" largeDesktopViewIE$="{{_largeDesktopViewIE(largeDesktopView)}}">
+
+
+      <div class="container-fluid">
+        <div class="row">
+
+          <!--Toolbar to show on mobile screen for Drop down link 'Need more rooms or have children' .
+          This is hidden while user is working desktop mode or tablet mode.
+          It will come in picture after user clicking on 'Need more rooms or have children' mobile screen..       -->
+
+          <app-toolbar hidden$="{{showToolbar}}" id="toolbarRoom" class="row-lg-height row-md-height row-sm-height row-xs-height">
+            <iron-icon icon="icons:arrow-back" id="backButtonRoom" on-tap="_showMainToolbar"></iron-icon>
+            <paper-button toggles id="buttons" on-tap='_doneRoomCard'>Done</paper-button>
+          </app-toolbar>
+
+          <!--Toolbar to show on mobile screen for date picker.
+          This is hidden while user is working desktop mode or tablet mode.
+          It will come in picture after user clicking on date picker at mobile screen.       -->
+
+          <app-toolbar hidden$="{{showDatePicker}}" id="toolbarDatePicker" class="row-lg-height row-md-height row-sm-height row-xs-height">
+            <div id="selectDate">
+              <iron-icon icon="icons:arrow-back" id="backButtonDatepicker" on-tap="_showDateToolbar"></iron-icon>
+              <span class="dateSpan">Select Dates</span>
+              <paper-button toggles id="buttons" on-tap='_doneDatePicker'>Done</paper-button>
+            </div>
+          </app-toolbar>
+
+
+          <!--Toolbar to show on mobile screen for Auto suggest.
+            This is hidden while user is working desktop mode or tablet mode.
+            It will come in picture after user providing three input characters at autosuggest at mobile screen.       -->
+
+          <app-toolbar hidden class="row-lg-height row-md-height row-sm-height row-xs-height" id="toolbarAutoComplete">
+            <iron-icon id="backButtonAutoSuggest" icon="icons:arrow-back" on-tap="_showaMainToolbar"></iron-icon>
+            <div>
+              <iron-icon id="clearButton" icon="close" on-click="_clearInput"></iron-icon>
+            </div>
+          </app-toolbar>
+
+
+          <!--Main toolbar which contains auto suggest dropdown, date pickers and travellers drop down at all screens. -->
+          <app-toolbar id="mainToolbar" class="row-lg-height row-md-height row-sm-height row-xs-height">
+            <form is="iron-form" id="form" method="post" action="/form/handler">
+              <div required auto-validate class="col-lg-5 col-md-5 col-sm-12 col-xs-12" id="deskinput">
+                <t-autosuggest required auto-validate id="location" name="location" selected-item="{{location}}" query-params="token={{tokenResponse.authenticationToken}}"
+                  label="{{resources.watermark.hotelLocation}}" token-param="formattedAddress" data-url$="{{dataUrl}}">
+                </t-autosuggest>
+              </div>
+
+
+              <div id="start1" class="col-lg-1 col-md-1 col-sm-3 col-xs-6">
+                <t-input-date-picker required auto-validate error-message="{{resources.errorMessage.checkInError}}" class="suggestions" date-format="MM/DD/YYYY"
+                  id="start" label="Check in" min-date="[[minDatetoday]]" max-date="[[maxDate]]" on-keydown="_keypress" on-tap="_openDatePicker"
+                  on-focus="this.blur()">
+                </t-input-date-picker>
+              </div>
+
+              <div id="end1" class="col-lg-1 col-md-1 col-sm-3 col-xs-6">
+                <t-input-date-picker required auto-validate error-message="{{resources.errorMessage.checkOutError}}" class="suggestions"
+                  id="end" label="Check out" date-format="MM-DD-YYYY" on-keydown="_keypress" max-date="[[maxDate]]" on-tap="_openDatePicker"
+                  on-focus="this.blur()">
+                </t-input-date-picker>
+              </div>
+
+              <div class="col-lg-3 col-md-3 col-sm-4 col-xs-12" id="travellField">
+                <paper-dropdown-menu on-tap="_dismisCard" required auto-validate error-message="Required Field" class="suggestions" id="deskinput1"
+                  readonly on-keydown="_tabPress">
+                  <paper-listbox class="dropdown-content" id="listbox" selected="{{choice}}">
+                    <paper-item class="trvellerItem" id="adult1Room1" count-adult="1" count-room="1">1 Adult in 1 Room</paper-item>
+                    <paper-item class="trvellerItem" id="adult2Room1" count-adult="2" count-room="1">2 Adults in 1 Room</paper-item>
+                    <paper-item class="trvellerItem" id="adult3Room1" count-adult="3" count-room="1">3 Adults in 1 Room</paper-item>
+                    <paper-item class="trvellerItem" id="adult4Room1" count-adult="4" count-room="1">4 Adults in 1 Room</paper-item>
+                    <paper-item class="trvellerItem" id="adult5Room1" count-adult="1,1" count-room="2">2 Adults in 2 Rooms</paper-item>
+                    <paper-item on-tap="_openChildForm" id="needRoom" class="trvellerItem">Need more rooms or have children? </paper-item>
+                  </paper-listbox>
+                </paper-dropdown-menu>
+                <input id="travellerInput" is="iron-input" type="hidden" bind-value="[[choice]]">
+              </div>
+
+              <div id="Button" class="col-lg-1 col-md-1 col-sm-2 col-xs-12 text-center">
+                <paper-button on-tap="_submitSearchFormInput" class="button" id="button">Search</paper-button>
+              </div>
+
+            </form>
+          </app-toolbar>
+        </div>
+      </div>
+    </div>
+    <div class="item" id="card" smallMobileView$="{{smallMobileView}}" MobileView$="{{mobileView}}" TabletView$="{{tabletView}}"
+      DesktopView$="{{desktopView}}" largeDesktopView$="{{largeDesktopView}}">
+      <paper-card hidden$="{{showTravellersCard}}" id="paperCard" class="paperCard" on-scroll="_removeDrop">
+        <div>
+          <choice-card id="choiceCard" roomLabel="{{resources.labels.room}}"></choice-card>
+        </div>
+      </paper-card>
+    </div>
+  </template>
+
+  <script>
+    var mqu = false, mq = false, mql = false, doneStartDate, doneEndDate;
+    Polymer({
+      is: 't-search',
+      properties: {
+        /**
+        * This contain search form to search a hotel based on location, check-in date, check-out date and travellers.
+        */
+
+        /**
+         * This property should have the value of a compatible autosuggest api url.
+         * Autosuggest api should return valid options based on a GET call to this url after appending `'/{text entered in location field}?{queryParams}'`
+         * Suggestions are requested after 3 characters have been entered. 
+         */
+        dataUrl: String,
+
+        /**
+         * This property stores the value of autosuggest api query parameters. 
+         */
+        queryParams: String,
+        /**
+         * This property stores the value of autosuggest api query parameters. 
+         */
+        tokenResponse: String,
+
+        /**
+        *@private
+        *travellers drop down for toggle purpose.
+        */
+
+        showTravellersCard: {
+          type: Boolean,
+          value: true
+        },
+
+        /**
+        *@private
+         * Property to set iron media queries for medium tablet.
+         **/
+        mediumTablet: {
+          type: Boolean,
+          value: false
+        },
+        /**
+         * Property to set iron media queries for tablet.
+         *@private
+         **/
+        tabletView: {
+          type: Boolean,
+          value: false
+        },
+        /**
+        *@private
+         * Property to set iron media queries for mobilephone.
+         **/
+        mobilePhone: {
+          type: Boolean,
+          value: false
+        },
+        /**
+        *@private
+         * Property to toggle toolbar of travellers field for mobile view.
+         **/
+        showToolbar: {
+          type: Boolean,
+          value: true
+        },
+        /**
+        *@private
+         * Property to toggle toolbar of date picker field for mobile view.
+         **/
+        showDatePicker: {
+          type: Boolean,
+          value: true
+        },
+        /**
+        *@private
+        *t-autosuggest location property.
+        **/
+
+        location: String,
+
+        /**
+        *return the min date of check in date and checkout date as today
+        */
+
+        minDatetoday: {
+          type: Date
+        },
+
+        /**
+        *@private
+        *this property is set to travellers drop down for selected item.
+        **/
+
+        choice: {
+          type: String,
+          value: 0
+        },
+
+        option: {
+          type: Object,
+          value: {
+            "traveller": {
+              "minAdultCount": 1,
+              "maxAdultCount": 6,
+              "minChildCount": 0,
+              "maxChildCount": 6,
+              "totalRoomPaxCount": 9,
+              "minChildAge": 0,
+              "maxChildAge": 12,
+              "defaultAdultCount": 2,
+              "defaultChildCount": 0,
+              "defaultSelectOption": [{
+                "room": 1,
+                "adult": 1
+              }, {
+                "room": 1,
+                "adult": 2
+              }, {
+                "room": 1,
+                "adult": 3
+              }, {
+                "room": 2,
+                "adult": 5
+              }]
+            },
+            "maxRoomCount": 6,
+            "date": {
+              "checkInAllowFromNow": 0,
+              "maxStayDuration": 30,
+              "defaultStayDuration": 6,
+              "format": "MM/DD/YY"
+            }
+          }
+        },
+        resources: {
+          type: Object,
+          value: {
+            "labels": {
+              "adult": "Adult",
+              "children": "Children",
+              "child": "Child",
+              "age": "Age",
+              "room": "Room"
+            },
+            "watermark": {
+              "checkIn": "MM/DD/YYYY",
+              "checkOut": "MM/DD/YYYY",
+              "hotelLocation": "City, Airport, Address or Point of Interest"
+            },
+
+            "errorMessage": {
+              "destinationError": "Please enter your destination",
+              "checkInError": "Please enter checkin date",
+              "checkOutError": "Please enter checkout date"
+
+            }
+          }
+        },
+        /**
+        *@private
+         * Property to collect output data of done room of choice card.
+         **/
+        doneRoomCardOutput: {
+          type: String
+        },
+        /**
+        *@private
+         * Property to insure whether done button of travellers toolbar for mobile view is clicked or not.
+         **/
+        doneRoomCard: {
+          type: Boolean,
+          value: false
+        },
+        /**
+        *@private
+         * Property to insure whether done button of date picker toolbar for mobile view is clicked or not.
+         **/
+        doneDatePicker: {
+          type: Boolean,
+          value: false
+        },
+
+        /*
+        *Set to max date of checkin date picker and checkout date picker.
+        *Returns the max date after 1 year.           
+        *Date format is mm/dd/yyyy.
+        */
+
+        maxDate: {
+          value: function () {
+            var x = 12; //or whatever offset
+            var dateAfterOneYear = new Date();
+            dateAfterOneYear.setMonth(dateAfterOneYear.getMonth() + x);
+            return dateAfterOneYear;
+          }
+        },
+
+        /**
+        *@private
+         * Property to set the array of destiantion field output with certain parameters.
+         * This property set output for autosuggest.
+         * To collect data in searchModel JSON object.
+         **/
+        dataCity: {
+          type: Array
+        },
+        /**
+        *@private
+         * Property to set the array of travellers output.
+         * This property set output for choice card.
+         * To collect data in searchModel JSON object.
+         **/
+        travellersFinalData: {
+          type: Array
+        }
+
+      },
+
+      /*      
+      * Function set to keypress event of date picker.
+      *prevent user to input by typing.
+      **/
+
+      _keypress: function (event) {
+        var regex = new RegExp("^[a-zA-Z0-9]+$");
+        var key = String.fromCharCode(!event.charCode ? event.which : event.charCode);
+        if (regex.test(key)) {
+          event.preventDefault();
+          return false;
+        }
+      },
+      _setMinDate: function (checkInAllowFromNow) {
+        var setMinDatetoToday = new Date();
+        setMinDatetoToday.setDate(setMinDatetoToday.getDate() - 1 + checkInAllowFromNow);
+        this.minDatetoday = setMinDatetoToday;
+        return setMinDatetoToday;
+      },
+
+      _removeDrop: function () {
+        for (var i = 0; i < this.querySelector("#choiceCard").roomCount; i++) {
+          showDrop
+          var showDrop = this.querySelector("#paperCard");
+          var C = showDrop.querySelectorAll(".inputChildCount")[i];
+          var A = showDrop.querySelectorAll(".inputAdultCount")[i];
+          if (C.focused === true) {
+            showDrop.querySelectorAll(".inputChildCount")[i].close();
+            showDrop.querySelectorAll(".inputChildCount")[i].querySelector("#input").focus();
+           showDrop.querySelectorAll(".inputChildCount")[i].querySelector("#input").blur();
+          }
+          else if (A.focused === true) {
+            showDrop.querySelectorAll(".inputAdultCount")[i].close();
+            showDrop.querySelectorAll(".inputAdultCount")[i].querySelector("#input").focus();
+           showDrop.querySelectorAll(".inputAdultCount")[i].querySelector("#input").blur();
+          }
+          //  if(C.value != 0){
+          //    for(var v=0; v < C.value; v++){
+          //    var CA = showDrop.querySelectorAll(".ageOfChild")[i];
+             
+          //   if (CA.focused === true) {
+          //   showDrop.querySelectorAll(".ageOfChild")[i].close();
+          //   CA.blur()
+          //   }
+          // }
+          //  }
+        }
+      },
+      /**
+       * Functions to set view of internet explorer.
+       * And also work for other than internet explorer.
+       * */
+      _largeDesktopViewIE: function (largeDesktopView) {
+        // Internet Explorer 6-11
+        var isIE = /*@cc_on!@*/false || !!document.documentMode;
+        return isIE && largeDesktopView;
+      },
+      _largeDesktopViewOther: function (largeDesktopView) {
+        // Internet Explorer 6-11
+        var isIE = /*@cc_on!@*/false || !!document.documentMode;
+        return !isIE && largeDesktopView;
+      },
+      /**
+      *to hide the children papercard after removing focus through it.
+      **/
+
+      _dismisCard: function () {
+        var travellerLabelShow = this.$$("#deskinput1");
+        travellerLabelShow.label = "Travellers";
+        var pCard = Polymer.dom(this.$.paperCard).node;
+        pCard.style.display = 'none';
+        var paperItem = this.$$("#needRoom");
+        paperItem.textContent = "Need more rooms or have children?";
+        this.querySelector("#deskinput1").blur();
+      },
+      _tabPress: function (e) {
+        if (e.keyCode == 38 || e.keyCode == 40) {
+          var pCard = Polymer.dom(this.$.paperCard).node;
+          pCard.style.display = 'none';
+          var paperItem = this.$$("#needRoom");
+          paperItem.textContent = "Need more rooms or have children?";
+        }
+      },
+      /**
+      * This function is for date picker full screen dialog at mobile screen.
+      **/
+      _openDatePicker: function () {
+        if (mq) {
+          this.$.end.invalid = false;
+          Polymer.dom(this.$.toolbarDatePicker).node.style.display = "block";
+          Polymer.dom(this.$.deskinput).node.style.display = "none";
+          Polymer.dom(this.$.travellField).node.style.display = "none";
+          Polymer.dom(this.$.Button).node.style.display = "none";
+          Polymer.dom(this.$.mainToolbar).node.style.height = "0px";
+          Polymer.dom(this.$.mainToolbar).node.style.minHeight = "0px";
+          Polymer.dom(this.$.start1).node.classList.add("divColorofDatepicker");
+          Polymer.dom(this.$.end1).node.classList.add("divColorofDatepicker");
+          Polymer.dom(this.$.mainToolbar).node.classList.add("divColorofDatepicker");
+          var startInput = Polymer.dom(this.$.start).node;
+          var endInput = Polymer.dom(this.$.end).node;
+          startInput.children[0].style.textAlign = "center";
+          endInput.children[0].style.textAlign = "center";
+          startInput.querySelector("#input").querySelector("#input").style.color = "black";
+          endInput.querySelector("#input").querySelector("#input").style.color = "black";
+        }
+        if (this.showTravellersCard = true) {
+          this.showTravellersCard = !this.showTravellersCard
+        }
+        if (mq && this.showDatePicker == true) {
+          this.showDatePicker = !this.showDatePicker;
+        }
+        if (mq) {
+          this.querySelector("#start").querySelector("#dialog").style.display = "block";
+          if (startInput.value === undefined) {
+            this.querySelector("#calendar").children[0].scrollTop = 0;
+          }
+        }
+      },
+
+      /*
+      *to open the paper-card on click of 'need more rooms or have children'
+      *paper-card contains choice form.
+      *this is used for toggle purpose.
+      */
+
+      _openChildForm: function (e) {
+        if (mq) {
+          this.querySelector("#start1").style.display = "none";
+          this.querySelector("#end1").style.display = "none";
+          this.querySelector("#deskinput").style.display = "none";
+          this.querySelector("#deskinput1").style.display = "none";
+          this.querySelector("#Button").style.display = "none";
+        }
+        this.$.needRoom.textContent = "1 Adult in 1 Room";
+        var pCard = Polymer.dom(this.$.paperCard).node;
+        pCard.style.display = 'block';
+
+        if (this.showTravellersCard = true) {
+          this.showTravellersCard = !this.showTravellersCard
+        }
+        pCard.style.visibility = '' ? 'hidden' : '';
+
+        var tBar = Polymer.dom(this.$.toolbarRoom).node;
+        tBar.style.display = 'block';
+        var toolbarSpan = this.querySelector("#choiceCard").querySelector("#choiceRoom");
+        this.choice = 5;
+        toolbarSpan._calResultOfRoom();
+        if (mq && this.showToolbar == true) {
+          this.showToolbar = !this.showToolbar;
+        }
+        tBar.style.visibility = '' ? 'hidden' : '';
+        if (mq) {
+          this.querySelector("#toolbarRoom");
+        }
+      },
+      /**
+      * This function is used for done button which is used on the header of child form card on mobile screen.
+      * This is calculate the total output.
+      **/
+
+      _doneRoomCard: function () {
+        this.doneRoomCard = true;
+        this._styleForBackToMainToolbar();
+        var card = this.querySelector("#choiceCard");
+        var validData = card._doneRoom();
+        this.querySelector("#menuButton").querySelector("#input").value = this.doneRoomCardOutput;
+        if (validData == true) {
+          Polymer.dom(this.$.toolbarRoom).node.style.display = "none";
+          this.querySelector("#paperCard").style.display = "none";
+        }
+      },
+      _styleForBackToMainToolbar: function () {
+        this.querySelector("#start1").style.display = "block";
+        this.querySelector("#end1").style.display = "block";
+        this.querySelector("#deskinput").style.display = "block";
+        this.querySelector("#deskinput1").style.display = "block";
+        this.querySelector("#Button").style.display = "block";
+      },
+
+
+      /**
+      * This function is used for done button which is used on the header ofdate picker on mobile screen.
+      * This is used for date picker.
+      **/
+      _doneDatePicker: function () {
+        this.doneDatePicker = true;
+        var startValue = Polymer.dom(this.$.start).node.value;
+        var endValue = Polymer.dom(this.$.end).node.value;
+        this._showDateToolbarFun();
+        doneStartDate = this.querySelector("#start").value;
+        doneEndDate = this.querySelector("#end").value;
+      },
+      /**
+      * This is used for toolbar toggle.
+      * This function will work after clicking on back arrow button on date picker and travellers toolbar at mobile screen.
+      * This toolbar is used for only mobile screen.
+      **/
+      _showMainToolbar: function () {
+        if (mq) {
+          this._styleForBackToMainToolbar();
+        }
+        var paperItem = this.$$("#needRoom");
+        paperItem.textContent = "Need more rooms or have children?";
+        this.showTravellersCard = true;
+        this.showToolbar = true;
+        Polymer.dom(this.$.toolbarDatePicker).node.style.display = "none";
+        Polymer.dom(this.$.deskinput).node.style.display = "block";
+        Polymer.dom(this.$.deskinput1).node.style.display = "block";
+        Polymer.dom(this.$.button).node.style.display = "block";
+        Polymer.dom(this.$.start1).node.classList.add("colorOfToolbarAtRuntime");
+        Polymer.dom(this.$.end1).node.classList.add("colorOfToolbarAtRuntime");
+        Polymer.dom(this.$.mainToolbar).node.classList.add("colorOfToolbarAtRuntime");
+        this.choice = 0;
+        var dropdownInput = this.querySelector("#deskinput1").querySelector("#menuButton").domHost.querySelector("#input");
+        if (this.doneRoomCard == false && this.doneRoomCardOutput == null) {
+          dropdownInput.value = "1 Adult in 1 Room";
+        } else if (this.doneRoomCard == true && this.doneRoomCardOutput == undefined) {
+          dropdownInput.value = "1 Adult in 1 Room";
+        } else if (this.doneRoomCardOutput != null) {
+          dropdownInput.value = this.doneRoomCardOutput;
+        }
+      },
+
+      _showDateToolbar: function () {
+        this._showDateToolbarFun();
+        var startDateValue = this.querySelector("#start");
+        var endDateValue = this.querySelector("#end");
+        if (this.doneDatePicker == false && doneStartDate == null && doneEndDate == null) {
+          startDateValue.value = undefined;
+          startDateValue.placeholder = "";
+          endDateValue.value = undefined;
+          endDateValue.placeholder = "";
+        } else if (doneStartDate != null && doneEndDate != null) {
+          startDateValue.value = doneStartDate;
+          endDateValue.value = doneEndDate;
+        }
+        this.querySelector("#end").querySelector(".underline").style.border = "none";
+      },
+
+      _showDateToolbarFun: function () {
+        this.showTravellersCard = true;
+        this.showToolbar = true;
+        Polymer.dom(this.$.toolbarDatePicker).node.style.display = "none";
+        Polymer.dom(this.$.deskinput).node.style.display = "block";
+        Polymer.dom(this.$.travellField).node.style.display = "block";
+        Polymer.dom(this.$.Button).node.style.display = "block";
+        Polymer.dom(this.$.start1).node.classList.remove("divColorofDatepicker");
+        Polymer.dom(this.$.end1).node.classList.remove("divColorofDatepicker");
+        Polymer.dom(this.$.mainToolbar).node.classList.remove("divColorofDatepicker");
+        Polymer.dom(this.$.start1).node.classList.add("colorOfToolbarAtRuntime");
+        Polymer.dom(this.$.end1).node.classList.add("colorOfToolbarAtRuntime");
+        Polymer.dom(this.$.mainToolbar).node.classList.add("colorOfToolbarAtRuntime");
+        var startInput = Polymer.dom(this.$.start).node;
+        var endInput = Polymer.dom(this.$.end).node;
+        startInput.children[0].style.textAlign = "";
+        endInput.children[0].style.textAlign = "";
+        startInput.querySelector(".unfocused-line").style.display = "block";
+        endInput.querySelector(".unfocused-line").style.display = "block";
+        startInput.querySelector("#labelAndInputContainer").style.marginRight = "";
+        endInput.querySelector("#labelAndInputContainer").style.marginRight = "";
+        startInput.querySelector("#input").querySelector("#input").style.color = "white";
+        endInput.querySelector("#input").querySelector("#input").style.color = "white";
+      },
+      /**
+       * This is used for toolbar toggle.
+       * This function will work after clicking on back arrow button on autocomplete toolbar at mobile screen.
+       * This toolbar is used for only mobile screen.
+       **/
+
+      _showaMainToolbar: function () {
+        this.showTravellersCard = true;
+        this.showToolbar = true;
+        Polymer.dom(this.$.toolbarAutoComplete).node.style.display = "none";
+        this._styleForBackToMainToolbar();
+        this.querySelector("#travellField").style.display = "block";
+        this.querySelector("#dropBox").style.display = "none";
+      },
+
+      /**
+      * This function will work after clicking on clear button on autocomplete toolbar at mobile screen.
+      * This toolbar is used for only mobile screen.
+      **/
+      _clearInput: function () {
+        var autoInput = this.querySelector("#spanAutoId");
+        autoInput.value = "";
+        autoInput.focus();
+        var node = this.querySelector("#dropBox");
+        while (node.hasChildNodes()) {
+          node.removeChild(node.lastChild);
+        }
+        /*Dummy blank ul to create mobile view on click of clear button */
+        var toolbar = this.querySelector("#toolbarAutoComplete");
+        var ul = domCreate("ul");
+        toolbar.style.display = "block";
+        toolbar.hidden = false;
+        var inPut = toolbar.childNodes[2];
+        node.appendChild(ul);
+        attrClass(ul, "ulClassMobile");
+      },
+
+      /*
+      *To collect the input from form on click of search button.
+      *This function also validates the each field of the form.
+      *used to set search button text as 'searching' after clicking on search button.
+      */
+
+      _submitSearchFormInput: function (e) {
+        var input = [];
+        input[0] = this.querySelector("#autoSuggest").value;
+        input[1] = this.querySelector("#start").value;
+        input[2] = this.querySelector("#end").value;
+        input[3] = this.querySelector("#menuButton").querySelector("#input").value;
+        var data = [];
+        for (var i = 0; i < 4; i++) {
+          data[i] = input[i];
+        }
+        if (data[0] == "" && data[1] == undefined && data[2] == undefined) {
+          this.querySelector("#autoInput").invalid = true;
+          this.$.start.invalid = true;
+          this.$.end.invalid = true;
+        }
+        else if (data[0] == "" && data[1] == undefined) {
+          this.querySelector("#autoInput").invalid = true;
+          this.$.start.invalid = true;
+        }
+        else if (data[1] == undefined && data[2] == undefined) {
+          this.$.start.invalid = true;
+          this.$.end.invalid = true;
+        }
+        else if (data[0] == "") {//show error        
+          this.querySelector("#autoInput").invalid = true;
+        }
+        else if (data[1] == undefined) {
+          this.$.start.invalid = true;
+        }
+        else {
+          var card = this.querySelector("#choiceCard");
+          if (this.choice >= 0 && this.choice <= 4) {
+            var roomC = this.querySelector("#choiceCard").roomCount;
+            for (var i = 0; i < roomC; i++) {
+              this.querySelectorAll("#choiceRoom")[i].querySelector("#child").querySelector("#listBox").selected = 0;
+            }
+          }
+          var validData = card._doneRoom();
+          if (validData == true) {
+            var button = this.$.button;
+            button.textContent = 'searching';
+            var searchModel = {};
+            var JsonData = [];
+
+            JsonData[0] = this.dataCity;
+            var arrDestination = {};
+            arrDestination.id = JsonData[0].id;
+            arrDestination.name = JsonData[0].name;
+            arrDestination.geoCode = JsonData[0].geoCode;
+            arrDestination.type = JsonData[0].type;
+            arrDestination.code = JsonData[0].code;
+            arrDestination.formattedAddress = JsonData[0].formattedAddress;
+
+            JsonData[1] = this.querySelector("#start").querySelector("#input").value;
+            JsonData[2] = this.querySelector("#end").querySelector("#input").value;
+            JsonData[3] = this.travellersFinalData;
+            JsonData1 = JsonData[3];
+            var arrTravellers = {};
+            var arrAdult = {};
+            var arrChild = {};
+
+            for (var i = 0; i < JsonData1.length; i++) {
+              var str = JsonData1[i];
+              str = str.replace("[[", "")
+              str = str.replace("]]", "")
+              var resTravellers = str.split("],[");
+              arrTravellers[i] = {};
+
+              arrAdult = new Object();
+              arrChild = new Object();
+
+              var strAdult = resTravellers[0];
+              var resAdult = strAdult.split(",");
+              arrAdult.Quantity = parseInt(resAdult[0].replace(/"/g, ""));
+
+              arrAdult.Type = resAdult[1].replace(/"/g, "");
+              arrAdult.Age = resAdult[2].replace(/"/g, "");
+
+              var strChild = resTravellers[1];
+              var resChild = strChild.split(",");
+              arrChild.Quantity = parseInt(resChild[0].replace(/"/g, ""));
+              arrChild.Type = resChild[1].replace(/"/g, "");
+              arrChild.Age = "";
+              for (var j = 2; j < resChild.length; j++) {
+                if (arrChild.Age != "") {
+                  arrChild.Age = arrChild.Age + ",";
+                }
+                arrChild.Age = arrChild.Age + resChild[j].replace(/"/g, "");
+              }
+
+              arrTravellers[i].Adult = arrAdult;
+              arrTravellers[i].children = arrChild;
+            }
+            searchModel.destination = arrDestination;
+            searchModel.checkInDate = JsonData[1];
+            searchModel.checkOutDate = JsonData[2];
+            searchModel.rooms = arrTravellers;
+            searchModel.type = "Hotel";
+
+            console.log(searchModel);
+            return false;      // stop form from posting
+          }
+          else {
+            this._openChildForm(e);
+          }
+        }
+      },
+
+      /* 
+      * function to control date picker for checkin and checkout dates.
+      */
+      ready: function () {
+        var ckeckMin = this.option.date.checkInAllowFromNow;
+        this._setMinDate(ckeckMin);
+        mqu = this.mediumTablet;
+        mq = this.mobilePhone;
+        mql = this.tabletView;
+        var start = this.$$('#start');
+        var end = this.$$('#end');
+        var CurrentDate;
+        start.addEventListener('value-changed', function () {
+          // Open the end date picker with a delay to
+          // make it less confusing.
+          window.setTimeout(function () {
+            startDate = new Date();
+            startDate.setDate(startDate.getDate() - 1);
+            start.minDate = startDate;
+            CurrentDate = start.value;
+            if (CurrentDate != undefined) {
+              CurrentDate.setHours(0, 0, 0, 0);
+              CurrentDate.setDate(CurrentDate.getDate());
+            }
+
+            if (start.value > end.value) {
+              end.value = CurrentDate;
+            }
+          });
+        });
+
+        var travelLableColor = this.$$("#deskinput1");
+        travelLableColor.querySelector("#input").style.color = "lightgray";
+
+        if (mql) {
+          var inputContent = this.$$("#deskinput1").children[1].children[1];
+          inputContent.style.width = "177%";
+        }
+      },
+    });
+  </script>
+</dom-module>

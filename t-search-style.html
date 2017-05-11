@@ -1,0 +1,537 @@
+<dom-module id="t-search-style">
+  <template>
+    <style is="custom-style">
+       :root {
+        --paper-card: {
+          position: absolute !important;
+          overflow-y: auto;
+          overflow-x: hidden;
+          border: 1px solid var(--border-color-for-cards);
+          background-color: var(--background-color-for-traveller-card);
+        }
+        --paper-button-search: {
+          color: white;
+          background-color: var(--search-button-color);
+          font-size: small;
+        }
+      }
+      
+       :host::content paper-button:focus {
+        outline: none;
+      }
+      
+       :host::content .automobileInput {
+        background-color: transparent;
+        width: 130px;
+        border: none;
+        text-decoration: underline;
+        color: black;
+        margin-left: 70px;
+        position: fixed;
+        margin-top: -23px;
+        font-family: roboto;
+        font-size: 15px;
+      }
+      
+       :host::content .automobileInput:focus,
+       :host::content .automobileInput:active {
+        outline: none;
+      }
+      
+      .colorOfToolbarAtRuntime {
+        background-color: var(--outer-container-color);
+      }
+      
+      .divColorofDatepicker {
+        background-color: white;
+      }
+      
+      paper-item.trvellerItem {
+        --paper-item: {
+          color: silver;
+        }
+        ;
+        --paper-item-selected: {
+          color: black;
+          font-weight: bold;
+        }
+        ;
+      }
+      #deskinput {
+        height: 80px;
+      }
+      #location {
+        height: 0px;
+      }
+      #start1, #end1, #travellField, #Button {
+        height: 80px;
+      }
+      #paperCard {
+        z-index: 3;
+      }
+      #toolbarRoom{
+        height: 80px;
+      }
+      #backButtonRoom {
+        color: lightgray;
+      }
+      #toolbarDatePicker {
+        height: 70px;
+      }
+      #backButtonDatepicker {
+        color: lightgray;
+        float: left;
+      }
+      #backButtonAutoSuggest {
+        z-index: 1;
+      }
+      /*CSS for paper card scroll to hide*/
+      
+      .trvellerItem {
+        font-size: 15px;
+        margin-top: -15px;
+      }
+      
+      #toolbarAutoComplete {
+        height: 70px;
+        width: 100%;
+        /*margin-top: 2px;*/
+        position: fixed;
+        z-index: 2;
+        width: 100%;
+        background-color: white;
+        border-bottom: 1px solid lightgray;
+      }
+      
+      #card {
+        overflow: hidden;
+      }
+      /* Variable applied for color of buttons in room card*/
+      
+      choice-card {
+        --color-for-button: var(--button-color-for-rooms);
+      }
+      /* CSS to main toolbar*/
+      
+      app-toolbar {
+        background-color: var(--outer-container-color);
+        display: block;
+        height: 100px;
+        margin-top: -20px;
+        padding: 0px;
+      }
+      /*CSS for icon used in toolbar Arrow back for mobile view*/
+      
+      iron-icon {
+        color: gray;
+        margin-top: 10px;
+      }
+      /*CSS for Done button which is used in mobile view*/
+      
+      #buttons {
+        color: var(--button-color-for-rooms);
+        float: right;
+        margin-top: 3px;
+        z-index: 2;
+      }
+      
+      paper-input {
+        --paper-input-container-focus-color: #4cb050;
+        --paper-input-container-color: lightgray;
+        --paper-input-container-input-color: white;
+        --paper-input-container-label-focus: lightgray;
+        font-size: small;
+      }
+      
+      paper-dropdown-menu {
+        --paper-input-container-color: lightgray;
+        --paper-input-container-focus-color: #4cb050;
+        --paper-input-container-input-color: white;
+        --paper-input-container-label-focus: lightgray;
+        --paper-menu-button-dropdown: {
+          position: absolute !important;
+          width: 100%;
+          top: 53px !important;
+          min-height: 240px; 
+        }
+        ;
+      }
+      
+      #clearButton {
+        float: right;
+        top: -33px;
+        right: 10px;
+        z-index: 1;
+      }
+      /*DATE PICKER */
+      
+      .suggestions#end,
+      .suggestions#start {
+        --primary-color: lightgray;
+        --dark-theme-background-color: #fff;
+        --dark-theme-secondary-color: #d0d0d0;
+        --primary-text-color: var(--color-for-calendar-dates);
+        --secondary-text-color: lightgray;
+        --light-primary-color: var(--color-for-calendar-dates);
+        --primary-background-color: var(--color-for-calendar-background);
+      }
+      
+      #selectDate {
+        text-align: center;
+        top: -18px;
+        position: absolute;
+        width: 100%;
+        height: 50px;
+        color: lightgray;
+        font-size: 15px;
+      }
+      
+      #selectDate span {
+        position: absolute;
+        margin-left: -150px;
+        font-family: roboto;
+        font-size: 18px;
+        top: 12px;
+      }
+      /*CSS for link need room or have children*/
+      
+      #needRoom {
+        color: var(--dropdown-element-link-color);
+        cursor: pointer;
+      }
+      /*CSS for drop down list*/
+      
+      #listbox {
+        border: 2px solid var(--border-color-for-cards);
+        cursor: pointer;
+      }
+      
+      .item[mobileView] #listbox {
+        height: 240px;
+          min-height: 240px;
+      }
+      
+      .item[smallMobileView] #listbox {
+        height: 240px;
+      }
+      
+       :host .item[largeDesktopView] {
+        display: block;
+        padding: 24px;
+        margin: 0px;
+      }
+      /** Large Desktop view **/
+      
+      .item[largeDesktopView] .button {
+        margin-left: 70px;
+        min-width: 95%;
+        height: 40px;
+        margin-top: 41px;
+        @apply --paper-button-search;
+      }
+      
+      .item[largeDesktopView] .row-lg-height {
+        display: table;
+        table-layout: fixed;
+        height: 100px;
+        width: 100%;
+      }
+      
+      .item[largeDesktopView] #toolbar {
+        display: none;
+      }
+      
+      .item[largeDesktopView] .paperCard {
+        top: 110px !important;
+        right: 43px !important;
+        width: 36%;
+        min-width: 35%;
+        max-height: 450px;
+        @apply --paper-card;
+      }
+      
+      .item[largeDesktopView] #start {
+        margin-top: 25px;
+        width: 100%;
+      }
+      
+      .item[largeDesktopView] #end {
+        margin-top: 25px;
+        width: 100%;
+      }
+      
+      .item[largeDesktopView] #deskinput1 {
+        margin-top: 25px;
+        width: 100%;
+      }
+      
+      .item[largeDesktopView] #deskinput {
+        margin-top: 25px;
+      }
+      /** Desktop view **/
+      
+       :host .item[desktopView] {
+        display: block;
+        padding: 24px;
+        margin: 0px;
+      }
+      
+      .item[desktopView] .row-lg-height {
+        display: table;
+        table-layout: fixed;
+        height: 100px;
+        width: 100%;
+      }
+      
+      .item[desktopView] #toolbar {
+        display: none;
+      }
+      
+      .item[desktopView] .button {
+        margin-left: 12px;
+        min-width: 75%;
+        height: 40px;
+        margin-top: 41px;
+        @apply --paper-button-search;
+      }
+      
+      .item[desktopView] .paperCard {
+        top: 110px !important;
+        right: 43px !important;
+        width: 36%;
+        min-width: 40%;
+        max-height: 450px;
+        @apply --paper-card;
+      }
+      
+      .item[desktopView] #start {
+        margin-top: 25px;
+        width: 100%;
+      }
+      
+      .item[desktopView] #end {
+        margin-top: 25px;
+        width: 100%;
+      }
+      
+      .item[desktopView] #deskinput1 {
+        margin-top: 25px;
+        width: 100%;
+      }
+      
+      .item[desktopView] #deskinput {
+        margin-top: 25px;
+      }
+      /** Tablet view **/
+      
+      .item[tabletView] .row-sm-height {
+        display: table;
+        table-layout: fixed;
+        height: 150px;
+        width: 100%;
+      }
+      
+      .item[tabletView] paper-container {
+        position: fixed;
+      }
+      
+      .item[tabletView] #toolbar {
+        display: none;
+      }
+      
+      .item[tabletView] paper-card {
+        top: 147px !important;
+        left: 94px !important;
+        width: 61%;
+        max-height: 450px;
+        @apply --paper-card;
+      }
+      
+      .item[tabletView] paper-button {
+        margin-top: 15px;
+        min-width: 90%;
+        height: 40px;
+        margin-left: 12px;
+        @apply --paper-button-search;
+      }
+      
+      .item[tabletView] #start {
+        width: 100%;
+      }
+      
+      .item[tabletView] #end {
+        width: 100%;
+      }
+      
+      .item[tabletView] #deskinput1 {
+        width: 74%;
+      }
+      /** Mobile view **/
+      
+      .item[mobileView] .row-xs-height {
+        display: table;
+        table-layout: fixed;
+        height: 350px;
+        width: 100%;
+      }
+      
+      .item[mobileView] .button {
+        margin-top: 18px;
+        margin-left: 35%;
+        margin-right: 65%;
+        min-width: 30%;
+        height: 40px;
+        bottom: 5px;
+        text-align: center;
+        padding: 13px;
+        @apply --paper-button-search;
+      }
+      
+      .item[mobileView] paper-card {
+        top: 45px !important;
+        width: 100%;
+        height: 90%;
+        @apply --paper-card;
+      }
+      
+      .item[mobileView] #start {
+        width: 100%;
+      }
+      
+      .item[mobileView] #end {
+        width: 100%;
+      }
+      
+      .item[mobileView] input,
+      textarea {
+        cursor: url(cursor.cur);
+      }
+      
+      .item[mobileView] #deskinput1 {
+        width: 100%;
+      }
+      
+      .item[mobileView] #deskinput {
+        margin-top: 30px;
+      }
+      /** Small Mobile view **/
+      
+      .item[smallMobileView]input,
+      textarea {
+        cursor: url(cursor.cur);
+      }
+      
+      .item[smallMobileView] .row-xs-height {
+        display: table;
+        table-layout: fixed;
+        height: 100%;
+        width: 100%;
+      }
+      
+      .item[smallMobileView] .button {
+        margin-top: 18px;
+        margin-left: 35%;
+        margin-right: 65%;
+        min-width: 35%;
+        bottom: 5px;
+        text-align: center;
+        padding: 12px;
+        @apply --paper-button-search;
+      }
+      
+      .item[smallMobileView] paper-card {
+        top: 45px !important;
+        position: fixed;
+        width: 100%;
+        height: 90%;
+        overflow-y: auto;
+        overflow-x: hidden;
+        background-color: var(--background-color-for-traveller-card);
+        /*@apply --paper-card;*/
+      }
+      
+      .item[smallMobileView] #start {
+        width: 100%;
+      }
+      
+      .item[smallMobileView] #end {
+        width: 100%;
+      }
+      
+      .item[smallMobileView] #deskinput1 {
+        width: 100%;
+      }
+      
+      .item[smallMobileView] #deskinput {
+        margin-top: 30px;
+      }
+      
+      .item[smallMobileView] #clearButton {
+        float: right;
+        top: -33px;
+        right: 10px;
+        z-index: 1;
+      }
+      /*internet Explorer*/
+      
+       :host .item[largeDEsktopViewIE] {
+        display: block;
+        padding: 24px;
+        margin: 0px;
+      }
+      
+      .item[largeDEsktopViewIE] .row-lg-height {
+        display: table;
+        table-layout: fixed;
+        height: 100px;
+        width: 100%;
+      }
+      
+      .item[largeDEsktopViewIE] #toolbar {
+        display: none;
+      }
+      
+      .item[largeDEsktopViewIE] .button {
+        margin-left: 73px;
+        width: 95%;
+        min-width: 55%;
+        height: 40px;
+        margin-top: 41px;
+        @apply --paper-button-search;
+      }
+      
+      .item[largeDEsktopViewIE] paper-card {
+        top: 110px !important;
+        right: 43px !important;
+        width: 37%;
+        min-width: 37%;
+        max-height: 450px;
+        @apply --paper-card;
+      }
+      
+      .item[largeDEsktopViewIE] #start {
+        margin-top: 25px;
+        width: 100%;
+      }
+      
+      .item[largeDEsktopViewIE] #end {
+        margin-top: 25px;
+        width: 100%;
+      }
+      
+      .item[largeDEsktopViewIE] #deskinput1 {
+        margin-top: 20px;
+        width: 100%;
+      }
+      
+      .item[largeDEsktopViewIE] #deskinput {
+        margin-top: 25px;
+      }
+      
+      .item[largeDEsktopViewIE] .trvellerItem {
+        font-size: 15px;
+        margin-top: -4px;
+      }
+    </style>
+  </template>
+</dom-module>

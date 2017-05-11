@@ -1,0 +1,98 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=11; IE=9; IE=8; IE=7; IE=EDGE">
+  <meta name="viewport" content="width=device-width, minimum-scale=1, initial-scale=1, user-scalable=0">
+  <meta http-equiv="Cache-control" content="no-cache">
+  <title>t-search demo</title>
+
+  <style is="custom-style">
+    t-search {
+      /* Variables for colors */
+      --outer-container-color: #424d51;
+      --search-button-color: #4CB050;
+      --dropdown-element-link-color: #4CB050;
+      --button-color-for-rooms: #478BD7;
+      --border-color-for-cards: lightgray;
+      --background-color-for-traveller-card: white;
+      --color-for-calendar-dates: #4CB050;
+      --color-for-calendar-background: white;
+      --color-for-calendar-selected-range: #4CB050;
+      --background-img-for-selected-date: url('../t-input-date-picker/Green circle.svg');
+      --background-img-for-today-date: url('../t-input-date-picker/todayCircle.svg');
+    }
+  </style>
+
+</head>
+
+<body unresolved>
+
+  <template is="dom-bind" id="domBindTemplate">
+    <t-mystique-auth name="mystique" url="http://demo.travelnxt.com/api/authentication/authenticate/context" token-response="{{tokenResponse}}"
+      auto>
+    </t-mystique-auth>
+    <t-search option='{"traveller": {
+		"minAdultCount": 1,
+		"maxAdultCount": 6,
+		"minChildCount": 0,
+		"maxChildCount": 6,
+		"totalRoomPaxCount": 9,
+		"minChildAge": 0,
+		"maxChildAge": 12,
+		"defaultAdultCount": 2,
+		"defaultChildCount": 0,
+		"defaultSelectOption": [{
+			"room": 1,
+			"adult": 1
+		}, {
+			"room": 1,
+			"adult": 2
+		}, {
+			"room": 1,
+			"adult": 3
+		}, {
+			"room": 2,
+			"adult": 5
+		}]
+	},
+	"maxRoomCount": 6,
+	"date": {
+		"checkInAllowFromNow": 0,
+		"maxStayDuration": 30,
+		"defaultStayDuration": 6,
+		"format": "MM/DD/YY"
+	}
+  }' 
+  resources='{"labels": {
+   "adult": "Adult",
+   "children": "Children",
+   "child": "Child",
+   "age": "Age",
+   "room": "Room"
+  },
+  "watermark": {
+   "checkIn": "MM/DD/YY",
+   "checkOut": "MM/DD/YY",
+   "hotelLocation": "City, Airport, Address or Point of Interest"
+  },  
+  "errorMessage": {
+    "destinationError": "Please enter your destination",
+    "checkInError": "Please enter checkin date",
+    "checkOutError": "Please enter checkout date"
+  
+  }
+ }'
+  dataUrl="http://demo.travelnxt.com/api/content/autosuggest/" token-response="{{tokenResponse}}">
+    </t-search>
+  </template>
+
+  <script src="../bower_components/webcomponentsjs/webcomponents-lite.min.js"></script>
+  <link rel="import" href="../t-mystique-auth/t-mystique-auth.html">
+  <link rel="import" href="../t-autosuggest.html">
+  <link rel="import" href="../t-search.html">
+
+</body>
+
+</html>

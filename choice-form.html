@@ -1,0 +1,514 @@
+<link rel="import" href="bower_components/polymer/polymer.html">
+<link rel="import" href="bower_components/paper-dropdown-menu/paper-dropdown-menu.html">
+<link rel="import" href="bower_components/paper-listbox/paper-listbox.html">
+<link rel="import" href="bower_components/paper-item/paper-item.html">
+
+<!--
+This component is a form that fires an event with request object on click of Add Room button. 
+
+This component use the form that contains drop down for all input fields of rooms like adult children and child age .
+
+Example:
+
+    <choice-form>
+    </choice-form>
+
+Note:
+The form handles below mentioned scenarios on its own.
+
+1. A minimum of 1 adult is required to book a hotel.
+2. Children are considered below 12yrs old.
+3. Child age is mandatory.
+
+-->
+
+<dom-module id="choice-form">
+    <template>
+        <style>
+             :host {
+                display: block;
+            }
+
+            paper-dropdown-menu {
+                --paper-input-container-color: lightgray;
+                --paper-input-container-focus-color: #4cb050;
+                --paper-input-container-input-color: black;
+                --paper-input-container-label-focus: lightgray;
+            }
+
+            paper-input {
+                --paper-input-container-focus-color: #4cb050;
+                --paper-input-container-color: lightgray;
+                --paper-input-container-input-color: white;
+                --paper-input-container-label-focus: lightgray;               
+            }
+
+            .age {
+                color: silver;
+                font-size: 11px;
+                font-family: Roboto;
+            }
+
+            #size {
+                font-size: 11px;
+                color: silver;
+                font-family: Roboto;
+            }
+
+            #listBox {
+                width: 60px;
+                position: relative;
+                overflow-x: none;
+            }
+
+            @media (min-width:1024px) and (max-width:2200px) {
+                #Adult {
+                    width: 16%;
+                    float: left;
+                    float: clear;
+                    margin-top: -12px;
+                    margin-left: 2%;
+                }
+                .childs {
+                    width: 16%;
+                    float: left;
+                    margin-left: 2%;
+                    float: clear;
+                    margin-top: -12px;
+                }
+                .childs1 {
+                    width: 18%;
+                    float: left;
+                    margin-left: 2%;
+                    float: clear;
+                    margin-top: -12px;
+                }
+                .container1 {
+                    width: 100%;
+                    margin-left: 5px;
+                }
+            }
+
+            @media (min-width:600px) and (max-width:1024px) {
+                #Adult {
+                    width: 16%;
+                    float: left;
+                    float: clear;
+                    margin-top: -12px;
+                    margin-left: 2%;
+                }
+                .childs {
+                    width: 16%;
+                    float: left;
+                    margin-left: 2%;
+                    float: clear;
+                    margin-top: -12px;
+                }
+                .childs1 {
+                    width: 18%;
+                    float: left;
+                    margin-left: 2%;
+                    float: clear;
+                    margin-top: -12px;
+                }
+                .container1 {
+                    width: 100%;
+                    margin-left: 5px;
+                }
+            }
+
+            @media (max-width: 600px) {
+                .container1 {
+                    width: 100%;
+                    margin-left: 5px;
+                }
+                #Adult {
+                    width: 40%;
+                    float: left;
+                    float: clear;
+                }
+                .childs {
+                    width: 40%;
+                    float: left;
+                    margin-left: 18px;
+                    float: clear;
+                }
+                .childs1 {
+                    width: 30%;
+                    float: left;
+                    margin-left: 4px;
+                    float: clear;
+                }
+            }
+
+            @media screen and (-ms-high-contrast: active),
+            (-ms-high-contrast: none) {
+                #Adult {
+                    width: 70px;
+                    float: left;
+                    margin-left: 5px;
+                }
+                .childs {
+                    width: 70px;
+                    float: left;
+                    margin-left: 10px;
+                }
+                .childs1 {
+                    width: 90px;
+                    float: left;
+                    margin-left: 10px;
+                }
+                .inputAdultCount {
+                    width: 70px;
+                    margin-left: 10px;
+                    float: left;
+                }
+                .inputChildCount {
+                    width: 70px;
+                    margin-left: 10px;
+                    float: left;
+                }
+                .ageOfChild {
+                    width: 90px;
+                    margin-left: 10px;
+                    float: left;
+                }
+                #size {
+                    font-size: 12px;
+                    width: 70px;
+                    margin-left: 10px;
+                    color: silver;
+                }
+                .age {
+                    font-size: 12px;
+                    margin-left: 5px;
+                    font-family: Roboto;
+                }
+            }
+        </style>
+        <div class="container1">
+            <form is="iron-form" id="form" method="post" action="/form/handler">
+                <div id="Adult">
+                    <paper-dropdown-menu label="{{adultLabel}}" id$="adult{{_displayId()}}" class="inputAdultCount" required auto-validate error-message="Enter"
+                        on-iron-select="_calResultOfRoom">
+                        <paper-listbox id="listBox" class="dropdown-content" selected="{{countAdult}}">
+                            <template is='dom-repeat' items='{{adultCountInRoom}}'>
+                                <paper-item value="{{item}}">{{item}}</paper-item>
+                            </template>
+                        </paper-listbox>
+                    </paper-dropdown-menu>
+                    <div id="size">(12+ Years)</div>
+                    <input is="iron-input" type="hidden" bind-value="[[countAdult]]">
+                </div>
+
+                <div class="childs">
+                    <paper-dropdown-menu label="{{childLabel}}" id="child" on-iron-select='_onCount' class="inputChildCount" required auto-validate
+                        error-message="Enter Child Count">
+                        <paper-listbox id="listBox" class="dropdown-content" selected="{{countChildren}}">
+                            <template is='dom-repeat' items='{{childCountInRoom}}'>
+                                <paper-item value="{{item}}">{{item}}</paper-item>
+                            </template>
+                        </paper-listbox>
+                    </paper-dropdown-menu>
+                    <div id="size">(0-11 Years)</div>
+                    <input is="iron-input" type="hidden" bind-value="[[countChildren]]">
+                </div>
+
+                <template is='dom-repeat' items='{{ children }}'>
+                    <div class="childs1">
+                        <paper-dropdown-menu on-tap="_ageLabelShow" on-keydown="_tabPress" class="ageOfChild" required auto-validate error-message="Enter age"
+                            label="{{childAgeLabel}}{{_childIndex(index)}}" id="child{{_childID(index)}}">
+                            <paper-listbox id="listBox" class="dropdown-content">
+                                <template is='dom-repeat' items='{{childAgeCountInRoom}}'>
+                                    <paper-item value="{{item}}">{{item}}</paper-item>
+                                </template>
+                            </paper-listbox>
+                        </paper-dropdown-menu>
+                        <div id="size1{{_childID(index)}}" class="age">{{Agelabel}}</div>
+                    </div>
+                </template>
+            </form>
+        </div>
+
+    </template>
+    <script>
+        Polymer({
+
+            is: 'choice-form',
+            properties: {
+                /*
+                * Fired when the option from form add room is clicked.
+                *
+                *@event 'ADD ROOM'.
+                */
+
+                /**
+                 * @private
+                * This is an array of children.
+                * children can be set by setting an array of objects.
+                * children can be added by clicking on child drop down and it is toggle with number of children added by user. 
+                * child age drop down in display whrn user clicks on number of children user wants.
+                **/
+                children: {
+                    type: Array,
+                    notify: true
+                },
+
+                /**
+                 * @private
+                *this property is set to adult drop down for selected item.
+                **/
+                countAdult: {
+                    type: Number,
+                    value: function () {
+                        var defaultAdult = this.dataHost.dataHost.domHost.domHost.option.traveller.defaultAdultCount - 1;
+                        return defaultAdult;
+                    }
+                },
+                /**
+                 * @private
+                 *this property is set to child drop down for selected item.
+                 **/
+                countChildren: {
+                    type: Number,
+                    value: function () {
+                        var defaultChild = this.dataHost.dataHost.domHost.domHost.option.traveller.defaultChildCount;
+                        return defaultChild;
+                    }
+                },
+
+
+                adultCountInRoom: {
+                    type: Array,
+                    value: function () {
+                        var childArray = new Array();
+                        var minimumAdult = this.dataHost.dataHost.domHost.domHost.option.traveller.minAdultCount;
+                        var maximumAdult = this.dataHost.dataHost.domHost.domHost.option.traveller.maxAdultCount;
+                        for (i = minimumAdult; i < maximumAdult; i++) {
+                            childArray.push(i);
+                        }
+                        return childArray;
+                    }
+                },
+                childCountInRoom: {
+                    type: Array,
+                    value: function () {
+                        var childArray = new Array();
+                        var minimumChild = this.dataHost.dataHost.domHost.domHost.option.traveller.minChildCount;
+                        var maximumChild = this.dataHost.dataHost.domHost.domHost.option.traveller.maxChildCount;
+                        for (i = minimumChild; i < maximumChild; i++) {
+                            childArray.push(i);
+                        }
+                        return childArray;
+                    }
+                },
+
+                childAgeCountInRoom: {
+                    type: Array,
+                    value: function () {
+                        var childArray = new Array();
+                        var minimumChildAge = this.dataHost.dataHost.domHost.domHost.option.traveller.minChildAge;
+                        var maximumChildAge = this.dataHost.dataHost.domHost.domHost.option.traveller.maxChildAge;
+                        for (i = minimumChildAge; i < maximumChildAge; i++) {
+                            childArray.push(i);
+                        }
+                        return childArray;
+                    }
+                },
+                adultLabel: {
+                    type: String,
+                    value: function () {
+                        var labelAdult = this.dataHost.dataHost.domHost.domHost.resources.labels.adult;
+                        return labelAdult;
+                    }
+                },
+                childLabel: {
+                    type: String,
+                    value: function () {
+                        var labelChild = this.dataHost.dataHost.domHost.domHost.resources.labels.children;
+                        return labelChild;
+                    }
+                },
+                childAgeLabel: {
+                    type: String,
+                    value: function () {
+                        var labelChildAge = this.dataHost.dataHost.domHost.domHost.resources.labels.child;
+                        return labelChildAge;
+                    }
+                },
+                Agelabel: {
+                    type: String,
+                    value: function () {
+                        var labelAge = this.dataHost.dataHost.domHost.domHost.resources.labels.age;
+                        return labelAge;
+                    }
+                },
+            },
+
+            /**
+           *function to create dynamic Id for child age dropdown.
+           **/
+
+            _childID: function (index) {
+                index = index + 1;
+                return this.room + '_' + index;
+            },
+
+            /**
+           *function to create lable for child age dropdown.
+           **/
+
+            _childIndex: function (index) {
+                index = index + 1;
+                return index;
+            },
+
+            /**
+           *function to generate dynamic id for adult dropdown.
+           **/
+
+            _displayId: function (a) {
+                return a;
+            },
+
+            /**
+           *defines the array for children 
+           **/
+
+            ready: function () {
+                var setAdultDropdownheight = this.querySelector("#Adult").children[0].children[1].children[1];
+                setAdultDropdownheight.style.height = "150px";
+                setAdultDropdownheight.children[0].children[0].style.overflowX = "hidden";
+                var setDropdownheight = this.querySelector("#child").children[1].children[1];
+                setDropdownheight.style.height = "150px";
+                setDropdownheight.children[0].children[0].style.overflowX = "hidden";
+                this.children = [];
+            },
+
+            /**
+            *This function is used for child dropdown ,
+             *on click this function adds the child age dropdown to form.
+            **/
+
+            _onCount: function () {
+                this.children = [];
+                var cCount = this.countChildren;
+                for (var i = 0; i < cCount; i++) {
+                    this.push('children', { child: "" });
+                }
+                this._calResultOfRoom();
+            },
+
+
+
+
+            _ageLabelShow: function (event) {
+                var setAgeDropdownheight = event.currentTarget.children[1].children[1];
+                setAgeDropdownheight.style.height = "150px";
+                setAgeDropdownheight.children[0].children[0].style.overflowX = "hidden";
+                var lblsize = event.currentTarget.id.replace("child", "size1");
+                event.currentTarget.invalid = false;
+                this.$$("#" + lblsize).style.visibility = "";
+            },
+            _tabPress: function (e) {
+                if (e.keyCode == 38 || e.keyCode == 40) {
+                    e.currentTarget.invalid = false;
+                    var lblsize = e.currentTarget.id.replace("child", "size1");
+                    this.$$("#" + lblsize).style.visibility = "";
+                }
+            },
+
+            /**
+             * This function is useful for displaying data like x Adults, Y Children in z rooms on mobile screen header.
+             * This is called by each selection of adult and children dropdown.
+             * It only works for mobile screen.
+             **/
+            _calResultOfRoom: function (roomC) {
+                var adultCount = 0;
+                var dataAdultR = [];
+                var dataChild = [];
+                var childCount = 0;
+                var card = this.domHost;
+                var roomCount = card.roomCount;
+                var delRoomNo = roomC;
+                inputAdultCount = this.domHost.querySelectorAll(".inputAdultCount");
+                inputChildCount = this.domHost.querySelectorAll(".inputChildCount");
+                if (inputAdultCount != undefined && inputChildCount != undefined) {
+                    for (var i = 0; i < roomCount; i++) {
+                        // loop through each adult input on the page              
+                        if (i != delRoomNo) {
+                            dataAdultR[i] = inputAdultCount[i].value;
+                            adultCount = +adultCount + +dataAdultR[i];
+                        }
+                    }
+                    var inputAdult = JSON.stringify(adultCount);
+                    for (var i = 0; i < roomCount; i++) {
+                        // loop through each adult input on the page              
+                        if (i != delRoomNo) {
+                            dataChild[i] = inputChildCount[i].value;
+                            childCount = +childCount + +dataChild[i];
+                        }
+                    }
+                    var inputChild = JSON.stringify(childCount);
+                }
+                spanData = '';
+                if (inputAdult === "1") {
+                    spanData = inputAdult + ' Adult';
+                }
+                else {
+                    spanData = inputAdult + ' Adults';
+                }
+                if (inputChild === "0") {
+                    spanData = spanData + '';
+                } else
+                    if (inputChild === "1") {
+                        spanData = spanData + ', ' + inputChild + ' Child ';
+                    }
+                    else {
+                        spanData = spanData + ', ' + inputChild + ' Children ';
+                    }
+                var finalRoomCount = roomCount - (roomC >= 0 ? 1 : 0)
+                if (finalRoomCount === 1) {
+                    spanData = spanData + ' in ' + finalRoomCount + ' Room';
+                }
+                else {
+                    spanData = spanData + ' in ' + finalRoomCount + ' Rooms';
+                }
+                var dropdownChoice = this.domHost.domHost.choice;
+                if (dropdownChoice >= 0 && dropdownChoice < 5) {
+                    return false;
+                } else {
+                    var deskOut = this.domHost.domHost.querySelector("#menuButton");
+                    deskOut.domHost.querySelector("#input").value = spanData;
+                }
+
+                if (mq) {
+                    var toolbar = this.domHost.domHost.querySelector("#toolbarRoom")
+                    var span = domCreate("span");
+                    var div = domCreate("div");
+                    span.setAttribute("id", "spanId");
+                    span.style.color = "lightgray";
+                    span.innerHtml = "1 Adult in 1 Room";
+                    span.innerHTML = spanData;
+                    div.style.textAlign = "center";
+                    div.style.position = "relative";
+                    div.style.height = "50px";
+                    div.style.marginLeft = "30px";
+                    div.style.width = "250px";
+                    div.style.top = "-20px";
+                    div.style.fontSize = "15px";
+                    div.style.fontFamily = "roboto";
+                    var checkSpan = toolbar.querySelector("#spanId");
+                    div.appendChild(span);
+                    if (checkSpan == null) {
+                        toolbar.appendChild(div);
+                    }
+                    else {
+                        checkSpan.innerHTML = spanData;
+                    }
+
+                }
+            },
+        });
+    </script>
+</dom-module>

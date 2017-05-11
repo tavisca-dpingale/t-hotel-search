@@ -1,0 +1,50 @@
+// <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.6.2/jquery.min.js"> </script>
+//   <script>
+//     $(function() {
+
+
+//    var people = [];
+
+//    $.getJSON('t-search.json', function(data) {
+//        $.each(data, function(i, f) {
+//          $('option').html(f);
+//      });
+
+//    });
+
+// });
+[
+	{
+	"traveller": {
+		"minAdultCount": 1,
+		"maxAdultCount": 6,
+		"minChildCount": 0,
+		"maxChildCount": 6,
+		"totalRoomPaxCount": 9,
+		"minChildAge": 0,
+		"maxChildAge": 12,
+		"defaultAdultCount": 2,
+		"defaultChildCount": 0,
+		"defaultSelectOption": [{
+			"room": 1,
+			"adult": 1
+		}, {
+			"room": 1,
+			"adult": 2
+		}, {
+			"room": 1,
+			"adult": 3
+		}, {
+			"room": 2,
+			"adult": 5
+		}]
+	},
+	"maxRoomCount": 4,
+	"date": {
+		"checkInAllowFromNow": 0,
+		"maxStayDuration": 30,
+		"defaultStayDuration": 1,
+		"format": "mm/dd/yyyy"
+	}
+	}
+]

@@ -1,0 +1,386 @@
+<script src='autocomplete.js'></script>
+<link rel="import" href="paper-s/paper-spinner.html">
+<link rel="import" href="t-autosuggest-style.html">
+
+<!--
+  `<t-autosuggest>` is a ajax driven autosuggestion component. 
+
+    <t-autosuggest data-url="http://localhost:3000/components/formComponents/t-autosuggest/data.json">
+    </t-autosuggest>   
+-->
+<style>
+    .hide {
+        display: none;
+    }
+
+    .unhide {
+        display: block;
+    }
+
+    #line {
+        border-bottom: 1px silver solid;
+        margin: 3px 0 10px 0;
+    }
+
+    #line span {
+        background-color: white;
+        padding: 4px;
+    }
+</style>
+
+<dom-module id="t-autosuggest">
+    <template>
+        <style include="t-autosuggest-style">
+            *,
+             ::content * {
+                -webkit-text-size-adjust: none;
+            }
+
+            #spinner {
+                margin-top: -34px;
+                float: right;
+            }
+
+            #clearContainer {
+                width: 100%;
+            }
+
+            #labelId {
+                color: lightgray;
+            }
+
+            #autoSuggest {
+                width: 99%;
+            }
+
+            #autoInput {
+                width: 100%;
+                float: left;
+            }
+
+            #clearButton {
+                float: right;
+                margin-top: -37px;
+                color: white;
+            }
+
+            paper-input-container {
+                --paper-input-container-focus-color: #4cb050;
+                --paper-input-container-color: lightgray;
+                --paper-input-container-input-color: white;
+                font-size: small;
+            }
+        </style>
+
+        <paper-input-container required auto-validate invalid="{{isInvalid}}" id="autoInput" label-float="[[labelFloat]]">
+            <div id="mainBody" class="layout vertical">
+                <div class="layout horizontal center">
+                    <div class="flex label-container">
+                        <label id="labelId" hidden$="[[!label]]">[[label]]</label>
+                        <input class="suggestions" id="autoSuggest" is="iron-input" disabled$="[[disabled]]" data-autocomplete$="{{dataUrl}}" data-autocomplete-method="GET"
+                            data-autocomplete-type="JSON" data-autocomplete-limit="10" data-autocomplete-param-name$="{{param}}"
+                            data-autocomplete-no-result$="{{emptyMessage}}" on-mouseUp="_onFocus" bind-value$="[[selectedValue]]"
+                            on-search="_onClear" on-tap="_focusOnInput" autocapitalize="on" autocorrect="off" autocomplete="additional-name"
+                            data-autocomplete-dealy$="{{debounce}}" on-blur="_onBlur" title="[[selectedValue]]">
+                    </div>
+                </div>
+                <div id="append" class="flex"> </div>
+                <div id="dropBox" class="autocomplete flex"></div>
+            </div>
+            <template is="dom-if" if="[[invalidErrorMessage]]">
+                <paper-input-error class="invalid-error error">[[invalidErrorMessage]]</paper-input-error>
+            </template>
+        </paper-input-container>
+
+        <div id="clearContainer" is="iron-input" disabled$="[[disabled]]" data-autocomplete$="{{dataUrl}}" data-autocomplete-method="GET"
+            data-autocomplete-type="JSON" data-autocomplete-limit="10" data-autocomplete-param-name$="{{param}}" data-autocomplete-no-result$="{{emptyMessage}}"
+            on-mouseUp="_onFocus" bind-value$="[[selectedValue]]" on-search="_onClear" on-tap="_focusOnInput" autocapitalize="on"
+            autocorrect="off" autocomplete="additional-name">
+            <iron-icon id="clearButton" icon="close"></iron-icon>
+        </div>
+        <div id="spinner" class="horizontal layout flex center-justified" hidden>
+            <paper-spinner active></paper-spinner>
+        </div>
+    </template>
+</dom-module>
+<script>
+    Polymer({
+
+        is: 't-autosuggest',
+
+        properties: {
+
+            /**
+             * Name property
+             */
+            name: {
+                type: String,
+                value: '',
+                reflectToAttribute: true
+            },
+            /**
+             * No label float is to make the label either on the body or on the top.
+             */
+            labelFloat: {
+                type: Boolean,
+                reflectToAttribute: true,
+                value: true,
+            },
+            /**
+             * Api url of the autosuggestion engine.
+             */
+            dataUrl: {
+                type: String,
+                value: 'http://demo.travelnxt.com/api/content/autosuggest/',
+                reflectToAttribute: true,
+            },
+
+            /**
+             * Search parameter.
+             */
+            param: {
+                type: String,
+                value: "query",
+                reflectToAttribute: true
+            },
+            /**
+             * Selected value from the autosuggest.
+             */
+            selectedValue: {
+                type: String,
+                value: '',
+                notify: true,
+                observer: '_checkFloatedLabel',
+                reflectToAttribute: true
+            },
+            /**
+             * Selected item from the autosuggest.
+             */
+            selectedItem: {
+                type: Object,
+                notify: true,
+                observer: '_selectedItemChanged',
+                value: function () {
+                    return null;
+                }
+            },
+            /**
+             * Disable autosuggest.
+             */
+            disabled: {
+                type: Boolean,
+                value: false,
+                reflectToAttribute: true
+            },
+            /**
+             * Disable autosuggest.
+             */
+            isInvalid: {
+                type: Boolean,
+                value: false,
+                reflectToAttribute: true
+            },
+            /**
+             * Label of the autosuggest.
+             */
+            label: {
+                type: String,
+                value: "",
+                reflectToAttribute: true,
+            },
+            /**
+             * Put as required
+             */
+            required: {
+                type: Boolean,
+                value: false,
+                reflectToAttribute: true
+            },
+            /**
+             * Set to true to fire validations on blur
+             */
+            validateOnBlur: {
+                type: Boolean,
+                value: true
+            },
+            /**
+             * Token param
+             */
+            tokenParam: {
+                type: String,
+                value: "",
+                reflectToAttribute: true
+            },
+            invalidErrorMessage: {
+                type: String,
+            },
+            caching: {
+                type: Boolean,
+                reflectToAttribute: true,
+            },
+            subType: {
+                type: String,
+                value: ""
+            },
+            queryParams: {
+                type: String,
+                value: ""
+            },
+            minimumCharacters: {
+                type: Number,
+                value: 3
+            },
+            delay: {
+                type: TimeRanges,
+                value: '50'
+            },
+        },
+        listeners: {
+            'tap': 'simpleTap',
+            'clearContainer.tap': '_clear'
+        },
+        checkdata: {
+            type: String,
+            value: this.value == '' ? 'hide' : 'unhide'
+        },
+
+        attached: function () {
+            AutoComplete({
+                method: "POST"
+            }, this);
+            var component = this,
+                //to handle the scrolling position when focused
+                scrollTop;
+            this.$.autoSuggest.addEventListener('focus', function () {
+                function allFunction() {
+                    //to scroll to top when focused for ios
+                    scrollTop = document.documentElement.scrollTop || document.body.scrollTop;
+                    component.classList.add('focused');
+                    document.body.scrollTop = document.documentElement.scrollTop = 0;
+                }
+                setTimeout(allFunction, 10);
+            });
+            var setErrrorMasseg = this.domHost.resources.errorMessage.destinationError;
+            this._errorMassege(setErrrorMasseg);
+        },
+        _errorMassege: function (setErrrorMasseg) {
+            this.invalidErrorMessage = setErrrorMasseg;
+        },
+
+        _focusOnInput: function () {
+            this.domHost.querySelector("#travellerInput").fire('blur');
+            var startDate = this.domHost.querySelector("#start");
+            var endDate = this.domHost.querySelector("#end");
+            startDate.querySelector(".unfocused-line").style.display = "block";
+            startDate.querySelector(".underline").style.border = "none";
+            endDate.querySelector(".unfocused-line").style.display = "block";
+            endDate.querySelector(".underline").style.border = "none";
+            this.querySelector('#autoSuggest').blur();
+            this.querySelector('#autoSuggest').focus();
+            var pdialog = this.domHost.querySelector("#dialog");
+            pdialog.style.display = 'none';
+            var enddialog = this.domHost.querySelector("#end").childNodes[3];
+            enddialog.style.display = 'none';
+            var pcard = this.domHost.querySelector("#paperCard");
+            pcard.style.display = 'none';
+        },
+
+        _focusingOut: function () {
+            var component = this,
+                //to handle the scrolling position when focused
+                scrollTop;
+            function allFunction() {
+                Polymer.IronDropdownScrollManager.removeScrollLock(component);
+                if (component.selectedItem) {
+                    component.selectedValue = component.selectedItem[component.tokenParam];
+                }
+                component.classList.remove('focused');
+                component.$.dropBox.className = "autocomplete ";
+                component.$.spinner.hidden = true;
+                //to scroll to previous position when focusout
+                document.body.scrollTop = document.documentElement.scrollTop = scrollTop;
+                component.fire('blur');
+                component.querySelector('#autoSuggest').blur();
+            }
+            setTimeout(allFunction, 10);
+
+        },
+        _cancel: function () {
+            this.querySelector('#autoSuggest').value = this.selectedValue;
+            this._focusingOut();
+        },
+        _clear: function (event) {
+            event.stopPropagation();
+            this.clear();
+            Polymer.dom(this.$.clearContainer).node.setAttribute('class', 'hide');
+            if (mq) {
+                var showClearContainer = this.querySelector("#clearContainer");
+                showClearContainer.style.display = "none";
+            }
+        },
+        _onFocus: function (event) {
+            this.domHost.querySelector("#dropdown").style.display = "none";
+            Polymer.IronDropdownScrollManager.pushScrollLock(this);
+            this.$.autoSuggest.select();
+            event.stopImmediatePropagation();
+            return false;
+        },
+        _closeLambda: function () {
+            var item = this;
+            this.$.dropBox.className = "autocomplete ";
+        },
+        _onClear: function (event) {
+            this.selectedValue = "";
+            this.selectedItem = null;
+        },
+        _onBlur: function (event) {
+            var focusInputColor = this.domHost.querySelector("#autoSuggest");
+            focusInputColor.style.color = "white";
+            if (this.selectedValue == '') {
+                this._clear(event);
+                this.classList.remove('focused');
+                this.$.dropBox.className = "autocomplete ";
+                this.$.spinner.hidden = true;
+                this.$.autoSuggest.bindValue = '';
+            }
+            else {
+                this.classList.remove('focused');
+                this.$.dropBox.className = "autocomplete ";
+                this.$.spinner.hidden = true;
+            }
+            Polymer.IronDropdownScrollManager.removeScrollLock(this);
+        },
+        _selectedItemChanged: function () {
+            if (this.selectedItem != undefined) {
+                this.selectedValue = this.selectedItem;
+                this._focusingOut();
+            }
+        },
+        _checkFloatedLabel: function () {
+            if (this.$.autoSuggest.value.length > 0) {
+                this.classList.add('label-is-floating');
+            } else {
+                this.classList.remove('label-is-floating');
+            }
+            this._showReadMoreDots();
+        },
+        simpleTap: function (e) {
+            if (!e) var e = window.event;
+            e.cancelBubble = true;
+            if (e.stopPropagation) e.stopPropagation();
+        },
+        clear: function () {
+            this.classList.add('focused');
+            this.selectedValue = "";
+            this.$.autoSuggest.value = "";
+            this.classList.remove('label-is-floating');
+        },
+        _showReadMoreDots: function () {
+            var l = this.$.autoSuggest.offsetWidth / 8.5;
+            if (this.$.autoSuggest.value.length > l) {
+                this.$.autoSuggest.value = this.$.autoSuggest.bindValue.substring(0, l) + "..."
+            }
+        },
+    })
+
+</script>
