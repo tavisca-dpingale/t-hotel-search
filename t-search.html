@@ -163,7 +163,7 @@ The form handles below mentioned scenarios on its own.
     </div>
     <div class="item" id="card" smallMobileView$="{{smallMobileView}}" MobileView$="{{mobileView}}" TabletView$="{{tabletView}}"
       DesktopView$="{{desktopView}}" largeDesktopView$="{{largeDesktopView}}">
-      <paper-card hidden$="{{showTravellersCard}}" id="paperCard" class="paperCard" on-scroll="_removeDrop">
+      <paper-card hidden$="{{showTravellersCard}}" id="paperCard" class="paperCard">
         <div>
           <choice-card id="choiceCard" roomLabel="{{resources.labels.room}}"></choice-card>
         </div>
@@ -422,33 +422,33 @@ The form handles below mentioned scenarios on its own.
       /**
        * This function is used for on scroll method of travellers form.
        **/ 
-      _removeDrop: function () {
-        var RCount = this.querySelector("#choiceCard").roomCount;
-        for (var i = 0; i < RCount; i++) {
-          var showDrop = this.querySelector("#paperCard");
-          var childDD = showDrop.querySelectorAll(".inputChildCount")[i];
-          var adultDD = showDrop.querySelectorAll(".inputAdultCount")[i];
-          if (childDD.focused === true) {
-            childDD.close();
-            childDD.querySelector("#input").focus();
-            childDD.querySelector("#input").blur();
-          }
-          else if (adultDD.focused === true) {
-            adultDD.close();
-            adultDD.querySelector("#input").focus();
-            adultDD.querySelector("#input").blur();
-          }
-          // if (C.value != 0) {
-            var ageOfChildDD = showDrop.querySelectorAll(".ageOfChild");
-            for (var v = 0; v < ageOfChildDD.length; v++) {
-              var childAgeFocus = ageOfChildDD[v];
-              if(childAgeFocus.focused){
-              childAgeFocus.close();
-              }
-            // }
-          }
-        }
-      },
+      // _removeDrop: function () {
+      //   var RCount = this.querySelector("#choiceCard").roomCount;
+      //   for (var i = 0; i < RCount; i++) {
+      //     var showDrop = this.querySelector("#paperCard");
+      //     var childDD = showDrop.querySelectorAll(".inputChildCount")[i];
+      //     var adultDD = showDrop.querySelectorAll(".inputAdultCount")[i];
+      //     if (childDD.focused === true) {
+      //       childDD.close();
+      //       childDD.querySelector("#input").focus();
+      //       childDD.querySelector("#input").blur();
+      //     }
+      //     else if (adultDD.focused === true) {
+      //       adultDD.close();
+      //       adultDD.querySelector("#input").focus();
+      //       adultDD.querySelector("#input").blur();
+      //     }
+      //     // if (C.value != 0) {
+      //       var ageOfChildDD = showDrop.querySelectorAll(".ageOfChild");
+      //       for (var v = 0; v < ageOfChildDD.length; v++) {
+      //         var childAgeFocus = ageOfChildDD[v];
+      //         if(childAgeFocus.focused){
+      //         childAgeFocus.close();
+      //         }
+      //       // }
+      //     }
+      //   }
+      // },
       /**
        * Function to set view of internet explorer.       
        * */

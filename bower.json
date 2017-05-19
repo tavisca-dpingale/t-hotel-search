@@ -18,7 +18,8 @@
     "paper-dialog": "PolymerElements/paper-dialog#^1.1.0",
     "paper-search-input": "vic10us/paper-search-input#^1.0.7",
     "moment-element": "abdonrd/moment-element#^0.4.4",
-    "iron-list": "PolymerElements/iron-list#^1.4.6"    
+    "iron-list": "PolymerElements/iron-list#^1.4.6",
+    "iron-test-helpers": "PolymerElements/iron-test-helpers#^2.0.0"
   },
   "devDependencies": {
     "iron-component-page": "PolymerElements/iron-component-page#^1.0.0",
