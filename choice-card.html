@@ -32,7 +32,9 @@ The form handles below mentioned scenarios on its own.
             .unhidden {
                 display: block;
             }
-
+            #errfn{
+                color: red;
+            }
             #linePaper {
                 width: 92%;
                 float: left;
@@ -234,16 +236,18 @@ The form handles below mentioned scenarios on its own.
         <paper-material id="paperMaterial">
             <div id="formDiv">
                 <form is="iron-form" id="form" method="post" action="/form/handler">
-                    <template is='dom-repeat' items='{{ rooms }}'>
+                    <template is='dom-repeat' items='{{ rooms }}' id="choiceForms">
                         <div class="head">
                             <paper-item id="linePaper" disabled>
                                 <div id="line"><span>{{roomLabel}}# {{_displayIndex(index)}}</span></div>
                             </paper-item>
+                            
                             <paper-item id="deleteButton" on-keydown="_onkeyPress">
                                 <paper-button toggles hidden="[[_isDeleteHidden]]" class=button on-click="_deleteRoom" id="delButton">
                                     <img src="trash.svg" height="15px" width="15px">
                                 </paper-button>
                             </paper-item>
+                            <div id="errfn"></div>
                         </div>
                         <choice-form room="{{_displayIndex(index)}}" id="choiceRoom">{{ item.room }}</choice-form>
                     </template>
@@ -253,7 +257,6 @@ The form handles below mentioned scenarios on its own.
                 <paper-button id="button1" toggles on-tap='_addRoom' style="position: relative">Add Room</paper-button>
                 <paper-button id="button2" toggles on-click='_doneRoom' hidden$="{{showButton}}">Done</paper-button>
             </div>
-            <div id="errfn" style="color:red"></div>
         </paper-material>
 
     </template>
@@ -265,18 +268,11 @@ The form handles below mentioned scenarios on its own.
         Polymer({
             is: 'choice-card',
             properties: {
-                /**
-           * Fired when the option from drop down list 'need more rooms or have children is clicked.
-           *
-           * @event 'need more rooms or have children'
-           */
 
-                /**
-                *@private
+                /**   
                 * This is an array of rooms.
-                * rooms can be set by setting an array of objects.
-                * Rooms can be added by clicking on add room button and can be deleted by clicking on trash icon 
-                * rooms form is displayed when user click on need more rooms or have children.
+                * Rooms can be added by clicking on add room button and can be deleted by clicking on trash icon.            
+                *@private
                 **/
                 rooms: {
                     type: Array,
@@ -284,10 +280,9 @@ The form handles below mentioned scenarios on its own.
                 },
 
                 /**
-                *@private
                  * This property is set to hidden attribute of delete button.
                  * when room count is 1 then delete button should be hidden.
-                 * And this property is set to true for room 1.
+                *@private
                  **/
 
                 _isDeleteHidden: {
@@ -295,9 +290,8 @@ The form handles below mentioned scenarios on its own.
                     computed: '_lte(rooms.length , 1)'
                 },
                 /**
-                *@private
-                 * Property to hide done button when screen is below 767px.
-                 * it is only useful for mobile screen.
+                 * Property to hide done button when screen is below 767px i.e in mobile view.
+                *@private                
                  **/
 
                 showButton: {
@@ -312,6 +306,7 @@ The form handles below mentioned scenarios on its own.
                     }
                 },
                 /**
+                 * To set label of room.
                 *@private
                 **/
                 roomLabel: {
@@ -319,8 +314,8 @@ The form handles below mentioned scenarios on its own.
                 },
 
                 /**
-                *@private
                 *This property is set for total count of rooms.
+                *@private
                 **/
 
                 roomCount: {
@@ -329,8 +324,8 @@ The form handles below mentioned scenarios on its own.
                 },
 
                 /**
-                *@private
                  * This property is for data of room when there are children included.
+                *@private
                  **/
 
                 totalData: {
@@ -344,17 +339,17 @@ The form handles below mentioned scenarios on its own.
              * This function is used for hide delete button when room count is 1.
              **/
 
-            _lte: function (a, b) {
-                return a <= b;
+            _lte: function (roomLength, hiddenButtonRoomNumber) {
+                return roomLength <= hiddenButtonRoomNumber;
             },
             /**
-            *
+            *To set the label of room.
             **/
             _labelRoom: function (roomlabels) {
                 this.roomLabel = roomlabels;
             },
 
-            /**: function
+            /**
             * Defines the array for rooms 
             **/
 
@@ -373,7 +368,9 @@ The form handles below mentioned scenarios on its own.
                 var roomlabels = this.roomlabel;
                 this._labelRoom(roomlabels);
             },
-
+            /**
+             * To delete rooms on enter key press.
+             * */
             _onkeyPress: function (e) {
                 var keycode = e.keyCode;
                 if (this.roomCount > 1 && keycode === 13) {
@@ -382,8 +379,8 @@ The form handles below mentioned scenarios on its own.
             },
 
             /**
-            *This function is used for Add Room button ,
-            *on click this function adds the room to form.
+            *This function is used when Add Room button is clicked,
+            *on click this function adds the room into travellers form.
             **/
             _addRoom: function () {
                 if (this.roomCount < this.domHost.option.maxRoomCount) {
@@ -407,7 +404,7 @@ The form handles below mentioned scenarios on its own.
 
             /**
             *This function is used for delete Room button (trash icon),
-            *on click this function delete the room to form.
+            *on click this function delete the room from form.
             **/
 
             _deleteRoom: function (e) {
@@ -431,7 +428,7 @@ The form handles below mentioned scenarios on its own.
             /**
             *Function works for delete button .
             *on click it count id's of adult, children and child age drop down to calculate data.
-            *it calculate id's runtime while clicking on delete button.
+            *It calculate id's runtime while clicking on delete button.
             **/
             _idDelCal: function (delIndex) {
                 inputChildCount = this.domHost.querySelectorAll(".inputChildCount");
@@ -517,9 +514,9 @@ The form handles below mentioned scenarios on its own.
 
             /**
             *Function works for done button .
-            *on click it count total adults, children nad rooms from the form.
-            *output gives to the dropdown to show it's content instead of 'need rooms or have children'
-            *it also provides the array containing adultCount, childCount and array for children ages for each room.
+            *On click it count total adults, children nad rooms from the form.
+            *Output gives to the dropdown to show it's content instead of 'need rooms or have children'.
+            *It also provides the array containing adultCount, childCount and array for children ages for each room.
             **/
 
             _doneRoom: function (event) {
@@ -538,7 +535,13 @@ The form handles below mentioned scenarios on its own.
                 for (var i = 0; i < roomCount; i++) {
                     // loop through each adult input on the page   
                     dataAdult[i] = inputAdultCount[i].value;
+                    dataChild[i] = inputChildCount[i].value;
+                    var totalCount = +dataAdult[i] + +dataChild[i];
+                    if (totalCount > this.domHost.option.traveller.totalRoomPaxCount) {
+                        validdata = false;
+                    }
                     adultCount = +adultCount + +dataAdult[i];
+
                 }
                 var inputAdult = JSON.stringify(adultCount);
 
@@ -550,11 +553,7 @@ The form handles below mentioned scenarios on its own.
                 }
                 var inputChild = JSON.stringify(childCount);
                 var focused = false;
-                 var totalCount = +adultCount + +childCount;
-                if (totalCount > this.domHost.option.traveller.totalRoomPaxCount) {
-                    validdata = false;
-                    this.querySelector("#errfn").innerHTML = "maximum allowed";
-                }
+
                 for (var i = 0; i < roomCount; i++) {
                     // loop through each child input on the page  
                     count = +2 + +inputChildCount[i].value;

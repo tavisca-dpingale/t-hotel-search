@@ -130,8 +130,9 @@ Example:
           min-height: 98%;
         }
       }
-       @media (min-width: 1200px) {
-          paper-dialog {
+      
+      @media (min-width: 1200px) {
+        paper-dialog {
           position: fixed;
           width: 51%;
           min-width: 50%;
@@ -165,7 +166,7 @@ Example:
         on-blur="_onInputBlur" on-keydown="_onInputKeyDown" on-keyup="_onInputKeyUp" tabindex="-1" readonly>
       </paper-input>
     </paper-button>
-    <paper-dialog id="dialog" class="t-date-picker-dialog dialogPosition"  modal="[[modal]]" on-iron-overlay-closed="_dismissDialog">
+    <paper-dialog id="dialog" class="t-date-picker-dialog dialogPosition" modal="[[modal]]" on-iron-overlay-closed="_dismissDialog">
       <paper-date-picker id="picker" locale="[[locale]]" min-date="[[_computeMinDate(minDate)]]" max-date="[[_computeMaxDate(maxDate)]]"></paper-date-picker>
     </paper-dialog>
   </template>
@@ -188,41 +189,69 @@ Example:
     properties: {
       /**
         * Turns the datepicker in a modal dialog .
+          *@private
         */
       modal: {
         type: Boolean
       },
+      /**
+      *Following properties are added to suppress lint warnings.
+      **/
+      /**
+      *@private
+      **/
       _dropdownContent: {
         type: String
       },
+      /**@private**/
       invalid: {
         type: Boolean
       },
+      /**@private**/
       allowedPattern: {
         type: String,
         notify: true
       },
+      /**@private**/
       validator: {},
+      /**@private**/
       type: {},
+      /**@private**/
       pattern: {},
+      /**@private**/
       autocomplete: {},
+      /**@private**/
       autofocus: {},
+      /**@private**/
       inputmode: {},
+      /**@private**/
       minlength: {},
+      /**@private**/
       maxlength: {},
+      /**@private**/
       min: {},
+      /**@private**/
       max: {},
+      /**@private**/
       step: {},
+      /**@private**/
       name: {},
+      /**@private**/
       autoValidate: {},
+      /**@private**/
       lit: {},
+      /**@private**/
       size: {},
+      /**@private**/
       autocapitalize: {},
+      /**@private**/
       autocorrect: {},
+      /**@private**/
       autosave: {},
+      /**@private**/
       results: {},
+      /**@private**/
       errorMessage: {},
-
       /**
         * The label for the dropdown.
         */
@@ -231,39 +260,31 @@ Example:
       },
 
       /**
-        * The placeholder for the dropdown.
+        * placeholder for datepicker as MM/DD/YY.
         */
       placeholder: {
         type: String
       },
 
-      noPrefixIcon: {
-        type: Boolean,
-        value: false,
-        reflectToAttribute: true
-      },
-
+      /**@private**/
       disabled: {
         type: Boolean,
         value: false
       },
-
-
-      prefixIcon: {
-        type: String,
-        value: 'today',
-        reflectToAttribute: true
+      /**
+      *To store previous check in date.
+         *@private
+         **/
+      LastStartDate: {
+        type: Date,
+        value: new Date()
       },
-       
-       LastStartDate:{
-         type: Date,
-         value: new Date()
-       },
 
       /**
         * Set to true to disable the floating label. Bind this to the
         * `<paper-input-container>`'s `noLabelFloat` property.
-        */
+        *@private
+        **/
       noLabelFloat: {
         type: Boolean,
         value: false,
@@ -272,7 +293,7 @@ Example:
       /**
         * Set to true to always float the label. Bind this to the
         * `<paper-input-container>`'s `alwaysFloatLabel` property.
-        */
+        *@private**/
       alwaysFloatLabel: {
         type: Boolean,
         value: false
@@ -285,29 +306,38 @@ Example:
         type: String,
         notify: true
       },
-
+      /**
+      * The minimum allowed date
+      */
       minDate: {
         type: Date,
         notify: true
       },
-
+      /**
+      * The maximum allowed date
+      */
       maxDate: {
         type: Date,
         notify: true
       },
-
+      /**@private**/
       keyEventTarget: {
         type: Object,
         value: function () {
           return this;
         }
       },
-
+      /**
+      *To hold the value of datepicker.
+      **/
       value: {
         type: Date,
         notify: true
       },
-
+      /**
+      *To set the display format of input.
+      *@private
+      **/
       inputDisplayFormat: {
         type: String,
         value: 'L',
@@ -405,74 +435,74 @@ Example:
     },
 
     _dismissDialog: function (event) {
-       this.async(function () {  
-      var $this = this;
-      var startDate = this.domHost.querySelector("#start");
-      var endDate = this.domHost.querySelector("#end");
-      if (mq) {
-        if (this.id == 'end' && startDate.value != undefined) {
-          endDate.querySelector(".underline").style.border = "none";
+      this.async(function () {
+        var $this = this;
+        var startDate = this.domHost.querySelector("#start");
+        var endDate = this.domHost.querySelector("#end");
+        if (mq) {
+          if (this.id == 'end' && startDate.value != undefined) {
+            endDate.querySelector(".underline").style.border = "none";
+          }
+          else if (this.id == 'start') {
+            startDate.querySelector(".underline").style.border = "none";
+          }
         }
-        else if (this.id == 'start') {
-          startDate.querySelector(".underline").style.border = "none";
+        else {
+          if (this.id == 'end' && startDate.value != undefined) {
+            endDate.querySelector(".unfocused-line").style.display = "block";
+            endDate.querySelector(".underline").style.border = "none";
+          }
+          else if (this.id == 'start') {
+            startDate.querySelector(".unfocused-line").style.display = "block";
+            startDate.querySelector(".underline").style.border = "none";
+          }
+          if ((!event.detail.canceled) && (event.detail.confirmed)) {
+            event.stopPropagation();
+
+          }
         }
-      }
-      else {
-        if (this.id == 'end' && startDate.value != undefined) {
-          endDate.querySelector(".unfocused-line").style.display = "block";
-          endDate.querySelector(".underline").style.border = "none";
-        }
-        else if (this.id == 'start') {
-          startDate.querySelector(".unfocused-line").style.display = "block";
-          startDate.querySelector(".underline").style.border = "none";
-        }
-        if ((!event.detail.canceled) && (event.detail.confirmed)) {
-           event.stopPropagation();
-        
-      }
-      }
-       });
+      });
     },
 
-    _showDialog: function (event) {     
+    _showDialog: function (event) {
       var startDate = this.domHost.querySelector("#start");
       var endDate = this.domHost.querySelector("#end");
       if (this.id == 'end' && startDate.value != undefined) {
         endDate.querySelector(".underline").style.border = "1px solid #4cb050";
         endDate.querySelector(".unfocused-line").style.display = "none";
-         this.$picker.date = (this.value) ? this.value : new Date();
+        this.$picker.date = (this.value) ? this.value : new Date();
         this.$.dialog.toggle();
-          if (startDate.value) {
-            this.$picker.date = endDate.value;
+        if (startDate.value) {
+          this.$picker.date = endDate.value;
+        }
+        this.async(function () {
+          if (this.LastStartDate.getTime() != startDate.value.getTime()) {
+            this.querySelector("#calendar")._populate(startDate.value.getFullYear(), startDate.value.getMonth() + 1);
+            this.LastStartDate = startDate.value;
           }
-           this.async(function () {  
-          if(this.LastStartDate.getTime() != startDate.value.getTime()){
-          this.querySelector("#calendar")._populate(startDate.value.getFullYear(), startDate.value.getMonth() + 1);
-          this.LastStartDate = startDate.value;
-          }
-           });
+        });
       }
       else if (this.id == 'start') {
-      startDate.placeholder=this.domHost.resources.watermark.checkIn;
-       endDate.placeholder=this.domHost.resources.watermark.checkOut;      
+        startDate.placeholder = this.domHost.resources.watermark.checkIn;
+        endDate.placeholder = this.domHost.resources.watermark.checkOut;
         startDate.querySelector(".underline").style.border = "1px solid #4cb050";
         startDate.querySelector(".unfocused-line").style.display = "none";
         startDate.invalid = false;
-         this.$picker.date = (this.value) ? this.value : new Date();
+        this.$picker.date = (this.value) ? this.value : new Date();
         this.$.dialog.toggle();
         if (endDate.value) {
           this.$picker.date = endDate.value;
         }
       }
-       if (this.id == 'end' && startDate.value == undefined) {
+      if (this.id == 'end' && startDate.value == undefined) {
         startDate.invalid = true;
-         startDate.querySelector(".underline").style.border = "none";
+        startDate.querySelector(".underline").style.border = "none";
         startDate.querySelector("#paper-input-add-on-1").style.width = "123%";
       }
-       var pcard = this.domHost.querySelector("#paperCard");
-        pcard.style.display = "none"; 
+      var pcard = this.domHost.querySelector("#paperCard");
+      pcard.style.display = "none";
     },
-    
+
   });
 
 </script>

@@ -40,7 +40,7 @@ The form handles below mentioned scenarios on its own.
                 --paper-input-container-focus-color: #4cb050;
                 --paper-input-container-color: lightgray;
                 --paper-input-container-input-color: white;
-                --paper-input-container-label-focus: lightgray;               
+                --paper-input-container-label-focus: lightgray;
             }
 
             .age {
@@ -189,8 +189,8 @@ The form handles below mentioned scenarios on its own.
         <div class="container1">
             <form is="iron-form" id="form" method="post" action="/form/handler">
                 <div id="Adult">
-                    <paper-dropdown-menu label="{{adultLabel}}" id$="adult{{_displayId()}}" class="inputAdultCount" required auto-validate error-message="Enter"
-                        on-iron-select="_calResultOfRoom">
+                    <paper-dropdown-menu label="{{adultLabel}}" id$="adult{{_displayId()}}" on-iron-select="_onCount" class="inputAdultCount"
+                        required auto-validate error-message="Enter" on-iron-select="_calResultOfRoom">
                         <paper-listbox id="listBox" class="dropdown-content" selected="{{countAdult}}">
                             <template is='dom-repeat' items='{{adultCountInRoom}}'>
                                 <paper-item value="{{item}}">{{item}}</paper-item>
@@ -236,18 +236,10 @@ The form handles below mentioned scenarios on its own.
 
             is: 'choice-form',
             properties: {
-                /*
-                * Fired when the option from form add room is clicked.
-                *
-                *@event 'ADD ROOM'.
-                */
 
                 /**
-                 * @private
                 * This is an array of children.
-                * children can be set by setting an array of objects.
-                * children can be added by clicking on child drop down and it is toggle with number of children added by user. 
-                * child age drop down in display whrn user clicks on number of children user wants.
+                 * @private
                 **/
                 children: {
                     type: Array,
@@ -255,8 +247,8 @@ The form handles below mentioned scenarios on its own.
                 },
 
                 /**
-                 * @private
                 *this property is set to adult drop down for selected item.
+                 * @private
                 **/
                 countAdult: {
                     type: Number,
@@ -266,8 +258,8 @@ The form handles below mentioned scenarios on its own.
                     }
                 },
                 /**
-                 * @private
                  *this property is set to child drop down for selected item.
+                 * @private
                  **/
                 countChildren: {
                     type: Number,
@@ -277,7 +269,10 @@ The form handles below mentioned scenarios on its own.
                     }
                 },
 
-
+                /**
+                 * This property is set for search option minAdultCount and maxAdultCount.
+                 * This property set the adult count in adult drop down.
+                 **/
                 adultCountInRoom: {
                     type: Array,
                     value: function () {
@@ -290,6 +285,10 @@ The form handles below mentioned scenarios on its own.
                         return childArray;
                     }
                 },
+                /**
+                 * This property is set for search option minChildCount and maxChildCount.
+                 * This property set the child count in children drop down.
+                 **/
                 childCountInRoom: {
                     type: Array,
                     value: function () {
@@ -302,7 +301,10 @@ The form handles below mentioned scenarios on its own.
                         return childArray;
                     }
                 },
-
+                /**
+                 * This property is set for search option minChildAge and maxChildAge.
+                 * This property set the age in children age drop down.
+                 **/
                 childAgeCountInRoom: {
                     type: Array,
                     value: function () {
@@ -315,6 +317,9 @@ The form handles below mentioned scenarios on its own.
                         return childArray;
                     }
                 },
+                /**
+                 * This property is set for search resources to set adult label.
+                 **/
                 adultLabel: {
                     type: String,
                     value: function () {
@@ -322,6 +327,9 @@ The form handles below mentioned scenarios on its own.
                         return labelAdult;
                     }
                 },
+                /**
+                 * This property is set for search resources to set child label.
+                 **/
                 childLabel: {
                     type: String,
                     value: function () {
@@ -329,6 +337,9 @@ The form handles below mentioned scenarios on its own.
                         return labelChild;
                     }
                 },
+                /**
+                 * This property is set for search resources to set childAge label.
+                 **/
                 childAgeLabel: {
                     type: String,
                     value: function () {
@@ -336,6 +347,9 @@ The form handles below mentioned scenarios on its own.
                         return labelChildAge;
                     }
                 },
+                /**
+                 * This property is set for search resources to set Age label.
+                 **/
                 Agelabel: {
                     type: String,
                     value: function () {
@@ -385,6 +399,8 @@ The form handles below mentioned scenarios on its own.
                 this.children = [];
             },
 
+
+
             /**
             *This function is used for child dropdown ,
              *on click this function adds the child age dropdown to form.
@@ -397,11 +413,15 @@ The form handles below mentioned scenarios on its own.
                     this.push('children', { child: "" });
                 }
                 this._calResultOfRoom();
+                this._removeError();
             },
+            /**
+            * This function is used for removing error of adult and children dropdown after reclicking on it.
+            **/
 
-
-
-
+            /**
+            * This function is used for showing label 'Age' below each children age.
+            **/
             _ageLabelShow: function (event) {
                 var setAgeDropdownheight = event.currentTarget.children[1].children[1];
                 setAgeDropdownheight.style.height = "150px";
@@ -410,11 +430,37 @@ The form handles below mentioned scenarios on its own.
                 event.currentTarget.invalid = false;
                 this.$$("#" + lblsize).style.visibility = "";
             },
+            /**
+            * This function is used for keypress on children age drop down.
+             **/
             _tabPress: function (e) {
                 if (e.keyCode == 38 || e.keyCode == 40) {
                     e.currentTarget.invalid = false;
                     var lblsize = e.currentTarget.id.replace("child", "size1");
                     this.$$("#" + lblsize).style.visibility = "";
+                }
+            },
+            /**
+             * To set the error message for room after exceeding total room pax count.
+             **/ 
+            _removeError: function () {
+                var inputAdultCount = this.domHost.domHost.querySelectorAll(".inputAdultCount");
+                var inputChildCount = this.domHost.domHost.querySelectorAll(".inputChildCount");
+                var roomCount = this.domHost.roomCount;
+                var dataAdult = [];
+                var dataChild = [];
+                for (var i = 0; i < roomCount; i++) {
+                    // loop through each adult & child input on the page   
+                    dataAdult[i] = inputAdultCount[i].value;
+                    dataChild[i] = inputChildCount[i].value;
+                    var totalCount = +dataAdult[i] + +dataChild[i];
+                    var totalRoomPaxCount = this.domHost.domHost.option.traveller.totalRoomPaxCount;
+                    if (totalCount > totalRoomPaxCount) {
+                        this.domHost.querySelectorAll(".head")[i].querySelector("#errfn").innerHTML = "Maximum Paxcount " + '' +totalRoomPaxCount;
+                    }
+                    else {
+                        this.domHost.querySelectorAll(".head")[i].querySelector("#errfn").innerHTML = "";
+                    }
                 }
             },
 
@@ -506,7 +552,6 @@ The form handles below mentioned scenarios on its own.
                     else {
                         checkSpan.innerHTML = spanData;
                     }
-
                 }
             },
         });

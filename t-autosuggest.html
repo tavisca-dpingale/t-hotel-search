@@ -120,6 +120,7 @@
             },
             /**
              * No label float is to make the label either on the body or on the top.
+             * @private
              */
             labelFloat: {
                 type: Boolean,
@@ -145,6 +146,7 @@
             },
             /**
              * Selected value from the autosuggest.
+             * @private
              */
             selectedValue: {
                 type: String,
@@ -155,6 +157,7 @@
             },
             /**
              * Selected item from the autosuggest.
+             * @private
              */
             selectedItem: {
                 type: Object,
@@ -166,6 +169,7 @@
             },
             /**
              * Disable autosuggest.
+             * @private
              */
             disabled: {
                 type: Boolean,
@@ -173,7 +177,8 @@
                 reflectToAttribute: true
             },
             /**
-             * Disable autosuggest.
+             * validate autosuggest.
+             * @private
              */
             isInvalid: {
                 type: Boolean,
@@ -182,6 +187,7 @@
             },
             /**
              * Label of the autosuggest.
+             * @private
              */
             label: {
                 type: String,
@@ -190,6 +196,7 @@
             },
             /**
              * Put as required
+             * @private
              */
             required: {
                 type: Boolean,
@@ -198,6 +205,7 @@
             },
             /**
              * Set to true to fire validations on blur
+             * @private
              */
             validateOnBlur: {
                 type: Boolean,
@@ -211,38 +219,51 @@
                 value: "",
                 reflectToAttribute: true
             },
+            /**
+             * to set error message
+             * @private
+             **/
             invalidErrorMessage: {
                 type: String,
             },
+            /**
+             * @private
+             **/
             caching: {
                 type: Boolean,
                 reflectToAttribute: true,
             },
+            /**
+             * @private
+             **/
             subType: {
                 type: String,
                 value: ""
             },
+
             queryParams: {
                 type: String,
                 value: ""
             },
+            /**
+             * property to set minimum characters length on which auto suggestion dropdown will appear.
+             * */
             minimumCharacters: {
                 type: Number,
                 value: 3
             },
+            /**
+             * Property to set delay time between keystroke and loading destination dropdown.
+             * */
             delay: {
                 type: TimeRanges,
                 value: '50'
             },
         },
         listeners: {
-            'tap': 'simpleTap',
+            'tap': '_simpleTap',
             'clearContainer.tap': '_clear'
-        },
-        checkdata: {
-            type: String,
-            value: this.value == '' ? 'hide' : 'unhide'
-        },
+        },       
 
         attached: function () {
             AutoComplete({
@@ -263,10 +284,15 @@
             var setErrrorMasseg = this.domHost.resources.errorMessage.destinationError;
             this._errorMassege(setErrrorMasseg);
         },
+        /**
+         * function works for error message.
+         **/
         _errorMassege: function (setErrrorMasseg) {
             this.invalidErrorMessage = setErrrorMasseg;
         },
-
+        /**
+         * works when focus on input autosuggest.
+         **/
         _focusOnInput: function () {
             this.domHost.querySelector("#travellerInput").fire('blur');
             var startDate = this.domHost.querySelector("#start");
@@ -284,7 +310,9 @@
             var pcard = this.domHost.querySelector("#paperCard");
             pcard.style.display = 'none';
         },
-
+        /**
+         * works when focus is removed from autosuggest.
+         **/
         _focusingOut: function () {
             var component = this,
                 //to handle the scrolling position when focused
@@ -303,21 +331,29 @@
                 component.querySelector('#autoSuggest').blur();
             }
             setTimeout(allFunction, 10);
-
         },
-        _cancel: function () {
-            this.querySelector('#autoSuggest').value = this.selectedValue;
-            this._focusingOut();
-        },
+        /**
+         * cancel the selected value.
+         **/
+        // _cancel: function () {
+        //     this.querySelector('#autoSuggest').value = this.selectedValue;
+        //     this._focusingOut();
+        // },
+        /**
+         * hide the clearbutton(cross button) on click of cross button.
+         **/
         _clear: function (event) {
             event.stopPropagation();
-            this.clear();
+            this._clearInput();
             Polymer.dom(this.$.clearContainer).node.setAttribute('class', 'hide');
             if (mq) {
                 var showClearContainer = this.querySelector("#clearContainer");
                 showClearContainer.style.display = "none";
             }
         },
+        /**
+         * function works on focus of autosuggest.
+         **/
         _onFocus: function (event) {
             this.domHost.querySelector("#dropdown").style.display = "none";
             Polymer.IronDropdownScrollManager.pushScrollLock(this);
@@ -325,14 +361,23 @@
             event.stopImmediatePropagation();
             return false;
         },
-        _closeLambda: function () {
-            var item = this;
-            this.$.dropBox.className = "autocomplete ";
-        },
+        /**
+         * Close the autosuggest dropdown.
+         **/
+        // _closeLambda: function () {
+        //     var item = this;
+        //     this.$.dropBox.className = "autocomplete ";
+        // },
+        /**
+         * Clear the seledted input on click of cross button.
+         **/
         _onClear: function (event) {
             this.selectedValue = "";
             this.selectedItem = null;
         },
+        /**
+         * This function is work on blur of autosuggest dropdown.
+         **/
         _onBlur: function (event) {
             var focusInputColor = this.domHost.querySelector("#autoSuggest");
             focusInputColor.style.color = "white";
@@ -350,12 +395,18 @@
             }
             Polymer.IronDropdownScrollManager.removeScrollLock(this);
         },
+        /**
+         * This is an observer acts on change of selected item from autosuggest dropdown.
+         **/
         _selectedItemChanged: function () {
             if (this.selectedItem != undefined) {
                 this.selectedValue = this.selectedItem;
                 this._focusingOut();
             }
         },
+        /**
+         *check whther label is floating or not. 
+         **/
         _checkFloatedLabel: function () {
             if (this.$.autoSuggest.value.length > 0) {
                 this.classList.add('label-is-floating');
@@ -364,17 +415,26 @@
             }
             this._showReadMoreDots();
         },
-        simpleTap: function (e) {
+        /**
+         * 
+         **/
+        _simpleTap: function (e) {
             if (!e) var e = window.event;
             e.cancelBubble = true;
             if (e.stopPropagation) e.stopPropagation();
         },
-        clear: function () {
+        /**
+         * Clear the seledted input on click of cross button.
+         **/
+        _clearInput: function () {
             this.classList.add('focused');
             this.selectedValue = "";
             this.$.autoSuggest.value = "";
             this.classList.remove('label-is-floating');
         },
+        /**
+         * Function to set width of selected value of autosuggest in text input according to offsetwidth.
+         **/
         _showReadMoreDots: function () {
             var l = this.$.autoSuggest.offsetWidth / 8.5;
             if (this.$.autoSuggest.value.length > l) {

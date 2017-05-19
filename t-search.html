@@ -9,15 +9,16 @@
 <link rel="import" href="t-search-style.html">
 <link rel="stylesheet" href="t-search-style.css">
 <link rel="import" href="choice-card.html">
+<link rel="import" href="t-autosuggest.html">
 
 
 <!--
 This component is a form that fires an event with search request object on successfull submission. 
 
 There are two  properties that are required to run this form which initialize the location autosuggest. These are
-`data-url`, `query-params`.
+`data-url`, `token-response`.
 
-To preselect some value in the form pass the value of the property while initiating t-search.
+To preselect some value in the form, pass the value of the property while initiating t-search.
 
 Example:
 
@@ -28,19 +29,19 @@ Example:
     </t-search>
 
 ### Styling
-Custom property                         | Description                                | Default
-----------------------------------------|--------------------------------------------|-------------
- `--outer-container-color               |  Background color of outer container       |     #424D51
-  --search-button-color                 |  Color for search button                   |     #4CB050
-  --dropdown-element-link-color         |  Color for Link in travellers Drop down    |     #4CB050
-  --button-color-for-rooms              |  Color for buttons availabel in room card  |     #478BD7
-  --border-color-for-cards              |  Color for borders of cards                |     lightgray
-  --background-color-for-traveller-card |  Background color for travellers card      |     white 
-  --color-for-calendar-dates            |  Color for calendar dates                  |     #4CB050
-  --color-for-calendar-background       |  Background color for dialog of calendar   |     white
-  --color-for-calendar-selected-range   |  Selected dates range border color         |     #4CB050
-  --background-img-for-selected-date    |  Background image for selected dates       |     url('../t-input-date-picker/Green circle.svg')                                                                 
-  --background-img-for-today-date       |  Background image for today date           |     url('../t-input-date-picker/todayCircle.svg')
+Custom property                         | Description                                      | Default
+----------------------------------------|--------------------------------------------------|-------------
+  --outer-container-color               |  Background color of outer container             |     #424D51
+  --search-button-color                 |  Color for search button                         |     #4CB050
+  --dropdown-element-link-color         |  Color for Link in travellers Drop down          |     #4CB050
+  --button-color-for-rooms              |  Color for buttons availabel in travellers form  |     #478BD7
+  --border-color-for-cards              |  Color for borders of cards                      |     lightgray
+  --background-color-for-traveller-card |  Background color for travellers form            |     white 
+  --color-for-calendar-dates            |  Color for calendar selectable dates             |     #4CB050
+  --color-for-calendar-background       |  Background color for calendar                   |     white
+  --color-for-calendar-selected-range   |  Selected dates range border color               |     #4CB050
+  --background-img-for-selected-date    |  Background image for selected dates             |     url('../t-input-date-picker/Green circle.svg')                                                                 
+  --background-img-for-today-date       |  Background image for today's date               |     url('../t-input-date-picker/todayCircle.svg')
 
 Note:
 The form handles below mentioned scenarios on its own.
@@ -83,18 +84,18 @@ The form handles below mentioned scenarios on its own.
           It will come in picture after user clicking on 'Need more rooms or have children' mobile screen..       -->
 
           <app-toolbar hidden$="{{showToolbar}}" id="toolbarRoom" class="row-lg-height row-md-height row-sm-height row-xs-height">
-            <iron-icon icon="icons:arrow-back" id="backButtonRoom" on-tap="_showMainToolbar"></iron-icon>
+            <iron-icon icon="icons:arrow-back" id="backButtonRoom" on-tap="_showDPMainToolbar"></iron-icon>
             <paper-button toggles id="buttons" on-tap='_doneRoomCard'>Done</paper-button>
           </app-toolbar>
 
-          <!--Toolbar to show on mobile screen for date picker.
+          <!--Toolbar to show on mobile screen for datepicker.
           This is hidden while user is working desktop mode or tablet mode.
-          It will come in picture after user clicking on date picker at mobile screen.       -->
+          It will come in picture after user clicking on datepicker at mobile screen.       -->
 
           <app-toolbar hidden$="{{showDatePicker}}" id="toolbarDatePicker" class="row-lg-height row-md-height row-sm-height row-xs-height">
             <div id="selectDate">
               <iron-icon icon="icons:arrow-back" id="backButtonDatepicker" on-tap="_showDateToolbar"></iron-icon>
-              <span class="dateSpan">Select Dates</span>
+              <span class="dateSpan" disabled>Select Dates</span>
               <paper-button toggles id="buttons" on-tap='_doneDatePicker'>Done</paper-button>
             </div>
           </app-toolbar>
@@ -105,14 +106,14 @@ The form handles below mentioned scenarios on its own.
             It will come in picture after user providing three input characters at autosuggest at mobile screen.       -->
 
           <app-toolbar hidden class="row-lg-height row-md-height row-sm-height row-xs-height" id="toolbarAutoComplete">
-            <iron-icon id="backButtonAutoSuggest" icon="icons:arrow-back" on-tap="_showaMainToolbar"></iron-icon>
+            <iron-icon id="backButtonAutoSuggest" icon="icons:arrow-back" on-tap="_showACMainToolbar"></iron-icon>
             <div>
               <iron-icon id="clearButton" icon="close" on-click="_clearInput"></iron-icon>
             </div>
           </app-toolbar>
 
 
-          <!--Main toolbar which contains auto suggest dropdown, date pickers and travellers drop down at all screens. -->
+          <!--Main toolbar which contains auto suggest dropdown, datepickers and travellers drop down at all screens. -->
           <app-toolbar id="mainToolbar" class="row-lg-height row-md-height row-sm-height row-xs-height">
             <form is="iron-form" id="form" method="post" action="/form/handler">
               <div required auto-validate class="col-lg-5 col-md-5 col-sm-12 col-xs-12" id="deskinput">
@@ -124,7 +125,7 @@ The form handles below mentioned scenarios on its own.
 
               <div id="start1" class="col-lg-1 col-md-1 col-sm-3 col-xs-6">
                 <t-input-date-picker required auto-validate error-message="{{resources.errorMessage.checkInError}}" class="suggestions" date-format="MM/DD/YYYY"
-                  id="start" label="Check in" min-date="[[minDatetoday]]" max-date="[[maxDate]]" on-keydown="_keypress" on-tap="_openDatePicker"
+                  id="start" label="Check in" min-date="[[minDateToday]]" max-date="[[maxDate]]" on-keydown="_keypress" on-tap="_openDatePicker"
                   on-focus="this.blur()">
                 </t-input-date-picker>
               </div>
@@ -182,22 +183,23 @@ The form handles below mentioned scenarios on its own.
         /**
          * This property should have the value of a compatible autosuggest api url.
          * Autosuggest api should return valid options based on a GET call to this url after appending `'/{text entered in location field}?{queryParams}'`
-         * Suggestions are requested after 3 characters have been entered. 
+         * Suggestions are requested after 3 characters(configurable) have been entered. 
          */
         dataUrl: String,
 
-        /**
+        /**        
          * This property stores the value of autosuggest api query parameters. 
+         * @private
          */
         queryParams: String,
         /**
-         * This property stores the value of autosuggest api query parameters. 
+         * This property stores the value of authentication token required for autosuggest API. 
          */
         tokenResponse: String,
 
-        /**
+        /**        
+        * To toggle travellers form.
         *@private
-        *travellers drop down for toggle purpose.
         */
 
         showTravellersCard: {
@@ -206,15 +208,15 @@ The form handles below mentioned scenarios on its own.
         },
 
         /**
-        *@private
          * Property to set iron media queries for medium tablet.
+         *@private
          **/
         mediumTablet: {
           type: Boolean,
           value: false
         },
         /**
-         * Property to set iron media queries for tablet.
+         * Property to set iron media queries for tablet.         
          *@private
          **/
         tabletView: {
@@ -222,54 +224,55 @@ The form handles below mentioned scenarios on its own.
           value: false
         },
         /**
-        *@private
          * Property to set iron media queries for mobilephone.
+         *@private
          **/
         mobilePhone: {
           type: Boolean,
           value: false
         },
         /**
-        *@private
          * Property to toggle toolbar of travellers field for mobile view.
+         *@private
          **/
         showToolbar: {
           type: Boolean,
           value: true
         },
         /**
-        *@private
-         * Property to toggle toolbar of date picker field for mobile view.
+         * Property to toggle toolbar of datepicker field for mobile view.
+         *@private
          **/
         showDatePicker: {
           type: Boolean,
           value: true
         },
         /**
-        *@private
         *t-autosuggest location property.
+        *@private
         **/
-
         location: String,
 
         /**
-        *return the min date of check in date and checkout date as today
+        *return the min date of checkin date as today
         */
 
-        minDatetoday: {
+        minDateToday: {
           type: Date
         },
 
         /**
+        *this property holds selected item of travellers dropdown and used for binding to input.
         *@private
-        *this property is set to travellers drop down for selected item.
         **/
 
         choice: {
           type: String,
           value: 0
         },
-
+        /**
+         * This property is used to set search option.
+         **/ 
         option: {
           type: Object,
           value: {
@@ -306,6 +309,9 @@ The form handles below mentioned scenarios on its own.
             }
           }
         },
+        /**
+         * This property is used to set search localized resources.
+         **/ 
         resources: {
           type: Object,
           value: {
@@ -331,34 +337,34 @@ The form handles below mentioned scenarios on its own.
           }
         },
         /**
-        *@private
-         * Property to collect output data of done room of choice card.
+         * Property to collect output data after done button is clicked in travellers form.
+         *@private
          **/
         doneRoomCardOutput: {
           type: String
         },
         /**
-        *@private
-         * Property to insure whether done button of travellers toolbar for mobile view is clicked or not.
+         * Property to ensure whether done button of travellers toolbar for mobile view is clicked or not.
+         *@private
          **/
         doneRoomCard: {
           type: Boolean,
           value: false
         },
         /**
-        *@private
-         * Property to insure whether done button of date picker toolbar for mobile view is clicked or not.
+         * Property to ensure whether done button of datepicker toolbar for mobile view is clicked or not.
+         *@private
          **/
         doneDatePicker: {
           type: Boolean,
           value: false
         },
 
-        /*
-        *Set to max date of checkin date picker and checkout date picker.
-        *Returns the max date after 1 year.           
+        /**
+        *Maximum date user can select for checkin datepicker.
+        *Default is after 1 year.           
         *Date format is mm/dd/yyyy.
-        */
+        **/
 
         maxDate: {
           value: function () {
@@ -370,29 +376,27 @@ The form handles below mentioned scenarios on its own.
         },
 
         /**
-        *@private
-         * Property to set the array of destiantion field output with certain parameters.
-         * This property set output for autosuggest.
-         * To collect data in searchModel JSON object.
+         * Property to get the JSON object of destiantion field output with others parameters like name, geoCode, etc.
+         * It is used in searchModel JSON object.
+         *@private
          **/
         dataCity: {
           type: Array
         },
         /**
-        *@private
-         * Property to set the array of travellers output.
-         * This property set output for choice card.
-         * To collect data in searchModel JSON object.
+         * Property holds array of travellers output.
+         * This property get output for choice card.
+         * It is used in searchModel JSON object.
+         *@private 
          **/
         travellersFinalData: {
           type: Array
         }
-
       },
 
       /*      
-      * Function set to keypress event of date picker.
-      *prevent user to input by typing.
+      * Function to handle keypress event of datepicker.
+      * It's prevent user from typing.
       **/
 
       _keypress: function (event) {
@@ -403,57 +407,66 @@ The form handles below mentioned scenarios on its own.
           return false;
         }
       },
+
+      /**
+       * This function is used to set min date for check in datepicker.
+       * It returns the min date as today.
+       **/ 
       _setMinDate: function (checkInAllowFromNow) {
         var setMinDatetoToday = new Date();
         setMinDatetoToday.setDate(setMinDatetoToday.getDate() - 1 + checkInAllowFromNow);
-        this.minDatetoday = setMinDatetoToday;
+        this.minDateToday = setMinDatetoToday;
         return setMinDatetoToday;
       },
 
+      /**
+       * This function is used for on scroll method of travellers form.
+       **/ 
       _removeDrop: function () {
-        for (var i = 0; i < this.querySelector("#choiceCard").roomCount; i++) {
-          showDrop
+        var RCount = this.querySelector("#choiceCard").roomCount;
+        for (var i = 0; i < RCount; i++) {
           var showDrop = this.querySelector("#paperCard");
-          var C = showDrop.querySelectorAll(".inputChildCount")[i];
-          var A = showDrop.querySelectorAll(".inputAdultCount")[i];
-          if (C.focused === true) {
-            showDrop.querySelectorAll(".inputChildCount")[i].close();
-            showDrop.querySelectorAll(".inputChildCount")[i].querySelector("#input").focus();
-           showDrop.querySelectorAll(".inputChildCount")[i].querySelector("#input").blur();
+          var childDD = showDrop.querySelectorAll(".inputChildCount")[i];
+          var adultDD = showDrop.querySelectorAll(".inputAdultCount")[i];
+          if (childDD.focused === true) {
+            childDD.close();
+            childDD.querySelector("#input").focus();
+            childDD.querySelector("#input").blur();
           }
-          else if (A.focused === true) {
-            showDrop.querySelectorAll(".inputAdultCount")[i].close();
-            showDrop.querySelectorAll(".inputAdultCount")[i].querySelector("#input").focus();
-           showDrop.querySelectorAll(".inputAdultCount")[i].querySelector("#input").blur();
+          else if (adultDD.focused === true) {
+            adultDD.close();
+            adultDD.querySelector("#input").focus();
+            adultDD.querySelector("#input").blur();
           }
-          //  if(C.value != 0){
-          //    for(var v=0; v < C.value; v++){
-          //    var CA = showDrop.querySelectorAll(".ageOfChild")[i];
-             
-          //   if (CA.focused === true) {
-          //   showDrop.querySelectorAll(".ageOfChild")[i].close();
-          //   CA.blur()
-          //   }
-          // }
-          //  }
+          // if (C.value != 0) {
+            var ageOfChildDD = showDrop.querySelectorAll(".ageOfChild");
+            for (var v = 0; v < ageOfChildDD.length; v++) {
+              var childAgeFocus = ageOfChildDD[v];
+              if(childAgeFocus.focused){
+              childAgeFocus.close();
+              }
+            // }
+          }
         }
       },
       /**
-       * Functions to set view of internet explorer.
-       * And also work for other than internet explorer.
+       * Function to set view of internet explorer.       
        * */
       _largeDesktopViewIE: function (largeDesktopView) {
         // Internet Explorer 6-11
         var isIE = /*@cc_on!@*/false || !!document.documentMode;
         return isIE && largeDesktopView;
       },
+      /**
+       * Function for desktop view for browsers other than internet explorer.
+       * */
       _largeDesktopViewOther: function (largeDesktopView) {
         // Internet Explorer 6-11
         var isIE = /*@cc_on!@*/false || !!document.documentMode;
         return !isIE && largeDesktopView;
       },
       /**
-      *to hide the children papercard after removing focus through it.
+      *to hide the travellers form on blur.
       **/
 
       _dismisCard: function () {
@@ -465,6 +478,9 @@ The form handles below mentioned scenarios on its own.
         paperItem.textContent = "Need more rooms or have children?";
         this.querySelector("#deskinput1").blur();
       },
+      /**
+       * This function is used for up and down arrow key press on drop down menu.
+       **/ 
       _tabPress: function (e) {
         if (e.keyCode == 38 || e.keyCode == 40) {
           var pCard = Polymer.dom(this.$.paperCard).node;
@@ -474,7 +490,7 @@ The form handles below mentioned scenarios on its own.
         }
       },
       /**
-      * This function is for date picker full screen dialog at mobile screen.
+      * Function to open full screen calendar dialog at mobile screen.
       **/
       _openDatePicker: function () {
         if (mq) {
@@ -495,25 +511,17 @@ The form handles below mentioned scenarios on its own.
           startInput.querySelector("#input").querySelector("#input").style.color = "black";
           endInput.querySelector("#input").querySelector("#input").style.color = "black";
         }
-        if (this.showTravellersCard = true) {
+        if (this.showTravellersCard == true) {
           this.showTravellersCard = !this.showTravellersCard
         }
         if (mq && this.showDatePicker == true) {
           this.showDatePicker = !this.showDatePicker;
-        }
-        if (mq) {
-          this.querySelector("#start").querySelector("#dialog").style.display = "block";
-          if (startInput.value === undefined) {
-            this.querySelector("#calendar").children[0].scrollTop = 0;
-          }
-        }
+        }       
       },
 
-      /*
-      *to open the paper-card on click of 'need more rooms or have children'
-      *paper-card contains choice form.
-      *this is used for toggle purpose.
-      */
+      /**
+      *To open the travellers form on click of 'need more rooms or have children'.      
+      **/
 
       _openChildForm: function (e) {
         if (mq) {
@@ -527,7 +535,7 @@ The form handles below mentioned scenarios on its own.
         var pCard = Polymer.dom(this.$.paperCard).node;
         pCard.style.display = 'block';
 
-        if (this.showTravellersCard = true) {
+        if (this.showTravellersCard == true) {
           this.showTravellersCard = !this.showTravellersCard
         }
         pCard.style.visibility = '' ? 'hidden' : '';
@@ -546,8 +554,7 @@ The form handles below mentioned scenarios on its own.
         }
       },
       /**
-      * This function is used for done button which is used on the header of child form card on mobile screen.
-      * This is calculate the total output.
+      * Function called upon done button click for travellers form on mobile screen.
       **/
 
       _doneRoomCard: function () {
@@ -561,6 +568,9 @@ The form handles below mentioned scenarios on its own.
           this.querySelector("#paperCard").style.display = "none";
         }
       },
+      /**
+       * Supportive function to maintain style when displayed main screen in mobile view. 
+       * */
       _styleForBackToMainToolbar: function () {
         this.querySelector("#start1").style.display = "block";
         this.querySelector("#end1").style.display = "block";
@@ -571,8 +581,7 @@ The form handles below mentioned scenarios on its own.
 
 
       /**
-      * This function is used for done button which is used on the header ofdate picker on mobile screen.
-      * This is used for date picker.
+      * Function called upon done button click for calendar on mobile screen.
       **/
       _doneDatePicker: function () {
         this.doneDatePicker = true;
@@ -583,11 +592,9 @@ The form handles below mentioned scenarios on its own.
         doneEndDate = this.querySelector("#end").value;
       },
       /**
-      * This is used for toolbar toggle.
-      * This function will work after clicking on back arrow button on date picker and travellers toolbar at mobile screen.
-      * This toolbar is used for only mobile screen.
+      * This function will work after clicking on back button on travellers toolbar in mobile screen.
       **/
-      _showMainToolbar: function () {
+      _showDPMainToolbar: function () {
         if (mq) {
           this._styleForBackToMainToolbar();
         }
@@ -613,6 +620,9 @@ The form handles below mentioned scenarios on its own.
         }
       },
 
+      /**
+       * It display the main toolbar after clicking on back button for datepicker in mobile view.
+       **/
       _showDateToolbar: function () {
         this._showDateToolbarFun();
         var startDateValue = this.querySelector("#start");
@@ -627,8 +637,16 @@ The form handles below mentioned scenarios on its own.
           endDateValue.value = doneEndDate;
         }
         this.querySelector("#end").querySelector(".underline").style.border = "none";
+        this.querySelector("#start").querySelector("#dialog").style.display = "block";
+         if (startDateValue.value === undefined) {
+            this.querySelector("#calendar").children[0].scrollTop = 0;
+          }
+           this.querySelector("#start").querySelector("#dialog").style.display = "none";
       },
 
+      /**
+       * This is supportive function to maintain style of datepicker toolbar in mobile view.
+       **/ 
       _showDateToolbarFun: function () {
         this.showTravellersCard = true;
         this.showToolbar = true;
@@ -654,12 +672,10 @@ The form handles below mentioned scenarios on its own.
         endInput.querySelector("#input").querySelector("#input").style.color = "white";
       },
       /**
-       * This is used for toolbar toggle.
-       * This function will work after clicking on back arrow button on autocomplete toolbar at mobile screen.
-       * This toolbar is used for only mobile screen.
+       * This function will work after clicking on back button on autocomplete toolbar in mobile screen.
        **/
 
-      _showaMainToolbar: function () {
+      _showACMainToolbar: function () {
         this.showTravellersCard = true;
         this.showToolbar = true;
         Polymer.dom(this.$.toolbarAutoComplete).node.style.display = "none";
@@ -669,8 +685,7 @@ The form handles below mentioned scenarios on its own.
       },
 
       /**
-      * This function will work after clicking on clear button on autocomplete toolbar at mobile screen.
-      * This toolbar is used for only mobile screen.
+      *Function to clear autocomplete toolbar content when clicked on clear button for mobile screen.
       **/
       _clearInput: function () {
         var autoInput = this.querySelector("#spanAutoId");
@@ -692,8 +707,8 @@ The form handles below mentioned scenarios on its own.
 
       /*
       *To collect the input from form on click of search button.
-      *This function also validates the each field of the form.
-      *used to set search button text as 'searching' after clicking on search button.
+      *This function also validates each field of the form.
+      * And used to set search button text as 'searching'.
       */
 
       _submitSearchFormInput: function (e) {
@@ -727,10 +742,10 @@ The form handles below mentioned scenarios on its own.
         }
         else {
           var card = this.querySelector("#choiceCard");
-          if (this.choice >= 0 && this.choice <= 4) {
+          if (this.choice >= 0 && this.choice <= 4 && !mq) {
             var roomC = this.querySelector("#choiceCard").roomCount;
-            for (var i = 0; i < roomC; i++) {
-              this.querySelectorAll("#choiceRoom")[i].querySelector("#child").querySelector("#listBox").selected = 0;
+            for (var i = 0; i < roomC; i++) {              
+              this.querySelectorAll("#choiceRoom")[i].querySelector("#child").querySelector("#listBox").selected = 0;              
             }
           }
           var validData = card._doneRoom();
@@ -805,7 +820,7 @@ The form handles below mentioned scenarios on its own.
       },
 
       /* 
-      * function to control date picker for checkin and checkout dates.
+      * function to control datepicker for checkin and checkout dates.
       */
       ready: function () {
         var ckeckMin = this.option.date.checkInAllowFromNow;
@@ -817,7 +832,7 @@ The form handles below mentioned scenarios on its own.
         var end = this.$$('#end');
         var CurrentDate;
         start.addEventListener('value-changed', function () {
-          // Open the end date picker with a delay to
+          // Open the end datepicker with a delay to
           // make it less confusing.
           window.setTimeout(function () {
             startDate = new Date();

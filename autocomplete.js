@@ -14,6 +14,7 @@ var AutoComplete = (function () {
                         attr(input, { "data-autocomplete-old-value": input.value = attr(item, "data-autocomplete-value", item.innerHTML) });
                         component.selectedValue = attr(item, "data-autocomplete-value", item.innerHTML);
                         component.selectedItem = component.response[attr(item)];
+                        component.domHost.querySelector("#dropBox").style.display = "none";
                         if (item.nodeName != "LI") {
                             item = item.parentNode;
                         }
@@ -308,6 +309,7 @@ var AutoComplete = (function () {
                                         setTimeout(function () {
                                             request = ajax(request, custParams, inputValue.trim(), input, result, component.subType, component.queryParams);
                                         }, component.delay);
+                                        component.domHost.querySelector("#dropBox").style.display = "block";
                                     }
                                     else {
                                         if (result.hasChildNodes()) {

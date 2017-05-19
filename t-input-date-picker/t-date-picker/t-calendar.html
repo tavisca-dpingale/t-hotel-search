@@ -520,14 +520,14 @@
       }
     </style>
     <div id="calendar">
-      <div id="months" on-track="_onTrack" class$="{{_contentClass}}" style="width:100%">
-        <template is="dom-repeat" items="{{_months}}" as="month">
+      <div id="months" class$="{{_contentClass}}" style="width:100%">
+        <template is="dom-repeat" items="{{_months}}" as="month" id="monthType">
           <div class$="{{_getMonthClass('month', month)}}">
             <div class="month-row month-name">
               <span>{{dateFormat(month.date, 'MMMM YYYY', locale)}}</span>
             </div>
             <div class="month-row month-weekdays week">
-              <template is="dom-repeat" items="{{_weekdays}}">
+              <template is="dom-repeat" id="weekDay" items="{{_weekdays}}">
                 <div class="month-col layout vertical flex">
                   <div class="day" id="weekday">{{item.0}}</div>
                 </div>
@@ -603,23 +603,6 @@
             value: function () {
               return new Date();
             },
-            // observer: '_dateChanged'
-          },
-          showMonthName: {
-            type: Boolean,
-            value: true
-          },
-
-          scrollToMonth: {
-            type: Number,
-            value: 0
-          },
-          /**
-           *This property set to checkout date after 6 days. 
-           */
-          setCheckOut: {
-            type: Number,
-            value: 6
           },
           /**
            * The current locale
@@ -645,13 +628,13 @@
             value: null
           },
           /**
-           * The currently selected month (1-12)
+           *currently selected month (1-12)
            */
           currentMonth: {
             type: Number
           },
           /**
-           * The currently selected year
+           *currently selected year
            */
           currentYear: {
             type: Number
@@ -660,9 +643,9 @@
           _months: Array,
           _firstDayOfWeek: Number,
           /**
-           * This property is check to first day of week.
-          */
-          checkFirstDayofWeek: String,
+           *To check if given date is first day of week.
+          **/
+          isFirstDayofWeek: String,
         },
         behaviors: [
           Polymer.IronResizableBehavior
@@ -680,6 +663,9 @@
           this.currentYear = this.date.getFullYear();
           this._transitionEvent = this._whichTransitionEnd();
         },
+        /**
+        *To set the month name.
+        **/
         dateFormat: function (date, format, locale) {
           if (!date) {
             return '';
@@ -688,16 +674,9 @@
           value.locale(locale || this.locale);
           return value.format(format);
         },
-        dateFormatMonthName: function (date, format, locale) {
-          if (!date) {
-            return '';
-          }
-          var date = date;
-          date.setDate(date.getDate() + 31);
-          var value = moment(date);
-          value.locale(locale || this.locale);
-          return value.format(format);
-        },
+        /**
+         * To set the locale.
+         **/
         _localeChanged: function (locale) {
           var localeMoment = moment();
           localeMoment.locale(locale);
@@ -705,13 +684,17 @@
           for (var i = 0; i < 7; i++) {
             weekdays.push(localeMoment.weekday(i).format('dd'));
             if (i === 0) {
-              this.checkFirstDayOfWeek = localeMoment.weekday(i).format('dddd');
+              this.isFirstDayOfWeek = localeMoment.weekday(i).format('dddd');
             }
           }
           this._weekdays = weekdays;
           this._firstDayOfWeek = localeMoment.weekday(0).format('d');
-          // this.checkFirstDayOfWeek = localeMoment.weekday(0).format('dddd');
+          var d = localeMoment.weekday(0).format('d');
+          return d;
         },
+        /**
+        * Number of months to preload on both sides of the current month.
+        **/
         _changeMinDate: function () {
           if (this.minDate === null) {
             this.minDate = new Date();
@@ -719,14 +702,16 @@
           if (this.maxDate === null) {
             this.maxDate = new Date(new Date().setFullYear(new Date().getFullYear() + 1));
           }
-          if(this.minDate.getFullYear() === this.maxDate.getFullYear()){
-             var setMinDate = this.maxDate.getMonth() -  this.minDate.getMonth();
-          }else{
-          var setMinDate = (12 - this.minDate.getMonth()) + this.maxDate.getMonth();
+          if (this.minDate.getFullYear() === this.maxDate.getFullYear()) {
+            var setMinDate = this.maxDate.getMonth() - this.minDate.getMonth();
+          } else {
+            var setMinDate = (12 - this.minDate.getMonth()) + this.maxDate.getMonth();
           }
           return setMinDate;
         },
-
+        /**
+         * To render the calendar according to month display.
+         **/
         _populate: function (currentYear, currentMonth) {
 
           var date, month, weeks, day, d, dayInfo, monthData, months = [];
@@ -745,7 +730,7 @@
             this.currentMonth = this.maxDate.getMonth() + 1;
             return;
           }
-        
+
           for (var i = 0; i <= PRELOAD_MONTHS; i++) {
             weeks = [[]];
             day = 1;
@@ -804,15 +789,17 @@
             this._positionSlider();
           });
         },
-      
 
+        /**
+         * To set CSS for selected dates and selected range.
+         **/
         _getDayClass: function (cssClass, date) {
           var startDateDefined = true;
           if (date) {
             if (date < this.today) {
               return cssClass;
             }
-            if(date > this.maxDate){
+            if (date > this.maxDate) {
               return cssClass;
             }
             var startdate = this.domHost.domHost.domHost.querySelector("#start").value;
@@ -910,50 +897,6 @@
               }
             }
 
-            //add 6 days
-
-            var datepick = this.domHost.domHost.domHost.querySelector("#start").value;
-            var datepickend = this.domHost.domHost.domHost.querySelector("#end").value;
-            if (enddate === startdate || datepickend === undefined) {
-              if (datepick === undefined) {
-
-              }
-              else {
-                var newdate = new Date(datepick);
-                newdate.setDate(newdate.getDate() + this.domHost.domHost.domHost.option.date.defaultStayDuration);
-                var maxDt = this.maxDate;
-                maxDt.setHours(0, 0, 0, 0);
-                if (newdate > maxDt) {
-                  newdate = maxDt;
-                }
-                var nd = new Date(newdate);
-                datepick.setHours(0, 0, 0, 0);
-                nd.setHours(0, 0, 0, 0);
-                if (date.getTime() === nd.getTime()) {
-                  cssClass += ' selectlast';
-                  this.async(function () {
-                    this._updateSelection();
-                  });
-                }
-
-                if (date > datepick && date < nd) {
-                  if (checkDayName != checkFirstDayWeek && date.getTime() != checkFirstDayOfMonth.getTime()) {
-                    cssClass += ' selectedRange';
-                    this.async(function () {
-                      this._updateSelection();
-                    });
-                  }
-                }
-                if (date.getTime() === datepick.getTime()) {
-                  cssClass += ' selectfirst';
-                  this.async(function () {
-                    this._updateSelection();
-                  });
-                }
-                var endDate = this.domHost.domHost.domHost.querySelector("#end");
-                endDate.value = nd;
-              }
-            }
             var maxDt = this.maxDate;
             maxDt.setHours(0, 0, 0, 0);
             cssClass = this._removeDuplicateWord(cssClass);
@@ -987,7 +930,9 @@
           }
           return cssClass;
         },
-
+        /**
+         * To remove duplicate css class from element.
+         **/
         _removeDuplicateWord: function (string) {
           var uniqueList = string.split(' ').filter(function (item, i, allItems) {
             return i == allItems.indexOf(item);
@@ -996,22 +941,34 @@
 
           return uniqueList;
         },
+        /**
+         * To check day name.
+         **/
         _checkDayName: function (date) {
           var days = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
           var d = new Date(date);
           var dayName = days[d.getDay()];
           return dayName;
         },
+        /**
+         * To check last day of month.
+         **/
         _checkLastDayofMonth: function (date) {
           var d = new Date(date.getFullYear(), date.getMonth() + 1, 0);
           return d;
         },
+        /**
+         * To check first day of month.
+         **/
         _checkFirstDayofMonth: function (date) {
           var d = new Date(date);
           d.setMonth(d.getMonth(), 1);
           d.setHours(0, 0, 0, 0);
           return d;
         },
+        /**
+         * To check first day of week.
+         **/
         _checkFirstDayofWeek: function (date) {
           var dayName = this.querySelector("#weekday").textContent;
           if (dayName === "M") {
@@ -1021,6 +978,9 @@
             return "Sunday";
           }
         },
+        /**
+         * To check last day of week.
+         **/
         _checkLastDayofWeek: function (date) {
           var dayName = this.querySelector("#weekday").textContent;
           if (dayName === "M") {
@@ -1030,92 +990,19 @@
             return "Saturday";
           }
         },
+        /**
+         * To check disabled dates.
+         **/
         _isDisabled: function (day, date) {
           return !day || !this._withinValidRange(date);
         },
+        
         _getMonthClass: function (name, month) {
           return name + ' month-' + month.year + '-' + month.month;
         },
-        _onTrack: function (event) {
-          var dx = event.detail.dx;
-          var dy = event.detail.dy;
-          var adx = Math.abs(dx);
-          var ady = Math.abs(dy);
-          var width = this._containerWidth;
-
-          switch (event.detail.state) {
-            case 'start':
-              this._trackStartTime = (new Date()).getTime();
-              this._startPos = this._currentPos;
-              this._moveQueue = [];
-              break;
-
-            case 'track':
-              if (this._moveQueue.length >= 4) {
-                this._moveQueue.shift();
-              }
-              this._moveQueue.push(event);
-
-              // ignore movement within WIGGLE_THRESHOLD
-              var distance = (dx * dx) + (dy * dy);
-              if (!this._gesture && distance > WIGGLE_THRESHOLD_SQUARE) {
-                this._gesture = adx > ady ? 'pan-x' : 'pan-y';
-              }
-
-              // only drag during pan-x gesture
-              if (this._gesture !== 'pan-x') {
-                return;
-              }
-
-              this._dragging = true;
-              var fullWidth = width * (this._months.length - 1);
-              var x = this._startPos + dx;
-
-              // If we're dragging outside the bounds, add some resistence
-              if (x > 0 || x <= (-fullWidth + width)) {
-                if (isNaN(parseInt(this._resistStart, 10))) {
-                  this._resistStart = adx;
-                }
-                var rdx = adx - this._resistStart;
-                var p, d, max = RESIST_LENGTH;
-                p = rdx > width ? 1 : rdx / width;
-                d = max * (1 - Math.pow(1 - p, RESIST_FACTOR));
-                x = 0;
-              } else {
-                this._resistStart = null;
-              }
-              this._translateX(x);
-              break;
-
-            case 'end':
-              this._resistStart = null;
-              var lastIdx = this._getMonthIdx(this._startPos);
-              var idx = this._getMonthIdx(this._currentPos);
-              var lastIdx = this._getMonthIdx(this._startPos);
-              var idx = this._getMonthIdx(this._currentPos);
-              var speed = this._getFastestMovement(event).v;
-              var move = idx !== lastIdx || speed > FLICK_SPEED;
-      
-              if (mq) {
-                if (!this._resistStart && this._gesture === 'pan-y') {
-                  if (speed > FLICK_SPEED) {
-                    // calculate an ideal transition duration based on current speed of swipe
-                    var remainingDistance = width - adx;
-                    var newDuration = remainingDistance / speed;
-                    if (newDuration > 300) {
-                      newDuration = 300;
-                    }
-                    this._transitionDuration = newDuration;
-                  }
-
-                } else {
-                  this._translateX(this._startPos, 'reset');
-                }
-                this._gesture = null;
-              }
-          }
-        },
-
+        /**
+         * To swipe on previous month after clicking on back arrow.
+         **/
         _swipePrevMonth: function () {
           var startDate = this.domHost.domHost.domHost.querySelector("#start");
           var endDate = this.domHost.domHost.domHost.querySelector("#end");
@@ -1130,86 +1017,33 @@
             this.fire('swiped', { direction: 'right' });
           }
         },
+        /**
+         * To swipe on next month after clicking on next arrow.
+         **/
         _swipeNextMonth: function () {
           if (!this.maxDate || this.currentYear < this.maxDate.getFullYear() || this.currentMonth < this.maxDate.getMonth() + 1) {
             this.fire('swiped', { direction: 'left' });
           }
-        },
-        _getMonthIdx: function (pos) {
-          // returns the index for the visible month according to the given position
-          var width = this._containerWidth;
-          var i = Math.floor((-pos + (width / 2)) / width);
-          return i < 0 ? 0 : i;
-        },
-        _translateX: function (x, transition, cb) {
-          if (isNaN(parseInt(x, 10))) {
-            // throw new Error('Not a number: ' + x);
+          else{
+            return;
           }
-          this._currentPos = x;
-          if (transition) {
-            if (this._transitionDuration) {
-              this.$.months.style.transitionDuration = this._transitionDuration + 'ms';
-            }
-            this._once(this._transitionEvent, function () {
-              this.set('_contentClass', '');
-              this.$.months.style.transitionDuration = '';
-              this._transitionDuration = null;
-              this.$.monthNav.style.removeProperty('opacity');
-              if (cb) {
-                cb();
-              }
-            }.bind(this), this.$.months);
-            this.set('_contentClass', 'animating ' + transition);
-            this.$.monthNav.style.removeProperty('opacity');
-            // Fixes odd bug in chrome where we lose touch-events after changing opacity
-            this._once('touchstart', function () { });
-          }
-          window.requestAnimationFrame(function () {
-            if (!transition) {
-              var halfWidth = this._containerWidth / 2;
-              var dx = Math.abs(this._startPos - x);
-              var p = (1 - (dx / halfWidth)) * 100;
-              p = (100 - Math.pow(p, 2)) / 100 / 100;
-              var opacity = Math.abs(parseFloat(p).toFixed(2));
-              this.$.monthNav.style.opacity = opacity;
-            }
-            this.transform('translateX(' + x + 'px)', this.$.months);
-          }.bind(this));
         },
-       
-        _getFastestMovement: function (event) {
-          // detect flick based on fastest segment of movement
-          var l = this._moveQueue.length;
-          var dt, tx, ty, tv2, x = 0, y = 0, v2 = 0;
-          for (var i = 0, m; i < l && (m = this._moveQueue[i]); i++) {
-            dt = event.timeStamp - m.timeStamp;
-            tx = (event.detail.x - m.detail.x) / dt;
-            ty = (event.detail.y - m.detail.y) / dt;
-            tv2 = tx * tx + ty * ty;
-            if (tv2 > v2) {
-              x = tx;
-              y = ty;
-              v2 = tv2;
-            }
-          }
-          return { x: x, y: y, v: Math.sqrt(v2) };
-        },
+        /**
+         * This function works as listener swipe.
+         **/
         _onSwipe: function (event) {
           if (event.detail.direction === 'right') {
             this._prevMonth();
+            return true;
           }
           else {
             this._nextMonth();
+            return true;
           }
         },
-        _once: function (eventName, callback, node) {
-          node = node || this;
-          function onceCallback() {
-            node.removeEventListener(eventName, onceCallback);
-            callback.apply(null, arguments);
-          }
-          node.addEventListener(eventName, onceCallback);
-        },
+        /**
+         * To increase or decrease next month and previous month.
+         **/
         _incrMonth: function (i) {
           var date = new Date(this.currentYear, this.currentMonth - 1 + i);
           var year = date.getFullYear();
@@ -1219,13 +1053,21 @@
             this.currentMonth = month;
           }
         },
+         /**
+         * To decrease previous month.
+         **/
         _prevMonth: function () {
           this._incrMonth(-1);
         },
+         /**
+         * To increase next month.
+         **/
         _nextMonth: function () {
           this._incrMonth(1);
         },
-
+         /**
+         * To select dates after clicking or tapping on date.
+         **/
         _tapDay: function (event) {
           var startDate = this.domHost.domHost.domHost.querySelector("#start");
           var endDate = this.domHost.domHost.domHost.querySelector("#end");
@@ -1250,22 +1092,32 @@
           this.date = newDate;
           if (this.domHost.domHost.id === "start") {
             startDate.value = newDate;
-             if(mq){ 
-              endDate.minDate = startDate.value;
-              //  var setMax =startDate.value;
-              // var setMaxDate = new Date();
-              // setMaxDate.setDate(setMax.getDate() + this.domHost.domHost.domHost.option.date.maxStayDuration);
-              // endDate.maxDate = setMaxDate; 
-              endDate._showDialog();            
-          }
-          else{
-             endDate.minDate = startDate.value;
-              // var setMax =startDate.value;
-              // var setMaxDate = new Date();
-              // setMaxDate.setDate(setMax.getDate() + this.domHost.domHost.domHost.option.date.maxStayDuration);
-              // endDate.maxDate = setMaxDate; 
-              endDate._showDialog(); 
-          }
+            if(endDate.value === undefined || startDate.value > endDate.value){
+              var startDateValue = new Date(startDate.value);
+              startDateValue.setDate(startDateValue.getDate() + this.domHost.domHost.domHost.option.date.defaultStayDuration);
+              var maxDt = this.maxDate;
+                maxDt.setHours(0, 0, 0, 0);
+                if (startDateValue > maxDt) {
+                  endDate.value = maxDt;
+                }
+                else{
+              endDate.value = startDateValue;
+                }
+            }
+                endDate.minDate = startDate.value;
+                var setCheckOutMin = startDate.value;
+                var setMax = new Date(setCheckOutMin);
+                setMax.setDate(setCheckOutMin.getDate() + this.domHost.domHost.domHost.option.date.maxStayDuration);
+                 if(setMax < this.maxDate){
+                endDate.maxDate = setMax;
+                }
+                else{
+                  endDate.maxDate = this.maxDate;
+                }
+                endDate._showDialog();
+                    if( endDate.value > setMax){
+                  endDate.value = setMax;
+                }
             if (startDate.value > endDate.value) {
               endDate.value = newDate;
             }
@@ -1284,7 +1136,7 @@
               this._populate(endDate.value.getFullYear(), endDate.value.getMonth() + 1);
             }
             else {
-              this._populate(startDate.value.getFullYear(), startDate.value.getMonth() + 1);
+              this._populate(endDate.value.getFullYear(), endDate.value.getMonth());
             }
           }
 
@@ -1295,60 +1147,71 @@
           }
         },
 
-
+         /**
+         * To check date is valid or not.
+         **/
         _isValidDate: function (date) {
           return date && date.getTime && !isNaN(date.getTime());
         },
+         /**
+         *To check date is within valid range or not. 
+         **/
         _withinValidRange: function (date) {
           if (this._isValidDate(date)) {
             return (!this.minDate || date >= this.minDate) && (!this.maxDate || date <= this.maxDate);
           }
           return false;
         },
+        /**
+         * To check month is within valid range or not.
+         **/
         _monthWithinValidRange: function (year, month) {
           var monthStart = new Date(year, month - 1, 1);
           var monthEnd = new Date(year, month, 0);
           return this._withinValidRange(monthStart) || this._withinValidRange(monthEnd);
         },
+        
         _positionSlider: function () {
           if (!this._months || !this._containerWidth) {
             return;
           }
-
-            var i = ((this.currentYear * 12) + this.currentMonth) -
-              ((this._months[0].year * 12) + this._months[0].month);
-            this._translateX(0 * this._containerWidth);
-  
         },
+        /**
+         * To update the selected dates and css class.
+         **/
+        
         _updateSelection: function () {
           // Force the day selection circle to maintain a 1:1 ratio
-           this.async(function () {
-          var selected = this.$$('.selected');
-          if (!selected) {
-            return;
-          }
-          selected.style.height = '';
-          selected.style.width = '';
-          var w = selected.parentElement.offsetWidth;
-          var h = selected.parentElement.offsetHeight;
-          selected.style.flex = '';
-          window.requestAnimationFrame(function () {
-            if (w > 0 && w < h) {
-              selected.style.height = h + 'px';
+          this.async(function () {
+            var selected = this.$$('.selected');
+            if (!selected) {
+              return;
             }
-            else if (h > 0) {
-              selected.style.width = w + 'px';
-            }
-          });
-           });
-        },
-        _resizeHandler: function () {
-            this.async(function () {
-          this._containerWidth = this.$.calendar.offsetWidth;
-          // this._positionSlider();
-          this._updateSelection();
+            selected.style.height = '';
+            selected.style.width = '';
+            var w = selected.parentElement.offsetWidth;
+            var h = selected.parentElement.offsetHeight;
+            selected.style.flex = '';
+            window.requestAnimationFrame(function () {
+              if (w > 0 && w < h) {
+                selected.style.height = h + 'px';
+              }
+              else if (h > 0) {
+                selected.style.width = w + 'px';
+              }
             });
+          });
         },
+        
+        _resizeHandler: function () {
+          this.async(function () {
+            this._containerWidth = this.$.calendar.offsetWidth;
+            this._updateSelection();
+          });
+        },
+        /**
+         * To get the name of name.
+         **/
         _getDayName: function (date) {
           return date.getFullYear() + '-' + (date.getMonth() + 1) + '-' + date.getDate();
         },
