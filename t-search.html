@@ -141,12 +141,17 @@ The form handles below mentioned scenarios on its own.
                 <paper-dropdown-menu on-tap="_dismisCard" required auto-validate error-message="Required Field" class="suggestions" id="deskinput1"
                   readonly on-keydown="_tabPress">
                   <paper-listbox class="dropdown-content" id="listbox" selected="{{choice}}">
-                    <paper-item class="trvellerItem" id="adult1Room1" count-adult="1" count-room="1">1 Adult in 1 Room</paper-item>
+                    <template is='dom-repeat' items='{{choices}}'>
+                      <paper-item class="trvellerItem" id="adult{{item.adult}}Room1" count-adult$="{{item.adult}}" count-room$="{{item.room}}"
+                        value="{{item}}">{{item.adult}} Adults in {{item.room}} Room</paper-item>
+                    </template>
+                    <paper-item on-tap="_openChildForm" id="needRoom" class="trvellerItem">Need more rooms or have children? </paper-item>
+                    <!--<paper-item class="trvellerItem" id="adult1Room1" count-adult="1" count-room="1">1 Adult in 1 Room</paper-item>
                     <paper-item class="trvellerItem" id="adult2Room1" count-adult="2" count-room="1">2 Adults in 1 Room</paper-item>
                     <paper-item class="trvellerItem" id="adult3Room1" count-adult="3" count-room="1">3 Adults in 1 Room</paper-item>
                     <paper-item class="trvellerItem" id="adult4Room1" count-adult="4" count-room="1">4 Adults in 1 Room</paper-item>
                     <paper-item class="trvellerItem" id="adult5Room1" count-adult="1,1" count-room="2">2 Adults in 2 Rooms</paper-item>
-                    <paper-item on-tap="_openChildForm" id="needRoom" class="trvellerItem">Need more rooms or have children? </paper-item>
+                    <paper-item on-tap="_openChildForm" id="needRoom" class="trvellerItem">Need more rooms or have children? </paper-item>-->
                   </paper-listbox>
                 </paper-dropdown-menu>
                 <input id="travellerInput" is="iron-input" type="hidden" bind-value="[[choice]]">
@@ -268,11 +273,15 @@ The form handles below mentioned scenarios on its own.
 
         choice: {
           type: String,
-          value: 0
+          value:0
+        },
+
+        choices:{
+          type:Array
         },
         /**
          * This property is used to set search option.
-         **/ 
+         **/
         option: {
           type: Object,
           value: {
@@ -311,7 +320,7 @@ The form handles below mentioned scenarios on its own.
         },
         /**
          * This property is used to set search localized resources.
-         **/ 
+         **/
         resources: {
           type: Object,
           value: {
@@ -394,24 +403,23 @@ The form handles below mentioned scenarios on its own.
         }
       },
 
-      /*      
-      * Function to handle keypress event of datepicker.
-      * It's prevent user from typing.
-      **/
-
-      _keypress: function (event) {
-        var regex = new RegExp("^[a-zA-Z0-9]+$");
-        var key = String.fromCharCode(!event.charCode ? event.which : event.charCode);
-        if (regex.test(key)) {
-          event.preventDefault();
-          return false;
+       _choices: function () {
+        var childArray = new Array();
+        var maximumChild = this.option.traveller.defaultSelectOption.length;
+        for (i = 0; i < maximumChild; i++) {
+          var dropDownOption = this.option.traveller.defaultSelectOption[i].room;
+          if(dropDownOption <= this.option.maxRoomCount){
+          childArray.push(this.option.traveller.defaultSelectOption[i]);
+          } 
         }
+        this.choices = childArray;
+        return childArray;
       },
 
       /**
        * This function is used to set min date for check in datepicker.
        * It returns the min date as today.
-       **/ 
+       **/
       _setMinDate: function (checkInAllowFromNow) {
         var setMinDatetoToday = new Date();
         setMinDatetoToday.setDate(setMinDatetoToday.getDate() - 1 + checkInAllowFromNow);
@@ -452,7 +460,7 @@ The form handles below mentioned scenarios on its own.
       },
       /**
        * This function is used for up and down arrow key press on drop down menu.
-       **/ 
+       **/
       _tabPress: function (e) {
         if (e.keyCode == 38 || e.keyCode == 40) {
           var pCard = Polymer.dom(this.$.paperCard).node;
@@ -488,7 +496,7 @@ The form handles below mentioned scenarios on its own.
         }
         if (mq && this.showDatePicker == true) {
           this.showDatePicker = !this.showDatePicker;
-        }       
+        }
       },
 
       /**
@@ -503,7 +511,7 @@ The form handles below mentioned scenarios on its own.
           this.querySelector("#deskinput1").style.display = "none";
           this.querySelector("#Button").style.display = "none";
         }
-        this.$.needRoom.textContent = "1 Adult in 1 Room";
+         this.$.needRoom.textContent = "1 Adult in 1 Room";
         var pCard = Polymer.dom(this.$.paperCard).node;
         pCard.style.display = 'block';
 
@@ -515,7 +523,7 @@ The form handles below mentioned scenarios on its own.
         var tBar = Polymer.dom(this.$.toolbarRoom).node;
         tBar.style.display = 'block';
         var toolbarSpan = this.querySelector("#choiceCard").querySelector("#choiceRoom");
-        this.choice = 5;
+        this.choice = this.choices.length;
         toolbarSpan._calResultOfRoom();
         if (mq && this.showToolbar == true) {
           this.showToolbar = !this.showToolbar;
@@ -524,6 +532,11 @@ The form handles below mentioned scenarios on its own.
         if (mq) {
           this.querySelector("#toolbarRoom");
         }
+        var Choicecard =this.querySelector("#choiceCard");
+         Choicecard.querySelector("#button1").style.visibility = "visible";
+        if(Choicecard.roomCount >= this.option.maxRoomCount){
+          Choicecard.querySelector("#button1").style.visibility = "hidden";
+        }
       },
       /**
       * Function called upon done button click for travellers form on mobile screen.
@@ -531,11 +544,11 @@ The form handles below mentioned scenarios on its own.
 
       _doneRoomCard: function () {
         this.doneRoomCard = true;
-        this._styleForBackToMainToolbar();
         var card = this.querySelector("#choiceCard");
         var validData = card._doneRoom();
         this.querySelector("#menuButton").querySelector("#input").value = this.doneRoomCardOutput;
         if (validData == true) {
+          this._styleForBackToMainToolbar();
           Polymer.dom(this.$.toolbarRoom).node.style.display = "none";
           this.querySelector("#paperCard").style.display = "none";
         }
@@ -556,7 +569,7 @@ The form handles below mentioned scenarios on its own.
       * Function called upon done button click for calendar on mobile screen.
       **/
       _doneDatePicker: function () {
-        this.doneDatePicker = true;        
+        this.doneDatePicker = true;
         this._showDateToolbarFun();
         doneStartDate = this.querySelector("#start").value;
         doneEndDate = this.querySelector("#end").value;
@@ -608,15 +621,15 @@ The form handles below mentioned scenarios on its own.
         }
         this.querySelector("#end").querySelector(".underline").style.border = "none";
         this.querySelector("#start").querySelector("#dialog").style.display = "block";
-         if (startDateValue.value === undefined) {
-            this.querySelector("#calendar").children[0].scrollTop = 0;
-          }
-           this.querySelector("#start").querySelector("#dialog").style.display = "none";
+        if (startDateValue.value === undefined) {
+          this.querySelector("#calendar").children[0].scrollTop = 0;
+        }
+        this.querySelector("#start").querySelector("#dialog").style.display = "none";
       },
 
       /**
        * This is supportive function to maintain style of datepicker toolbar in mobile view.
-       **/ 
+       **/
       _showDateToolbarFun: function () {
         this.showTravellersCard = true;
         this.showToolbar = true;
@@ -695,13 +708,13 @@ The form handles below mentioned scenarios on its own.
           this.querySelector("#autoInput").invalid = true;
           this.$.start.invalid = true;
           this.$.end.invalid = true;
-           this.querySelector("#start").querySelector("#paper-input-label-1").style.color = "lightgray";
+          this.querySelector("#start").querySelector("#paper-input-label-1").style.color = "lightgray";
           this.querySelector("#end").querySelector("#paper-input-label-2").style.color = "lightgray";
         }
         else if (data[1] == undefined && data[2] == undefined) {
           this.$.start.invalid = true;
           this.$.end.invalid = true;
-           this.querySelector("#start").querySelector("#paper-input-label-1").style.color = "lightgray";
+          this.querySelector("#start").querySelector("#paper-input-label-1").style.color = "lightgray";
           this.querySelector("#end").querySelector("#paper-input-label-2").style.color = "lightgray";
         }
         else if (data[0] == "") {//show error        
@@ -709,10 +722,11 @@ The form handles below mentioned scenarios on its own.
         }
         else {
           var card = this.querySelector("#choiceCard");
-          if (this.choice >= 0 && this.choice <= 4 && !mq) {
+          var totalDDOption = this.option.traveller.defaultSelectOption.length;
+          if (this.choice >= 0 && this.choice < totalDDOption && !mq) {
             var roomC = this.querySelector("#choiceCard").roomCount;
-            for (var i = 0; i < roomC; i++) {              
-              this.querySelectorAll("#choiceRoom")[i].querySelector("#child").querySelector("#listBox").selected = 0;              
+            for (var i = 0; i < roomC; i++) {
+              this.querySelectorAll("#choiceRoom")[i].querySelector(".inputChildCount").querySelector("#listBox").selected = 0;
             }
           }
           var validData = card._doneRoom();
@@ -792,6 +806,8 @@ The form handles below mentioned scenarios on its own.
       ready: function () {
         var ckeckMin = this.option.date.checkInAllowFromNow;
         this._setMinDate(ckeckMin);
+           var travelDD = this.option.traveller.defaultSelectOption;
+        this._choices(travelDD);
         mqu = this.mediumTablet;
         mq = this.mobilePhone;
         mql = this.tabletView;

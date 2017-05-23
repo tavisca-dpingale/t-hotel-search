@@ -24,6 +24,16 @@
       --background-img-for-today-date: url('../t-input-date-picker/todayCircle.svg');
     }
   </style>
+  <style>
+    body {
+      margin: 0;
+    }
+    * {
+        -webkit-box-sizing: border-box;
+        -moz-box-sizing: border-box;
+        box-sizing: border-box;
+    }
+    </style>
 
 </head>
 
@@ -34,14 +44,14 @@
       auto>
     </t-mystique-auth>
     <t-search option='{"traveller": {
-		"minAdultCount": 1,
-		"maxAdultCount": 6,
+		"minAdultCount": 2,
+		"maxAdultCount": 8,
 		"minChildCount": 0,
-		"maxChildCount": 6,
-		"totalRoomPaxCount": 6,
+		"maxChildCount": 5,
+		"totalRoomPaxCount": 7,
 		"minChildAge": 0,
 		"maxChildAge": 12,
-		"defaultAdultCount": 2,
+		"defaultAdultCount": 1,
 		"defaultChildCount": 0,
 		"defaultSelectOption": [{
 			"room": 1,
@@ -57,7 +67,7 @@
 			"adult": 5
 		}]
 	},
-	"maxRoomCount": 6,
+	"maxRoomCount": 10,
 	"date": {
 		"checkInAllowFromNow": 0,
 		"maxStayDuration": 30,

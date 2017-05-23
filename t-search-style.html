@@ -57,31 +57,43 @@
         }
         ;
       }
+      
       #deskinput {
         height: 80px;
       }
+      
       #location {
         height: 0px;
       }
-      #start1, #end1, #travellField, #Button {
+      
+      #start1,
+      #end1,
+      #travellField,
+      #Button {
         height: 80px;
       }
+      
       #paperCard {
         z-index: 3;
       }
-      #toolbarRoom{
+      
+      #toolbarRoom {
         height: 80px;
       }
+      
       #backButtonRoom {
         color: lightgray;
       }
+      
       #toolbarDatePicker {
         height: 70px;
       }
+      
       #backButtonDatepicker {
         color: lightgray;
         float: left;
       }
+      
       #backButtonAutoSuggest {
         z-index: 1;
       }
@@ -132,6 +144,7 @@
         color: var(--button-color-for-rooms);
         float: right;
         margin-top: 3px;
+        margin-right: -9px;
         z-index: 2;
       }
       
@@ -152,7 +165,7 @@
           position: absolute !important;
           width: 100%;
           top: 53px !important;
-          min-height: 240px; 
+          min-height: 240px;
         }
         ;
       }
@@ -207,12 +220,11 @@
       }
       
       .item[mobileView] #listbox {
-        height: 240px;
-          min-height: 240px;
+        min-height: 210px;
       }
       
       .item[smallMobileView] #listbox {
-        height: 240px;
+        height: 210px;
       }
       
        :host .item[largeDesktopView] {
@@ -531,6 +543,152 @@
       .item[largeDEsktopViewIE] .trvellerItem {
         font-size: 15px;
         margin-top: -4px;
+      }
+      /****
+
+***/
+      
+      @media (min-width: 1200px) {
+        .container {
+          width: 1170px;
+        }
+      }
+      
+      .col-md-1,
+      .col-lg-1,
+      .col-sm-2,
+      .col-lg-2,
+      .col-sm-3,
+      .col-md-3,
+      .col-lg-3,
+      .col-sm-4,
+      .col-md-5,
+      .col-lg-5,
+      .col-xs-6,
+      .col-xs-12,
+      .col-sm-12 {
+        position: relative;
+        min-height: 1px;
+        padding-right: 15px;
+        padding-left: 15px;
+      }
+      
+      .item[smallMobileView] .col-xs-6,
+      .col-xs-12 {
+        float: left;
+      }
+      
+      .item[smallMobileView] .col-xs-12 {
+        width: 100%;
+      }
+      /*.item[smallMobileView] .row {
+          position: fixed;
+    }*/
+      
+      .item[smallMobileView] .col-xs-6 {
+        width: 50%;
+      }
+      
+      .item[MobileView] .col-xs-6,
+      .col-xs-12 {
+        float: left;
+      }
+      
+      .item[MobileView] .col-xs-12 {
+        width: 100%;
+      }
+      
+      .item[MobileView] .col-xs-6 {
+        width: 50%;
+      }
+      /*.item[MobileView] .row {
+          position: fixed;
+    }*/
+      
+      .item[TabletView] .col-sm-2,
+      .col-sm-3,
+      .col-sm-4,
+      .col-sm-12 {
+        float: left;
+      }
+      
+      .item[TabletView] .col-sm-12 {
+        width: 100%;
+      }
+      
+      .item[TabletView] .col-sm-4 {
+        width: 33.33333333%;
+      }
+      
+      .item[TabletView] .col-sm-3 {
+        width: 25%;
+      }
+      
+      .item[TabletView] .col-sm-2 {
+        width: 16.66666667%;
+      }
+      
+      .item[DesktopView] .col-md-1,
+      .col-md-3,
+      .col-md-5 {
+        float: left;
+      }
+      
+      .item[DesktopView] .col-md-5 {
+        width: 40.66666667%;
+      }
+      
+      .item[DesktopView] .col-md-3 {
+        width: 24%;
+      }
+      
+      .item[DesktopView] .col-md-1 {
+        width: 11.73333333%;
+      }
+      
+      .item[largeDesktopView] .col-lg-1,
+      .col-lg-2,
+      .col-lg-3,
+      .col-lg-5 {
+        float: left;
+      }
+      
+      .item[largeDesktopView] .col-lg-5 {
+        width: 41.66666667%;
+      }
+      
+      .item[largeDesktopView] .col-lg-3 {
+        width: 25%;
+      }
+      
+      .item[largeDesktopView] .col-lg-2 {
+        width: 16.66666667%;
+      }
+      
+      .item[largeDesktopView] .col-lg-1 {
+        width: 9.33333333%;
+      }
+      
+      @media screen and (-ms-high-contrast: active),
+      (-ms-high-contrast: none) {
+        .col-lg-1,
+        .col-lg-2,
+        .col-lg-3,
+        .col-lg-5 {
+          float: left;
+        }
+        .col-lg-5 {
+          width: 41.66666667%;
+        }
+        .col-lg-3 {
+          width: 25%;
+        }
+        .col-lg-2 {
+          width: 16.66666667%;
+        }
+        .col-lg-1 {
+          width: 9.33333333%;
+        }
       }
     </style>
   </template>

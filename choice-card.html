@@ -24,43 +24,53 @@ The form handles below mentioned scenarios on its own.
              :host {
                 display: block;
             }
-
+            
             .hidden {
                 display: none;
             }
-
+            
             .unhidden {
                 display: block;
             }
-
+            
             #errfn {
                 color: red;
+                position: absolute;
+                width: 100%;
+                margin-top: -17px;
             }
-
+            
+            #countError {
+                width: 100%;
+                height: 12px;
+                float: left;
+                display: none;
+            }
+            
             #linePaper {
                 width: 92%;
                 float: left;
             }
-
+            
             #paperMaterial {
                 background-color: whitesmoke;
                 width: 500px;
             }
-
+            
             #formDiv {
                 float: left;
                 width: 100%;
             }
-
+            
             #delButton {
                 height: 35px;
                 width: 35px;
             }
-
+            
             #button1 {
                 position: relative;
             }
-
+            
             @media (min-width: 768px) and (max-width: 1024px) {
                 .head {
                     float: left;
@@ -70,7 +80,6 @@ The form handles below mentioned scenarios on its own.
                     height: 40px;
                 }
                 .button {
-                    margin-top: -115px;
                     padding: 0px 0px;
                 }
                 .buttons {
@@ -107,14 +116,15 @@ The form handles below mentioned scenarios on its own.
                 }
                 #deleteButton {
                     float: right;
-                    margin-right: 10px;
+                    margin-right: -15px;
+                    margin-top: -60px;
                 }
                 #linePaper {
                     width: 85%;
                     float: left;
                 }
             }
-
+            
             @media (max-width: 767px) {
                 .head {
                     float: left;
@@ -137,6 +147,7 @@ The form handles below mentioned scenarios on its own.
                 #deleteButton {
                     float: right;
                     margin-top: -50px;
+                    margin-right: -35px;
                 }
                 #line {
                     width: 100%;
@@ -152,7 +163,7 @@ The form handles below mentioned scenarios on its own.
                     color: silver;
                 }
             }
-
+            
             @media (min-width: 1024px) and (max-width:2200px) {
                 .head {
                     float: left;
@@ -162,6 +173,7 @@ The form handles below mentioned scenarios on its own.
                 }
                 .button {
                     margin-top: -20px;
+                    margin-right: -20px;
                     padding: 0px 0px;
                 }
                 .buttons {
@@ -201,7 +213,7 @@ The form handles below mentioned scenarios on its own.
                     color: silver;
                 }
             }
-
+            
             @media all and (-ms-high-contrast:none) {
                 .head {
                     float: left;
@@ -249,7 +261,7 @@ The form handles below mentioned scenarios on its own.
                                     <img src="trash.svg" height="15px" width="15px">
                                 </paper-button>
                             </paper-item>
-                            <div id="errfn"></div>
+                            <div id="countError"><span id="errfn"></span></div>
                         </div>
                         <choice-form room="{{_displayIndex(index)}}" id="choiceRoom">{{ item.room }}</choice-form>
                     </template>
@@ -429,6 +441,7 @@ The form handles below mentioned scenarios on its own.
                 var form = this.querySelector("#choiceRoom");
                 form._calResultOfRoom(e.model.index);
                 this.roomCount = this.roomCount - 1;
+                 this.querySelector("#button1").style.visibility = "visible";
             },
             /**
             *Function works for delete button .
@@ -525,6 +538,7 @@ The form handles below mentioned scenarios on its own.
             **/
 
             _doneRoom: function (event) {
+                this.querySelector("#button1").style.visibility = "hidden";
                 inputAdultCount = this.domHost.querySelectorAll(".inputAdultCount");
                 inputChildCount = this.domHost.querySelectorAll(".inputChildCount");
                 var dataAdult = [];
@@ -590,10 +604,11 @@ The form handles below mentioned scenarios on its own.
                     var dataArray = [];
                     var travellersdata = [];
                     var choiceDropdown = this.domHost.choice;
+                    var totalDDOption = this.domHost.choices.length;
 
-                    if (choiceDropdown >= 0 && choiceDropdown < 5) {
-                        var dropdownSelectionAdult = this.domHost.querySelector("#adult" + (choiceDropdown + 1) + "Room1").getAttribute("count-adult");
-                        roomCount = this.domHost.querySelector("#adult" + (choiceDropdown + 1) + "Room1").getAttribute("count-room");
+                    if (choiceDropdown >= 0 && choiceDropdown < totalDDOption) {
+                        var dropdownSelectionAdult = this.domHost.querySelector("#deskinput1").querySelector("#listbox").selectedItem.getAttribute("count-adult");
+                        roomCount = this.domHost.querySelector("#deskinput1").querySelector("#listbox").selectedItem.getAttribute("count-room");
                         dataAdult = dropdownSelectionAdult.split(",");
                         dataChild = 0;
                     }

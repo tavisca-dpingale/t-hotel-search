@@ -61,7 +61,34 @@ The form handles below mentioned scenarios on its own.
                 overflow-x: none;
             }
 
-            @media (min-width:1024px) and (max-width:2200px) {
+            @media (min-width:1024px) and (max-width:1200px) {
+                #Adult {
+                    width: 16%;
+                    float: left;
+                    float: clear;
+                    /*margin-top: -12px;*/
+                    margin-left: 2%;
+                }
+                .childs {
+                    width: 16%;
+                    float: left;
+                    margin-left: 2%;
+                    float: clear;
+                    /*margin-top: -12px;*/
+                }
+                .childs1 {
+                    width: 18%;
+                    float: left;
+                    margin-left: 2%;
+                    float: clear;
+                    /*margin-top: -12px;*/
+                }
+                .container1 {
+                    width: 100%;
+                    margin-left: 5px;
+                }
+            }
+             @media (min-width:1200px) and (max-width:2200px) {
                 #Adult {
                     width: 16%;
                     float: left;
@@ -89,12 +116,12 @@ The form handles below mentioned scenarios on its own.
                 }
             }
 
-            @media (min-width:600px) and (max-width:1024px) {
+            @media (min-width:600px) and (max-width:1023px) {
                 #Adult {
                     width: 16%;
                     float: left;
                     float: clear;
-                    margin-top: -12px;
+                    /*margin-top: -12px;*/
                     margin-left: 2%;
                 }
                 .childs {
@@ -102,14 +129,14 @@ The form handles below mentioned scenarios on its own.
                     float: left;
                     margin-left: 2%;
                     float: clear;
-                    margin-top: -12px;
+                    /*margin-top: -12px;*/
                 }
                 .childs1 {
                     width: 18%;
                     float: left;
                     margin-left: 2%;
                     float: clear;
-                    margin-top: -12px;
+                    /*margin-top: -12px;*/
                 }
                 .container1 {
                     width: 100%;
@@ -486,9 +513,11 @@ The form handles below mentioned scenarios on its own.
                     var totalRoomPaxCount = this.domHost.domHost.option.traveller.totalRoomPaxCount;
                     if (totalCount > totalRoomPaxCount) {
                         this.domHost.querySelectorAll(".head")[i].querySelector("#errfn").innerHTML = "Maximum Paxcount " + '' + totalRoomPaxCount;
+                        this.domHost.querySelectorAll(".head")[i].querySelector("#countError").style.display ="block";
                     }
                     else {
                         this.domHost.querySelectorAll(".head")[i].querySelector("#errfn").innerHTML = "";
+                         this.domHost.querySelectorAll(".head")[i].querySelector("#countError").style.display ="none";
                     }
                 }
             },
@@ -550,7 +579,8 @@ The form handles below mentioned scenarios on its own.
                     spanData = spanData + ' in ' + finalRoomCount + ' Rooms';
                 }
                 var dropdownChoice = this.domHost.domHost.choice;
-                if (dropdownChoice >= 0 && dropdownChoice < 5) {
+                var totalDDOption = this.domHost.domHost.choices.length;
+                if (dropdownChoice >= 0 && dropdownChoice < totalDDOption) {
                     return false;
                 } else {
                     var deskOut = this.domHost.domHost.querySelector("#menuButton");
@@ -568,7 +598,7 @@ The form handles below mentioned scenarios on its own.
                     div.style.textAlign = "center";
                     div.style.position = "relative";
                     div.style.height = "50px";
-                    div.style.marginLeft = "30px";
+                    div.style.marginLeft = "21px";
                     div.style.width = "250px";
                     div.style.top = "-20px";
                     div.style.fontSize = "15px";
