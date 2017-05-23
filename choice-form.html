@@ -210,14 +210,14 @@ The form handles below mentioned scenarios on its own.
                             </template>
                         </paper-listbox>
                     </paper-dropdown-menu>
-                    <div id="size">(0-11 Years)</div>
+                    <div id="size">({{minChildAge}}-{{maxChildAge}} Years)</div>
                     <input is="iron-input" type="hidden" bind-value="[[countChildren]]">
                 </div>
 
-                <template is='dom-repeat' items='{{ children }}'>
+                <template is='dom-repeat' items='{{ children }}' id="childAge">
                     <div class="childs1">
                         <paper-dropdown-menu on-tap="_ageLabelShow" on-keydown="_tabPress" class="ageOfChild" required auto-validate error-message="Enter age"
-                            label="{{childAgeLabel}}{{_childIndex(index)}}" id="child{{_childID(index)}}">
+                            label="{{childAgeLabel}} {{_childIndex(index)}}" id="child{{_childID(index)}}">
                             <paper-listbox id="listBox" class="dropdown-content">
                                 <template is='dom-repeat' items='{{childAgeCountInRoom}}'>
                                     <paper-item value="{{item}}">{{item}}</paper-item>
@@ -279,7 +279,7 @@ The form handles below mentioned scenarios on its own.
                         var childArray = new Array();
                         var minimumAdult = this.dataHost.dataHost.domHost.domHost.option.traveller.minAdultCount;
                         var maximumAdult = this.dataHost.dataHost.domHost.domHost.option.traveller.maxAdultCount;
-                        for (i = minimumAdult; i < maximumAdult; i++) {
+                        for (i = minimumAdult; i <= maximumAdult; i++) {
                             childArray.push(i);
                         }
                         return childArray;
@@ -295,7 +295,7 @@ The form handles below mentioned scenarios on its own.
                         var childArray = new Array();
                         var minimumChild = this.dataHost.dataHost.domHost.domHost.option.traveller.minChildCount;
                         var maximumChild = this.dataHost.dataHost.domHost.domHost.option.traveller.maxChildCount;
-                        for (i = minimumChild; i < maximumChild; i++) {
+                        for (i = minimumChild; i <= maximumChild; i++) {
                             childArray.push(i);
                         }
                         return childArray;
@@ -311,10 +311,24 @@ The form handles below mentioned scenarios on its own.
                         var childArray = new Array();
                         var minimumChildAge = this.dataHost.dataHost.domHost.domHost.option.traveller.minChildAge;
                         var maximumChildAge = this.dataHost.dataHost.domHost.domHost.option.traveller.maxChildAge;
-                        for (i = minimumChildAge; i < maximumChildAge; i++) {
+                        for (i = minimumChildAge; i <= maximumChildAge; i++) {
                             childArray.push(i);
                         }
                         return childArray;
+                    }
+                },
+                minChildAge: {
+                    type: Number,
+                    value: function () {
+                        var minimumAge = this.dataHost.dataHost.domHost.domHost.option.traveller.minChildAge;
+                        return minimumAge;
+                    }
+                },
+                maxChildAge: {
+                    type: Number,
+                    value: function () {
+                        var maximumAge = this.dataHost.dataHost.domHost.domHost.option.traveller.maxChildAge;
+                        return maximumAge;
                     }
                 },
                 /**
@@ -408,13 +422,28 @@ The form handles below mentioned scenarios on its own.
 
             _onCount: function () {
                 this.children = [];
-                var cCount = this.countChildren;
+                var setcount = this.dataHost.dataHost.domHost.domHost.option.traveller.minChildCount;
+                var cCount = this.countChildren + setcount;
                 for (var i = 0; i < cCount; i++) {
                     this.push('children', { child: "" });
                 }
                 this._calResultOfRoom();
                 this._removeError();
+                this.querySelector("#childAge").render();
+                var childValue = this.querySelector("#child").value;
+                if (childValue == setcount) {
+                    this.querySelector(".inputAdultCount").querySelector(".paper-input").querySelector(".paper-input").style.color = "lightgray";
+                    this.querySelector(".inputChildCount").querySelector(".paper-input").querySelector(".paper-input").style.color = "lightgray";
+                    for (var i = 0; i < setcount; i++) {
+                        this.querySelectorAll(".ageOfChild")[i].querySelector(".paper-input").querySelector(".paper-input").style.color = "lightgray";
+                    }
+                } else {
+                    for (var i = 0; i < childValue; i++) {
+                        this.querySelectorAll(".ageOfChild")[i].querySelector(".paper-input").querySelector(".paper-input").style.color = "lightgray";
+                    }
+                }
             },
+           
             /**
             * This function is used for removing error of adult and children dropdown after reclicking on it.
             **/
@@ -442,7 +471,7 @@ The form handles below mentioned scenarios on its own.
             },
             /**
              * To set the error message for room after exceeding total room pax count.
-             **/ 
+             **/
             _removeError: function () {
                 var inputAdultCount = this.domHost.domHost.querySelectorAll(".inputAdultCount");
                 var inputChildCount = this.domHost.domHost.querySelectorAll(".inputChildCount");
@@ -456,7 +485,7 @@ The form handles below mentioned scenarios on its own.
                     var totalCount = +dataAdult[i] + +dataChild[i];
                     var totalRoomPaxCount = this.domHost.domHost.option.traveller.totalRoomPaxCount;
                     if (totalCount > totalRoomPaxCount) {
-                        this.domHost.querySelectorAll(".head")[i].querySelector("#errfn").innerHTML = "Maximum Paxcount " + '' +totalRoomPaxCount;
+                        this.domHost.querySelectorAll(".head")[i].querySelector("#errfn").innerHTML = "Maximum Paxcount " + '' + totalRoomPaxCount;
                     }
                     else {
                         this.domHost.querySelectorAll(".head")[i].querySelector("#errfn").innerHTML = "";

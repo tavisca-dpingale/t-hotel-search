@@ -419,36 +419,7 @@ The form handles below mentioned scenarios on its own.
         return setMinDatetoToday;
       },
 
-      /**
-       * This function is used for on scroll method of travellers form.
-       **/ 
-      // _removeDrop: function () {
-      //   var RCount = this.querySelector("#choiceCard").roomCount;
-      //   for (var i = 0; i < RCount; i++) {
-      //     var showDrop = this.querySelector("#paperCard");
-      //     var childDD = showDrop.querySelectorAll(".inputChildCount")[i];
-      //     var adultDD = showDrop.querySelectorAll(".inputAdultCount")[i];
-      //     if (childDD.focused === true) {
-      //       childDD.close();
-      //       childDD.querySelector("#input").focus();
-      //       childDD.querySelector("#input").blur();
-      //     }
-      //     else if (adultDD.focused === true) {
-      //       adultDD.close();
-      //       adultDD.querySelector("#input").focus();
-      //       adultDD.querySelector("#input").blur();
-      //     }
-      //     // if (C.value != 0) {
-      //       var ageOfChildDD = showDrop.querySelectorAll(".ageOfChild");
-      //       for (var v = 0; v < ageOfChildDD.length; v++) {
-      //         var childAgeFocus = ageOfChildDD[v];
-      //         if(childAgeFocus.focused){
-      //         childAgeFocus.close();
-      //         }
-      //       // }
-      //     }
-      //   }
-      // },
+
       /**
        * Function to set view of internet explorer.       
        * */
@@ -472,6 +443,7 @@ The form handles below mentioned scenarios on its own.
       _dismisCard: function () {
         var travellerLabelShow = this.$$("#deskinput1");
         travellerLabelShow.label = "Travellers";
+        travellerLabelShow.querySelector("#paper-input-label-3").style.color = "lightgray";
         var pCard = Polymer.dom(this.$.paperCard).node;
         pCard.style.display = 'none';
         var paperItem = this.$$("#needRoom");
@@ -584,9 +556,7 @@ The form handles below mentioned scenarios on its own.
       * Function called upon done button click for calendar on mobile screen.
       **/
       _doneDatePicker: function () {
-        this.doneDatePicker = true;
-        var startValue = Polymer.dom(this.$.start).node.value;
-        var endValue = Polymer.dom(this.$.end).node.value;
+        this.doneDatePicker = true;        
         this._showDateToolbarFun();
         doneStartDate = this.querySelector("#start").value;
         doneEndDate = this.querySelector("#end").value;
@@ -725,20 +695,17 @@ The form handles below mentioned scenarios on its own.
           this.querySelector("#autoInput").invalid = true;
           this.$.start.invalid = true;
           this.$.end.invalid = true;
-        }
-        else if (data[0] == "" && data[1] == undefined) {
-          this.querySelector("#autoInput").invalid = true;
-          this.$.start.invalid = true;
+           this.querySelector("#start").querySelector("#paper-input-label-1").style.color = "lightgray";
+          this.querySelector("#end").querySelector("#paper-input-label-2").style.color = "lightgray";
         }
         else if (data[1] == undefined && data[2] == undefined) {
           this.$.start.invalid = true;
           this.$.end.invalid = true;
+           this.querySelector("#start").querySelector("#paper-input-label-1").style.color = "lightgray";
+          this.querySelector("#end").querySelector("#paper-input-label-2").style.color = "lightgray";
         }
         else if (data[0] == "") {//show error        
           this.querySelector("#autoInput").invalid = true;
-        }
-        else if (data[1] == undefined) {
-          this.$.start.invalid = true;
         }
         else {
           var card = this.querySelector("#choiceCard");

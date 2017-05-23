@@ -32,9 +32,11 @@ The form handles below mentioned scenarios on its own.
             .unhidden {
                 display: block;
             }
-            #errfn{
+
+            #errfn {
                 color: red;
             }
+
             #linePaper {
                 width: 92%;
                 float: left;
@@ -241,7 +243,7 @@ The form handles below mentioned scenarios on its own.
                             <paper-item id="linePaper" disabled>
                                 <div id="line"><span>{{roomLabel}}# {{_displayIndex(index)}}</span></div>
                             </paper-item>
-                            
+
                             <paper-item id="deleteButton" on-keydown="_onkeyPress">
                                 <paper-button toggles hidden="[[_isDeleteHidden]]" class=button on-click="_deleteRoom" id="delButton">
                                     <img src="trash.svg" height="15px" width="15px">
@@ -390,6 +392,9 @@ The form handles below mentioned scenarios on its own.
                     Polymer.RenderStatus.afterNextRender(this, function () {
                         this.domHost.querySelector("#paperCard").scrollTop = this.domHost.querySelector("#paperCard").scrollHeight;
                     });
+                }
+                if (this.roomCount == this.domHost.option.maxRoomCount) {
+                    this.querySelector("#button1").style.visibility = "hidden";
                 }
             },
 

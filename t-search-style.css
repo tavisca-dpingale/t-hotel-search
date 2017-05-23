@@ -37,9 +37,9 @@
           width: 100%;
     }
     
-    .item[smallMobileView] .row {
+    /*.item[smallMobileView] .row {
           position: fixed;
-    }
+    }*/
 
     .item[smallMobileView] .col-xs-6 {
           width: 50%;
@@ -54,9 +54,9 @@
     .item[MobileView] .col-xs-6 {
           width: 50%;
     }
-    .item[MobileView] .row {
+    /*.item[MobileView] .row {
           position: fixed;
-    }
+    }*/
 
 
     .item[TabletView] .col-sm-2, .col-sm-3, .col-sm-4, .col-sm-12 {
