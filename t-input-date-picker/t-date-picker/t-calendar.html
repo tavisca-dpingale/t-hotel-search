@@ -14,35 +14,35 @@
   <template>
     <style>
       .selectedRange {
-        border-top: 1px solid var(--color-for-calendar-selected-range);
-        border-bottom: 1px solid var(--color-for-calendar-selected-range);
+        border-top: 1px solid var(--color-for-calendar-selected-range, #4CB050);
+        border-bottom: 1px solid var(--color-for-calendar-selected-range, #4CB050);
       }
       
       .selectEndBorder .borderDiv {
-        border-top: 1px solid var(--color-for-calendar-selected-range);
-        border-bottom: 1px solid var(--color-for-calendar-selected-range);
+        border-top: 1px solid var(--color-for-calendar-selected-range, #4CB050);
+        border-bottom: 1px solid var(--color-for-calendar-selected-range, #4CB050);
       }
       
       .selectStartBorder .borderDiv {
         margin-left: 51%;
-        border-top: 1px solid var(--color-for-calendar-selected-range);
-        border-bottom: 1px solid var(--color-for-calendar-selected-range);
+        border-top: 1px solid var(--color-for-calendar-selected-range, #4CB050);
+        border-bottom: 1px solid var(--color-for-calendar-selected-range, #4CB050);
       }
       
       .selectedRangeSun {
-        border-left: 1px solid var(--color-for-calendar-selected-range);
+        border-left: 1px solid var(--color-for-calendar-selected-range, #4CB050);
         border-top-left-radius: 100%;
         border-bottom-left-radius: 100%;
-        border-top: 1px solid var(--color-for-calendar-selected-range);
-        border-bottom: 1px solid var(--color-for-calendar-selected-range);
+        border-top: 1px solid var(--color-for-calendar-selected-range, #4CB050);
+        border-bottom: 1px solid var(--color-for-calendar-selected-range, #4CB050);
       }
       
       .selectedRangeSat {
-        border-right: 1px solid var(--color-for-calendar-selected-range);
+        border-right: 1px solid var(--color-for-calendar-selected-range, #4CB050);
         border-top-right-radius: 100%;
         border-bottom-right-radius: 100%;
-        border-top: 1px solid var(--color-for-calendar-selected-range);
-        border-bottom: 1px solid var(--color-for-calendar-selected-range);
+        border-top: 1px solid var(--color-for-calendar-selected-range, #4CB050);
+        border-bottom: 1px solid var(--color-for-calendar-selected-range, #4CB050);
       }
       
       .selectfirst {
@@ -61,7 +61,7 @@
       .selectToday {
         background-image: var(--background-img-for-today-date);
         background-repeat: no-repeat;
-        color: var(--color-for-calendar-selected-range);
+        color: var(--color-for-calendar-selected-range, #4CB050);
         background-position: 50%;
         border-radius: 100%;
       }
@@ -1094,7 +1094,7 @@
             startDate.value = newDate;
             if(endDate.value === undefined || startDate.value > endDate.value){
               var startDateValue = new Date(startDate.value);
-              startDateValue.setDate(startDateValue.getDate() + this.domHost.domHost.domHost.option.date.defaultStayDuration);
+              startDateValue.setDate(startDateValue.getDate() + this.domHost.domHost.domHost.defaultStayDuration);
               var maxDt = this.maxDate;
                 maxDt.setHours(0, 0, 0, 0);
                 if (startDateValue > maxDt) {
@@ -1107,7 +1107,7 @@
                 endDate.minDate = startDate.value;
                 var setCheckOutMin = startDate.value;
                 var setMax = new Date(setCheckOutMin);
-                setMax.setDate(setCheckOutMin.getDate() + this.domHost.domHost.domHost.option.date.maxStayDuration);
+                setMax.setDate(setCheckOutMin.getDate() + this.domHost.domHost.domHost.maxStayDuration);
                  if(setMax < this.maxDate){
                 endDate.maxDate = setMax;
                 }
