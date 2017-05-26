@@ -281,7 +281,7 @@
                 }
                 setTimeout(allFunction, 10);
             });
-            var setErrrorMasseg = this.domHost.resources.errorMessage.destinationError;
+            var setErrrorMasseg = this.domHost.destinationError;
             this._errorMassege(setErrrorMasseg);
         },
         /**
@@ -332,13 +332,7 @@
             }
             setTimeout(allFunction, 10);
         },
-        /**
-         * cancel the selected value.
-         **/
-        // _cancel: function () {
-        //     this.querySelector('#autoSuggest').value = this.selectedValue;
-        //     this._focusingOut();
-        // },
+
         /**
          * hide the clearbutton(cross button) on click of cross button.
          **/
@@ -361,13 +355,7 @@
             event.stopImmediatePropagation();
             return false;
         },
-        /**
-         * Close the autosuggest dropdown.
-         **/
-        // _closeLambda: function () {
-        //     var item = this;
-        //     this.$.dropBox.className = "autocomplete ";
-        // },
+       
         /**
          * Clear the seledted input on click of cross button.
          **/
@@ -440,6 +428,7 @@
             if (this.$.autoSuggest.value.length > l) {
                 this.$.autoSuggest.value = this.$.autoSuggest.bindValue.substring(0, l) + "..."
             }
+             return l;
         },
     })
 
