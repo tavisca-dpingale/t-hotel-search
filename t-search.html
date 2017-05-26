@@ -7,7 +7,6 @@
 <link rel="import" href="bower_components/paper-listbox/paper-listbox.html">
 <link rel="import" href="t-input-date-picker/t-input-date-picker.html">
 <link rel="import" href="t-search-style.html">
-<link rel="stylesheet" href="t-search-style.css">
 <link rel="import" href="choice-card.html">
 <link rel="import" href="t-autosuggest.html">
 
@@ -118,22 +117,21 @@ The form handles below mentioned scenarios on its own.
             <form is="iron-form" id="form" method="post" action="/form/handler">
               <div required auto-validate class="col-lg-5 col-md-5 col-sm-12 col-xs-12" id="deskinput">
                 <t-autosuggest required auto-validate id="location" name="location" selected-item="{{location}}" query-params="token={{tokenResponse.authenticationToken}}"
-                  label="{{resources.watermark.hotelLocation}}" token-param="formattedAddress" data-url$="{{dataUrl}}">
+                  label="{{hotelLocation}}" token-param="formattedAddress" data-url$="{{dataUrl}}">
                 </t-autosuggest>
               </div>
 
 
               <div id="start1" class="col-lg-1 col-md-1 col-sm-3 col-xs-6">
-                <t-input-date-picker required auto-validate error-message="{{resources.errorMessage.checkInError}}" class="suggestions" date-format="MM/DD/YYYY"
-                  id="start" label="Check in" min-date="[[minDateToday]]" max-date="[[maxDate]]" on-keydown="_keypress" on-tap="_openDatePicker"
+                <t-input-date-picker required auto-validate error-message="{{checkInError}}" class="suggestions" date-format="MM/DD/YYYY"
+                  id="start" label="{{checkin}}" min-date="[[minDateToday]]" max-date="[[maxDate]]" on-tap="_openDatePicker"
                   on-focus="this.blur()">
                 </t-input-date-picker>
               </div>
 
               <div id="end1" class="col-lg-1 col-md-1 col-sm-3 col-xs-6">
-                <t-input-date-picker required auto-validate error-message="{{resources.errorMessage.checkOutError}}" class="suggestions"
-                  id="end" label="Check out" date-format="MM-DD-YYYY" on-keydown="_keypress" max-date="[[maxDate]]" on-tap="_openDatePicker"
-                  on-focus="this.blur()">
+                <t-input-date-picker required auto-validate error-message="{{checkOutError}}" class="suggestions" id="end" label="{{checkout}}"
+                  date-format="MM-DD-YYYY" max-date="[[maxDate]]" on-tap="_openDatePicker" on-focus="this.blur()">
                 </t-input-date-picker>
               </div>
 
@@ -143,15 +141,9 @@ The form handles below mentioned scenarios on its own.
                   <paper-listbox class="dropdown-content" id="listbox" selected="{{choice}}">
                     <template is='dom-repeat' items='{{choices}}'>
                       <paper-item class="trvellerItem" id="adult{{item.adult}}Room1" count-adult$="{{item.adult}}" count-room$="{{item.room}}"
-                        value="{{item}}">{{item.adult}} Adults in {{item.room}} Room</paper-item>
+                        value="{{item}}">{{item.adult}} {{_adultLabel(item.adult)}} in {{item.room}} {{_roomLabel(item.room)}}</paper-item>
                     </template>
                     <paper-item on-tap="_openChildForm" id="needRoom" class="trvellerItem">Need more rooms or have children? </paper-item>
-                    <!--<paper-item class="trvellerItem" id="adult1Room1" count-adult="1" count-room="1">1 Adult in 1 Room</paper-item>
-                    <paper-item class="trvellerItem" id="adult2Room1" count-adult="2" count-room="1">2 Adults in 1 Room</paper-item>
-                    <paper-item class="trvellerItem" id="adult3Room1" count-adult="3" count-room="1">3 Adults in 1 Room</paper-item>
-                    <paper-item class="trvellerItem" id="adult4Room1" count-adult="4" count-room="1">4 Adults in 1 Room</paper-item>
-                    <paper-item class="trvellerItem" id="adult5Room1" count-adult="1,1" count-room="2">2 Adults in 2 Rooms</paper-item>
-                    <paper-item on-tap="_openChildForm" id="needRoom" class="trvellerItem">Need more rooms or have children? </paper-item>-->
                   </paper-listbox>
                 </paper-dropdown-menu>
                 <input id="travellerInput" is="iron-input" type="hidden" bind-value="[[choice]]">
@@ -170,7 +162,7 @@ The form handles below mentioned scenarios on its own.
       DesktopView$="{{desktopView}}" largeDesktopView$="{{largeDesktopView}}">
       <paper-card hidden$="{{showTravellersCard}}" id="paperCard" class="paperCard">
         <div>
-          <choice-card id="choiceCard" roomLabel="{{resources.labels.room}}"></choice-card>
+          <choice-card id="choiceCard" roomLabel="{{room}}"></choice-card>
         </div>
       </paper-card>
     </div>
@@ -273,12 +265,158 @@ The form handles below mentioned scenarios on its own.
 
         choice: {
           type: String,
-          value:0
+          value: 0
         },
 
-        choices:{
-          type:Array
+        choices: {
+          type: Array
         },
+
+        checkInAllowFromNow: {
+          type: Number,
+          value: 0
+        },
+
+        minAdultCount: {
+          type: Number,
+          value: 2
+        },
+        maxAdultCount: {
+          type: Number,
+          value: 6
+        },
+        minChildCount: {
+          type: Number,
+          value: 0
+        },
+        maxChildCount: {
+          type: Number,
+          value: 5
+        },
+        minChildAge: {
+          type: Number,
+          value: 1
+        },
+        maxChildAge: {
+          type: Number,
+          value: 7
+        },
+        totalRoomPaxCount: {
+          type: Number,
+          value: 6
+        },
+        maxRoomCount: {
+          type: Number,
+          value: 2
+        },
+        defaultAdultCount: {
+          type: Number,
+          value: 0
+        },
+        defaultChildCount: {
+          type: Number,
+          value: 0
+        },
+        maxStayDuration: {
+          type: Number,
+          value: 30
+        },
+        defaultStayDuration: {
+          type: Number,
+          value: 4
+        },
+        format: {
+          type: String,
+          value: "MM/DD/YYYY"
+        },
+        defaultSelectOption: {
+          type: Object,
+          value: [{
+            "room": 1,
+            "adult": 1
+          }, {
+            "room": 1,
+            "adult": 2
+          }, {
+            "room": 1,
+            "adult": 3
+          }, {
+            "room": 2,
+            "adult": 5
+          }]
+        },
+
+        /**
+        Labels
+        **/
+        adult: {
+          type: String,
+          value: "Adult"
+        },
+        adults: {
+          type: String,
+          value: "Adults"
+        },
+        room: {
+          type: String,
+          value: "Room"
+        },
+        rooms: {
+          type: String,
+          value: "Rooms"
+        },
+        childrens: {
+          type: String,
+          value: "Children"
+        },
+        child: {
+          type: String,
+          value: "Child"
+        },
+        age: {
+          type: String,
+          value: "Age"
+        },
+        travelers: {
+          type: String,
+          value: "Travellers"
+        },
+        checkin: {
+          type: String,
+          value: "Check in"
+        },
+        checkout: {
+          type: String,
+          value: "Check out"
+        },
+        /**
+        WaterMark
+        **/
+        checkIn: {
+          type: String,
+          value: "MM/DD/YY"
+        },
+        checkOut: {
+          type: String,
+          value: "MM/DD/YY"
+        },
+        hotelLocation: {
+          type: String,
+          value: "Search by Airport, Destination etc."
+        },
+        destinationError: {
+          type: String,
+          value: "Please enter your destination"
+        },
+        checkInError: {
+          type: String,
+          value: "Please enter checkin date"
+        },
+        checkOutError: {
+          type: String,
+          value: "Please enter checkout date"
+        },
+
         /**
          * This property is used to set search option.
          **/
@@ -286,35 +424,11 @@ The form handles below mentioned scenarios on its own.
           type: Object,
           value: {
             "traveller": {
-              "minAdultCount": 1,
-              "maxAdultCount": 6,
-              "minChildCount": 0,
-              "maxChildCount": 6,
-              "totalRoomPaxCount": 9,
-              "minChildAge": 0,
-              "maxChildAge": 12,
-              "defaultAdultCount": 2,
-              "defaultChildCount": 0,
-              "defaultSelectOption": [{
-                "room": 1,
-                "adult": 1
-              }, {
-                "room": 1,
-                "adult": 2
-              }, {
-                "room": 1,
-                "adult": 3
-              }, {
-                "room": 2,
-                "adult": 5
-              }]
+
+              "defaultSelectOption": []
+
             },
-            "maxRoomCount": 6,
             "date": {
-              "checkInAllowFromNow": 0,
-              "maxStayDuration": 30,
-              "defaultStayDuration": 6,
-              "format": "MM/DD/YY"
             }
           }
         },
@@ -325,23 +439,11 @@ The form handles below mentioned scenarios on its own.
           type: Object,
           value: {
             "labels": {
-              "adult": "Adult",
-              "children": "Children",
-              "child": "Child",
-              "age": "Age",
-              "room": "Room"
             },
             "watermark": {
-              "checkIn": "MM/DD/YYYY",
-              "checkOut": "MM/DD/YYYY",
-              "hotelLocation": "City, Airport, Address or Point of Interest"
             },
 
             "errorMessage": {
-              "destinationError": "Please enter your destination",
-              "checkInError": "Please enter checkin date",
-              "checkOutError": "Please enter checkout date"
-
             }
           }
         },
@@ -376,6 +478,7 @@ The form handles below mentioned scenarios on its own.
         **/
 
         maxDate: {
+          type: Date,
           value: function () {
             var x = 12; //or whatever offset
             var dateAfterOneYear = new Date();
@@ -403,14 +506,31 @@ The form handles below mentioned scenarios on its own.
         }
       },
 
-       _choices: function () {
+      _adultLabel: function (adultCount) {
+        if (adultCount <= 1) {
+          return this.adult;
+        }
+        else {
+          return this.adults;
+        }
+      },
+      _roomLabel: function (roomCount) {
+        if (roomCount <= 1) {
+          return this.room;
+        }
+        else {
+          return this.rooms;
+        }
+      },
+
+      _choices: function () {
         var childArray = new Array();
-        var maximumChild = this.option.traveller.defaultSelectOption.length;
+        var maximumChild = this.defaultSelectOption.length;
         for (i = 0; i < maximumChild; i++) {
-          var dropDownOption = this.option.traveller.defaultSelectOption[i].room;
-          if(dropDownOption <= this.option.maxRoomCount){
-          childArray.push(this.option.traveller.defaultSelectOption[i]);
-          } 
+          var dropDownOption = this.defaultSelectOption[i].room;
+          if (dropDownOption <= this.maxRoomCount) {
+            childArray.push(this.defaultSelectOption[i]);
+          }
         }
         this.choices = childArray;
         return childArray;
@@ -450,7 +570,7 @@ The form handles below mentioned scenarios on its own.
 
       _dismisCard: function () {
         var travellerLabelShow = this.$$("#deskinput1");
-        travellerLabelShow.label = "Travellers";
+        travellerLabelShow.label = this.travelers;
         travellerLabelShow.querySelector("#paper-input-label-3").style.color = "lightgray";
         var pCard = Polymer.dom(this.$.paperCard).node;
         pCard.style.display = 'none';
@@ -462,7 +582,7 @@ The form handles below mentioned scenarios on its own.
        * This function is used for up and down arrow key press on drop down menu.
        **/
       _tabPress: function (e) {
-        if (e.keyCode == 38 || e.keyCode == 40) {
+        if (e.keyCode == 38 || e.key == "ArrowDown") {
           var pCard = Polymer.dom(this.$.paperCard).node;
           pCard.style.display = 'none';
           var paperItem = this.$$("#needRoom");
@@ -511,7 +631,7 @@ The form handles below mentioned scenarios on its own.
           this.querySelector("#deskinput1").style.display = "none";
           this.querySelector("#Button").style.display = "none";
         }
-         this.$.needRoom.textContent = "1 Adult in 1 Room";
+        this.$.needRoom.textContent = "1 Adult in 1 Room";
         var pCard = Polymer.dom(this.$.paperCard).node;
         pCard.style.display = 'block';
 
@@ -532,9 +652,9 @@ The form handles below mentioned scenarios on its own.
         if (mq) {
           this.querySelector("#toolbarRoom");
         }
-        var Choicecard =this.querySelector("#choiceCard");
-         Choicecard.querySelector("#button1").style.visibility = "visible";
-        if(Choicecard.roomCount >= this.option.maxRoomCount){
+        var Choicecard = this.querySelector("#choiceCard");
+        Choicecard.querySelector("#button1").style.visibility = "visible";
+        if (Choicecard.roomCount >= this.maxRoomCount) {
           Choicecard.querySelector("#button1").style.visibility = "hidden";
         }
       },
@@ -551,6 +671,10 @@ The form handles below mentioned scenarios on its own.
           this._styleForBackToMainToolbar();
           Polymer.dom(this.$.toolbarRoom).node.style.display = "none";
           this.querySelector("#paperCard").style.display = "none";
+          return true;
+        }
+        else {
+          validData = false;
         }
       },
       /**
@@ -688,6 +812,252 @@ The form handles below mentioned scenarios on its own.
         attrClass(ul, "ulClassMobile");
       },
 
+      _defaultOptionValue: function () {
+        if (this.option.traveller === undefined) {
+          this.defaultSelectOption;
+          this.defaultChildCount;
+          this.defaultAdultCount;
+          this.totalRoomPaxCount;
+          this.minAdultCount;
+          this.maxAdultCount;
+          this.minChildCount;
+          this.maxChildCount;
+          this.minChildAge;
+          this.maxChildAge;
+        }
+        else {
+          if (this.option.traveller.defaultSelectOption === undefined) {
+            this.defaultSelectOption;
+          }
+          else {
+            this.defaultSelectOption = this.option.traveller.defaultSelectOption;
+          }
+          if (this.option.traveller.defaultChildCount === undefined) {
+            this.defaultChildCount;
+          }
+          else {
+            this.defaultChildCount = this.option.traveller.defaultChildCount;
+          }
+          if (this.option.traveller.defaultAdultCount === undefined) {
+            this.defaultAdultCount;
+          }
+          else {
+            this.defaultAdultCount = this.option.traveller.defaultAdultCount;
+          }
+          if (this.option.traveller.totalRoomPaxCount === undefined) {
+            this.totalRoomPaxCount;
+          }
+          else {
+            this.totalRoomPaxCount = this.option.traveller.totalRoomPaxCount;
+          }
+          if (this.option.traveller.minAdultCount === undefined) {
+            this.minAdultCount;
+          }
+          else {
+            this.minAdultCount = this.option.traveller.minAdultCount;
+          }
+          if (this.option.traveller.maxAdultCount === undefined) {
+            this.maxAdultCount;
+          }
+          else {
+            this.maxAdultCount = this.option.traveller.maxAdultCount;
+          }
+          if (this.option.traveller.minChildCount === undefined) {
+            this.minChildCount;
+          }
+          else {
+            this.minChildCount = this.option.traveller.minChildCount;
+          }
+          if (this.option.traveller.maxChildCount === undefined) {
+            this.maxChildCount;
+          }
+          else {
+            this.maxChildCount = this.option.traveller.maxChildCount;
+          }
+          if (this.option.traveller.minChildAge === undefined) {
+            this.minChildAge;
+          }
+          else {
+            this.minChildAge = this.option.traveller.minChildAge;
+          }
+          if (this.option.traveller.maxChildAge === undefined) {
+            this.maxChildAge;
+          }
+          else {
+            this.maxChildAge = this.option.traveller.maxChildAge;
+          }
+        }
+        if (this.option.date === undefined) {
+          this.checkInAllowFromNow;
+          this.maxStayDuration;
+          this.defaultStayDuration;
+          this.format;
+        }
+        else {
+          if (this.option.date.checkInAllowFromNow === undefined) {
+            this.checkInAllowFromNow;
+          }
+          else {
+            this.checkInAllowFromNow = this.option.date.checkInAllowFromNow;
+          }
+          if (this.option.date.maxStayDuration === undefined) {
+            this.maxStayDuration;
+          }
+          else {
+            this.maxStayDuration = this.option.date.maxStayDuration;
+          }
+          if (this.option.date.defaultStayDuration === undefined) {
+            this.defaultStayDuration;
+          }
+          else {
+            this.defaultStayDuration = this.option.date.defaultStayDuration;
+          }
+          if (this.option.date.format === undefined) {
+            this.format;
+          }
+          else {
+            this.format = this.option.date.format;
+          }
+        }
+        if (this.option.maxRoomCount === undefined) {
+          this.maxRoomCount;
+        }
+        else {
+          this.maxRoomCount = this.option.maxRoomCount;
+        }
+
+      },
+
+      _defaultResourcesValue: function () {
+        /**Labels**/
+        if (this.resources.labels === undefined) {
+          this.adult;
+          this.adults;
+          this.room;
+          this.rooms;
+          this.childrens;
+          this.child;
+          this.age;
+          this.travelers;
+          this.checkin;
+          this.checkout;
+          this.hotelLocation;
+        }
+        else {
+          if (this.resources.labels.adult === undefined) {
+            this.adult;
+          }
+          else {
+            this.adult = this.resources.labels.adult;
+          }
+          if (this.resources.labels.adults === undefined) {
+            this.adults;
+          }
+          else {
+            this.adults = this.resources.labels.adults;
+          }
+          if (this.resources.labels.room === undefined) {
+            this.room;
+          }
+          else {
+            this.room = this.resources.labels.room;
+          }
+          if (this.resources.labels.rooms === undefined) {
+            this.rooms;
+          }
+          else {
+            this.rooms = this.resources.labels.rooms;
+          }
+          if (this.resources.labels.childrens === undefined) {
+            this.childrens;
+          }
+          else {
+            this.childrens = this.resources.labels.childrens;
+          }
+          if (this.resources.labels.child === undefined) {
+            this.child;
+          }
+          else {
+            this.child = this.resources.labels.child;
+          }
+          if (this.resources.labels.age === undefined) {
+            this.age;
+          }
+          else {
+            this.age = this.resources.labels.age;
+          }
+          if (this.resources.labels.travelers === undefined) {
+            this.travelers;
+          }
+          else {
+            this.travelers = this.resources.labels.travelers;
+          }
+          if (this.resources.labels.checkin === undefined) {
+            this.checkin;
+          }
+          else {
+            this.checkin = this.resources.labels.checkin;
+          }
+          if (this.resources.labels.checkout === undefined) {
+            this.checkout;
+          }
+          else {
+            this.checkout = this.resources.labels.checkout;
+          }
+           if (this.resources.labels.hotelLocation === undefined) {
+          this.hotelLocation;
+        }
+        else {
+          this.hotelLocation = this.resources.labels.hotelLocation;
+        }
+        }
+
+        /**WaterMark**/
+        if(this.resources.watermark === undefined){
+           this.checkIn;
+           this.checkOut;
+        }
+        else{
+        if (this.resources.watermark.checkIn === undefined) {
+          this.checkIn;
+        }
+        else {
+          this.checkIn = this.resources.watermark.checkIn;
+        }
+        if (this.resources.watermark.checkOut === undefined) {
+          this.checkOut;
+        }
+        else {
+          this.checkOut = this.resources.watermark.checkOut;
+        }
+        }
+        if(this.resources.errorMessage === undefined){
+           this.destinationError;
+           this.checkInError;
+            this.checkOutError;
+                    }
+                    else{
+        if (this.resources.errorMessage.destinationError === undefined) {
+          this.destinationError;
+        }
+        else {
+          this.destinationError = this.resources.errorMessage.destinationError;
+        }
+        if (this.resources.errorMessage.checkInError === undefined) {
+          this.checkInError;
+        }
+        else {
+          this.checkInError = this.resources.errorMessage.checkInError;
+        }
+        if (this.resources.errorMessage.checkOutError === undefined) {
+          this.checkOutError;
+        }
+        else {
+          this.checkOutError = this.resources.errorMessage.checkOutError;
+        }
+                    }
+      },
+
       /*
       *To collect the input from form on click of search button.
       *This function also validates each field of the form.
@@ -722,11 +1092,12 @@ The form handles below mentioned scenarios on its own.
         }
         else {
           var card = this.querySelector("#choiceCard");
-          var totalDDOption = this.option.traveller.defaultSelectOption.length;
-          if (this.choice >= 0 && this.choice < totalDDOption && !mq) {
+          var totalDDOption = this.defaultSelectOption.length;
+          if (this.choice >= 0 && this.choice < totalDDOption) {
             var roomC = this.querySelector("#choiceCard").roomCount;
             for (var i = 0; i < roomC; i++) {
               this.querySelectorAll("#choiceRoom")[i].querySelector(".inputChildCount").querySelector("#listBox").selected = 0;
+              this.querySelectorAll("#choiceRoom")[i].querySelector(".inputAdultCount").querySelector("#listBox").selected = 0;
             }
           }
           var validData = card._doneRoom();
@@ -804,9 +1175,11 @@ The form handles below mentioned scenarios on its own.
       * function to control datepicker for checkin and checkout dates.
       */
       ready: function () {
-        var ckeckMin = this.option.date.checkInAllowFromNow;
+        this._defaultOptionValue();
+        this._defaultResourcesValue();
+        var ckeckMin = this.checkInAllowFromNow;
         this._setMinDate(ckeckMin);
-           var travelDD = this.option.traveller.defaultSelectOption;
+        var travelDD = this.defaultSelectOption;
         this._choices(travelDD);
         mqu = this.mediumTablet;
         mq = this.mobilePhone;
