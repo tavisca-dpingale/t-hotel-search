@@ -379,16 +379,24 @@ The form handles below mentioned scenarios on its own.
                 this.inputAdultCount;
                 this.push('rooms', { room: "" }); //to show intial 1 room which is compulsory to select.
                 this.roomCount = this.roomCount + 1;
+                if(this.roomlabel === undefined){
+                   var roomlabels = "Room"
+                }
+                else{
                 var roomlabels = this.roomlabel;
+                }
                 this._labelRoom(roomlabels);
             },
             /**
              * To delete rooms on enter key press.
              * */
             _onkeyPress: function (e) {
-                var keycode = e.keyCode;
-                if (this.roomCount > 1 && keycode === 13) {
+                var key = e.key;
+                if (this.roomCount > 1 && key === "Enter") {
                     this._deleteRoom(e);
+                }
+                else {
+                    return;
                 }
             },
 
@@ -397,7 +405,7 @@ The form handles below mentioned scenarios on its own.
             *on click this function adds the room into travellers form.
             **/
             _addRoom: function () {
-                if (this.roomCount < this.domHost.option.maxRoomCount) {
+                if (this.roomCount < this.domHost.maxRoomCount) {
                     this.push('rooms', { room: "" });
                     this.push('totalData', { total: "" });
                     this.roomCount = this.roomCount + 1;
@@ -405,7 +413,7 @@ The form handles below mentioned scenarios on its own.
                         this.domHost.querySelector("#paperCard").scrollTop = this.domHost.querySelector("#paperCard").scrollHeight;
                     });
                 }
-                if (this.roomCount == this.domHost.option.maxRoomCount) {
+                if (this.roomCount == this.domHost.maxRoomCount) {
                     this.querySelector("#button1").style.visibility = "hidden";
                 }
             },
@@ -538,7 +546,6 @@ The form handles below mentioned scenarios on its own.
             **/
 
             _doneRoom: function (event) {
-                this.querySelector("#button1").style.visibility = "hidden";
                 inputAdultCount = this.domHost.querySelectorAll(".inputAdultCount");
                 inputChildCount = this.domHost.querySelectorAll(".inputChildCount");
                 var dataAdult = [];
@@ -556,7 +563,7 @@ The form handles below mentioned scenarios on its own.
                     dataAdult[i] = inputAdultCount[i].value;
                     dataChild[i] = inputChildCount[i].value;
                     var totalCount = +dataAdult[i] + +dataChild[i];
-                    if (totalCount > this.domHost.option.traveller.totalRoomPaxCount) {
+                    if (totalCount > this.domHost.totalRoomPaxCount) {
                         validdata = false;
                     }
                     adultCount = +adultCount + +dataAdult[i];
@@ -605,11 +612,31 @@ The form handles below mentioned scenarios on its own.
                     var travellersdata = [];
                     var choiceDropdown = this.domHost.choice;
                     var totalDDOption = this.domHost.choices.length;
-
+                    this.querySelector("#button1").style.visibility = "hidden";
                     if (choiceDropdown >= 0 && choiceDropdown < totalDDOption) {
-                        var dropdownSelectionAdult = this.domHost.querySelector("#deskinput1").querySelector("#listbox").selectedItem.getAttribute("count-adult");
-                        roomCount = this.domHost.querySelector("#deskinput1").querySelector("#listbox").selectedItem.getAttribute("count-room");
-                        dataAdult = dropdownSelectionAdult.split(",");
+                        var countAdult = new Array();
+                        var dropDownAdultCount = this.domHost.querySelector("#deskinput1").querySelector("#listbox").selectedItem.getAttribute("count-adult");
+                        var totalRoom = this.domHost.querySelector("#deskinput1").querySelector("#listbox").selectedItem.getAttribute("count-room");
+                        if (totalRoom >= 2) {
+                            for (var i = 0; i < totalRoom; i++) {
+                                if (i != totalRoom - 1) {
+                                    countAdult[i] = dropDownAdultCount - (dropDownAdultCount - 1);
+                                }
+                                else {
+                                    countAdult[i] = dropDownAdultCount - i;
+                                }
+                            }
+                        }
+                        else {
+                            var dropdownSelectionAdult = dropDownAdultCount;
+                        }
+                        roomCount = totalRoom;
+                        if (totalRoom >= 2) {
+                            dataAdult = countAdult;
+                        }
+                        else {
+                            dataAdult = dropdownSelectionAdult.split(",");
+                        }
                         dataChild = 0;
                     }
                     for (var i = 0; i < roomCount; i++) {
