@@ -280,7 +280,7 @@ The form handles below mentioned scenarios on its own.
                 countAdult: {
                     type: Number,
                     value: function () {
-                        var defaultAdult = this.dataHost.dataHost.domHost.domHost.option.traveller.defaultAdultCount - 1;
+                        var defaultAdult = this.dataHost.dataHost.domHost.domHost.defaultAdultCount;
                         return defaultAdult;
                     }
                 },
@@ -291,7 +291,7 @@ The form handles below mentioned scenarios on its own.
                 countChildren: {
                     type: Number,
                     value: function () {
-                        var defaultChild = this.dataHost.dataHost.domHost.domHost.option.traveller.defaultChildCount;
+                        var defaultChild = this.dataHost.dataHost.domHost.domHost.defaultChildCount;
                         return defaultChild;
                     }
                 },
@@ -304,8 +304,8 @@ The form handles below mentioned scenarios on its own.
                     type: Array,
                     value: function () {
                         var childArray = new Array();
-                        var minimumAdult = this.dataHost.dataHost.domHost.domHost.option.traveller.minAdultCount;
-                        var maximumAdult = this.dataHost.dataHost.domHost.domHost.option.traveller.maxAdultCount;
+                        var minimumAdult = this.dataHost.dataHost.domHost.domHost.minAdultCount;
+                        var maximumAdult = this.dataHost.dataHost.domHost.domHost.maxAdultCount;
                         for (i = minimumAdult; i <= maximumAdult; i++) {
                             childArray.push(i);
                         }
@@ -320,8 +320,8 @@ The form handles below mentioned scenarios on its own.
                     type: Array,
                     value: function () {
                         var childArray = new Array();
-                        var minimumChild = this.dataHost.dataHost.domHost.domHost.option.traveller.minChildCount;
-                        var maximumChild = this.dataHost.dataHost.domHost.domHost.option.traveller.maxChildCount;
+                        var minimumChild = this.dataHost.dataHost.domHost.domHost.minChildCount;
+                        var maximumChild = this.dataHost.dataHost.domHost.domHost.maxChildCount;
                         for (i = minimumChild; i <= maximumChild; i++) {
                             childArray.push(i);
                         }
@@ -336,8 +336,8 @@ The form handles below mentioned scenarios on its own.
                     type: Array,
                     value: function () {
                         var childArray = new Array();
-                        var minimumChildAge = this.dataHost.dataHost.domHost.domHost.option.traveller.minChildAge;
-                        var maximumChildAge = this.dataHost.dataHost.domHost.domHost.option.traveller.maxChildAge;
+                        var minimumChildAge = this.dataHost.dataHost.domHost.domHost.minChildAge;
+                        var maximumChildAge = this.dataHost.dataHost.domHost.domHost.maxChildAge;
                         for (i = minimumChildAge; i <= maximumChildAge; i++) {
                             childArray.push(i);
                         }
@@ -347,14 +347,14 @@ The form handles below mentioned scenarios on its own.
                 minChildAge: {
                     type: Number,
                     value: function () {
-                        var minimumAge = this.dataHost.dataHost.domHost.domHost.option.traveller.minChildAge;
+                        var minimumAge = this.dataHost.dataHost.domHost.domHost.minChildAge;
                         return minimumAge;
                     }
                 },
                 maxChildAge: {
                     type: Number,
                     value: function () {
-                        var maximumAge = this.dataHost.dataHost.domHost.domHost.option.traveller.maxChildAge;
+                        var maximumAge = this.dataHost.dataHost.domHost.domHost.maxChildAge;
                         return maximumAge;
                     }
                 },
@@ -364,7 +364,7 @@ The form handles below mentioned scenarios on its own.
                 adultLabel: {
                     type: String,
                     value: function () {
-                        var labelAdult = this.dataHost.dataHost.domHost.domHost.resources.labels.adult;
+                        var labelAdult = this.dataHost.dataHost.domHost.domHost.adult;
                         return labelAdult;
                     }
                 },
@@ -374,7 +374,7 @@ The form handles below mentioned scenarios on its own.
                 childLabel: {
                     type: String,
                     value: function () {
-                        var labelChild = this.dataHost.dataHost.domHost.domHost.resources.labels.children;
+                        var labelChild = this.dataHost.dataHost.domHost.domHost.childrens;
                         return labelChild;
                     }
                 },
@@ -384,7 +384,7 @@ The form handles below mentioned scenarios on its own.
                 childAgeLabel: {
                     type: String,
                     value: function () {
-                        var labelChildAge = this.dataHost.dataHost.domHost.domHost.resources.labels.child;
+                        var labelChildAge = this.dataHost.dataHost.domHost.domHost.child;
                         return labelChildAge;
                     }
                 },
@@ -394,7 +394,7 @@ The form handles below mentioned scenarios on its own.
                 Agelabel: {
                     type: String,
                     value: function () {
-                        var labelAge = this.dataHost.dataHost.domHost.domHost.resources.labels.age;
+                        var labelAge = this.dataHost.dataHost.domHost.domHost.age;
                         return labelAge;
                     }
                 },
@@ -449,7 +449,7 @@ The form handles below mentioned scenarios on its own.
 
             _onCount: function () {
                 this.children = [];
-                var setcount = this.dataHost.dataHost.domHost.domHost.option.traveller.minChildCount;
+                var setcount = this.dataHost.dataHost.domHost.domHost.minChildCount;
                 var cCount = this.countChildren + setcount;
                 for (var i = 0; i < cCount; i++) {
                     this.push('children', { child: "" });
@@ -457,7 +457,21 @@ The form handles below mentioned scenarios on its own.
                 this._calResultOfRoom();
                 this._removeError();
                 this.querySelector("#childAge").render();
-                var childValue = this.querySelector("#child").value;
+                var adultValue = this.querySelector(".inputAdultCount").value;
+                if(adultValue == 1){
+                    this.adultLabel = this.dataHost.dataHost.domHost.domHost.adult;
+                }
+                else{
+                    this.adultLabel = this.dataHost.dataHost.domHost.domHost.adults;
+                }
+                var childValue = this.querySelector(".inputChildCount").value;
+                 if(childValue == 1){
+                    this.childLabel = "Child";
+                }
+                else{
+                    this.childLabel = this.dataHost.dataHost.domHost.domHost.childrens;
+                }
+            
                 if (childValue == setcount) {
                     this.querySelector(".inputAdultCount").querySelector(".paper-input").querySelector(".paper-input").style.color = "lightgray";
                     this.querySelector(".inputChildCount").querySelector(".paper-input").querySelector(".paper-input").style.color = "lightgray";
@@ -510,7 +524,7 @@ The form handles below mentioned scenarios on its own.
                     dataAdult[i] = inputAdultCount[i].value;
                     dataChild[i] = inputChildCount[i].value;
                     var totalCount = +dataAdult[i] + +dataChild[i];
-                    var totalRoomPaxCount = this.domHost.domHost.option.traveller.totalRoomPaxCount;
+                    var totalRoomPaxCount = this.domHost.domHost.totalRoomPaxCount;
                     if (totalCount > totalRoomPaxCount) {
                         this.domHost.querySelectorAll(".head")[i].querySelector("#errfn").innerHTML = "Maximum Paxcount " + '' + totalRoomPaxCount;
                         this.domHost.querySelectorAll(".head")[i].querySelector("#countError").style.display ="block";
@@ -601,7 +615,12 @@ The form handles below mentioned scenarios on its own.
                     div.style.marginLeft = "21px";
                     div.style.width = "250px";
                     div.style.top = "-20px";
+                    var mqI =window.matchMedia("(max-width:330px)").matches;
+                    if(mqI){
+                        div.style.fontSize = "13px";
+                    }else{
                     div.style.fontSize = "15px";
+                    }
                     div.style.fontFamily = "roboto";
                     var checkSpan = toolbar.querySelector("#spanId");
                     div.appendChild(span);
