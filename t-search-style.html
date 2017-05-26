@@ -6,12 +6,12 @@
           position: absolute !important;
           overflow-y: auto;
           overflow-x: hidden;
-          border: 1px solid var(--border-color-for-cards);
-          background-color: var(--background-color-for-traveller-card);
+          border: 1px solid var(--border-color-for-cards, lightgray);
+          background-color: var(--background-color-for-traveller-card, white);
         }
         --paper-button-search: {
           color: white;
-          background-color: var(--search-button-color);
+          background-color: var(--search-button-color, #4CB050);
           font-size: small;
         }
       }
@@ -39,7 +39,7 @@
       }
       
       .colorOfToolbarAtRuntime {
-        background-color: var(--outer-container-color);
+        background-color: var(--outer-container-color, #424d51);
       }
       
       .divColorofDatepicker {
@@ -121,12 +121,12 @@
       /* Variable applied for color of buttons in room card*/
       
       choice-card {
-        --color-for-button: var(--button-color-for-rooms);
+        --color-for-button: var(--button-color-for-rooms,#478BD7);
       }
       /* CSS to main toolbar*/
       
       app-toolbar {
-        background-color: var(--outer-container-color);
+        background-color: var(--outer-container-color , #424d51);
         display: block;
         height: 100px;
         margin-top: -20px;
@@ -141,10 +141,9 @@
       /*CSS for Done button which is used in mobile view*/
       
       #buttons {
-        color: var(--button-color-for-rooms);
+        color: var(--button-color-for-rooms,#478BD7);
         float: right;
         margin-top: 3px;
-        margin-right: -9px;
         z-index: 2;
       }
       
@@ -183,10 +182,10 @@
         --primary-color: lightgray;
         --dark-theme-background-color: #fff;
         --dark-theme-secondary-color: #d0d0d0;
-        --primary-text-color: var(--color-for-calendar-dates);
+        --primary-text-color: var(--color-for-calendar-dates,#4CB050);
         --secondary-text-color: lightgray;
-        --light-primary-color: var(--color-for-calendar-dates);
-        --primary-background-color: var(--color-for-calendar-background);
+        --light-primary-color: var(--color-for-calendar-dates, #4CB050);
+        --primary-background-color: var(--color-for-calendar-background, white);
       }
       
       #selectDate {
@@ -209,13 +208,13 @@
       /*CSS for link need room or have children*/
       
       #needRoom {
-        color: var(--dropdown-element-link-color);
+        color: var(--dropdown-element-link-color, #4CB050);
         cursor: pointer;
       }
       /*CSS for drop down list*/
       
       #listbox {
-        border: 2px solid var(--border-color-for-cards);
+        border: 2px solid var(--border-color-for-cards, lightgray);
         cursor: pointer;
       }
       
@@ -458,7 +457,7 @@
         height: 90%;
         overflow-y: auto;
         overflow-x: hidden;
-        background-color: var(--background-color-for-traveller-card);
+        background-color: var(--background-color-for-traveller-card, white);
         /*@apply --paper-card;*/
       }
       
@@ -483,6 +482,9 @@
         top: -33px;
         right: 10px;
         z-index: 1;
+      }
+      .item[smallMobileView] #selectDate span {
+        margin-left: -125px;
       }
       /*internet Explorer*/
       
@@ -581,10 +583,7 @@
       .item[smallMobileView] .col-xs-12 {
         width: 100%;
       }
-      /*.item[smallMobileView] .row {
-          position: fixed;
-    }*/
-      
+         
       .item[smallMobileView] .col-xs-6 {
         width: 50%;
       }
@@ -601,10 +600,7 @@
       .item[MobileView] .col-xs-6 {
         width: 50%;
       }
-      /*.item[MobileView] .row {
-          position: fixed;
-    }*/
-      
+           
       .item[TabletView] .col-sm-2,
       .col-sm-3,
       .col-sm-4,
