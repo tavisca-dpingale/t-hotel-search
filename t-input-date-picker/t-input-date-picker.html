@@ -483,8 +483,8 @@ Example:
         });
       }
       else if (this.id == 'start') {
-        startDate.placeholder = this.domHost.resources.watermark.checkIn;
-        endDate.placeholder = this.domHost.resources.watermark.checkOut;
+        startDate.placeholder = this.domHost.checkIn;
+        endDate.placeholder = this.domHost.checkOut;
         startDate.querySelector(".underline").style.border = "1px solid #4cb050";
         startDate.querySelector(".unfocused-line").style.display = "none";
         startDate.invalid = false;
