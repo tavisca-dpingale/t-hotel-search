@@ -291,7 +291,7 @@ styling:
         this._selectPage('chooseDate');
       },
       dateFormat: function () {
-        arguments[1] = this.domHost.domHost.option.date.format;
+        arguments[1] = this.domHost.domHost.format;
         return this.$.calendar.dateFormat.apply(this.$.calendar, arguments);
       },
       _tapHeadingDate: function () {
