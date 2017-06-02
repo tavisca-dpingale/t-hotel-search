@@ -1,11 +1,11 @@
-<link rel="import" href="../bower_components/polymer/polymer.html">
-<link rel="import" href="../bower_components/iron-a11y-keys-behavior/iron-a11y-keys-behavior.html">
-<link rel="import" href="../bower_components/iron-behaviors/iron-button-state.html">
-<link rel="import" href="../bower_components/iron-behaviors/iron-control-state.html">
-<link rel="import" href="../bower_components/paper-input/paper-input.html">
-<link rel="import" href="../bower_components/iron-icons/iron-icons.html">
-<link rel="import" href="../bower_components/paper-button/paper-button.html">
-<link rel="import" href="../bower_components/paper-dialog/paper-dialog.html">
+<link rel="import" href="../../polymer/polymer.html">
+<link rel="import" href="../../iron-a11y-keys-behavior/iron-a11y-keys-behavior.html">
+<link rel="import" href="../../iron-behaviors/iron-button-state.html">
+<link rel="import" href="../../iron-behaviors/iron-control-state.html">
+<link rel="import" href="../../paper-input/paper-input.html">
+<link rel="import" href="../../iron-icons/iron-icons.html">
+<link rel="import" href="../../paper-button/paper-button.html">
+<link rel="import" href="../../paper-dialog/paper-dialog.html">
 <link rel="import" href="../t-input-date-picker/t-date-picker/t-date-picker.html">
 <link rel="import" href="../t-input-date-picker/moment-with-locales-import.html">
 
@@ -16,8 +16,6 @@ Example:
 
     <t-input-date-picker></t-input-date-picker>
 
-@group Seed Elements
-@element paper-input-date-picker
 @demo demo/index.html
 @hero hero.svg
 -->
@@ -467,11 +465,21 @@ Example:
     _showDialog: function (event) {
       var startDate = this.domHost.querySelector("#start");
       var endDate = this.domHost.querySelector("#end");
+      this.domHost.querySelector("#start").querySelector("#paper-input-label-1").style.color ="lightgray";
+      this.domHost.querySelector("#end").querySelector("#paper-input-label-2").style.color ="lightgray";
       if (this.id == 'end' && startDate.value != undefined) {
         endDate.querySelector(".underline").style.border = "1px solid #4cb050";
         endDate.querySelector(".unfocused-line").style.display = "none";
         this.$picker.date = (this.value) ? this.value : new Date();
-        this.$.dialog.toggle();
+        var deskView =window.matchMedia("(max-width:767px)").matches;
+        if(deskView){
+        this.$.dialog.style.display = "block";
+        startDate.querySelector("#dialog").style.display = "none";
+        startDate.querySelector(".underline").style.border = "none";
+        }
+        else{
+          this.$.dialog.toggle();
+        }
         if (startDate.value) {
           this.$picker.date = endDate.value;
         }
@@ -483,13 +491,21 @@ Example:
         });
       }
       else if (this.id == 'start') {
-        startDate.placeholder = this.domHost.checkIn;
-        endDate.placeholder = this.domHost.checkOut;
+        startDate.waterMark = this.domHost.checkIn;
+        endDate.waterMark = this.domHost.checkOut;
         startDate.querySelector(".underline").style.border = "1px solid #4cb050";
         startDate.querySelector(".unfocused-line").style.display = "none";
         startDate.invalid = false;
         this.$picker.date = (this.value) ? this.value : new Date();
-        this.$.dialog.toggle();
+        var deskView =window.matchMedia("(max-width:767px)").matches;
+       if(deskView){
+        this.$.dialog.style.display = "block";
+        endDate.querySelector("#dialog").style.display = "none";
+        endDate.querySelector(".underline").style.border = "none";
+        }
+        else{
+          this.$.dialog.toggle();
+        }
         if (endDate.value) {
           this.$picker.date = endDate.value;
         }

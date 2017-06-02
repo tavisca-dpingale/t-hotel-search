@@ -1,13 +1,13 @@
-<link rel="import" href="../../bower_components/polymer/polymer.html">
-<link rel="import" href="../../bower_components/iron-flex-layout/iron-flex-layout.html">
-<link rel="import" href="../../bower_components/iron-icon/iron-icon.html">
-<link rel="import" href="../../bower_components/paper-ripple/paper-ripple.html">
-<link rel="import" href="../../bower_components/paper-styles/color.html">
-<link rel="import" href="../../bower_components/paper-styles/default-theme.html">
-<link rel="import" href="../../bower_components/paper-styles/shadow.html">
-<link rel="import" href="../../bower_components/paper-styles/typography.html">
-<link rel="import" href="../../bower_components/iron-resizable-behavior/iron-resizable-behavior.html">
-<link rel="import" href="../../bower_components/moment-element/moment-import.html">
+<link rel="import" href="../../../polymer/polymer.html">
+<link rel="import" href="../../../iron-flex-layout/iron-flex-layout.html">
+<link rel="import" href="../../../iron-icon/iron-icon.html">
+<link rel="import" href="../../../paper-ripple/paper-ripple.html">
+<link rel="import" href="../../../paper-styles/color.html">
+<link rel="import" href="../../../paper-styles/default-theme.html">
+<link rel="import" href="../../../paper-styles/shadow.html">
+<link rel="import" href="../../../paper-styles/typography.html">
+<link rel="import" href="../../../iron-resizable-behavior/iron-resizable-behavior.html">
+<link rel="import" href="../../../moment-element/moment-import.html">
 <link rel="import" href="t-date-picker-icons.html">
 
 <dom-module id="t-calendar">
@@ -1115,6 +1115,7 @@
                   endDate.maxDate = this.maxDate;
                 }
                 endDate._showDialog();
+               
                     if( endDate.value > setMax){
                   endDate.value = setMax;
                 }

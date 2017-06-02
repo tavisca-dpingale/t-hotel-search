@@ -1,5 +1,5 @@
 <script src='autocomplete.js'></script>
-<link rel="import" href="bower_components/paper-spinner/paper-spinner.html">
+<link rel="import" href="../paper-spinner/paper-spinner.html">
 <link rel="import" href="t-autosuggest-style.html">
 
 <!--
@@ -12,16 +12,16 @@
     .hide {
         display: none;
     }
-
+    
     .unhide {
         display: block;
     }
-
+    
     #line {
         border-bottom: 1px silver solid;
         margin: 3px 0 10px 0;
     }
-
+    
     #line span {
         background-color: white;
         padding: 4px;
@@ -35,40 +35,47 @@
              ::content * {
                 -webkit-text-size-adjust: none;
             }
-
+            
             #spinner {
                 margin-top: -34px;
                 float: right;
             }
-
+            
             #clearContainer {
                 width: 100%;
             }
-
+            
             #labelId {
                 color: lightgray;
             }
-
+            
             #autoSuggest {
                 width: 99%;
             }
-
+            
             #autoInput {
                 width: 100%;
                 float: left;
             }
-
+            
             #clearButton {
                 float: right;
                 margin-top: -37px;
                 color: white;
             }
-
+            
             paper-input-container {
                 --paper-input-container-focus-color: #4cb050;
                 --paper-input-container-color: lightgray;
                 --paper-input-container-input-color: white;
                 font-size: small;
+            }
+            
+            @media (min-width: 768px) and (max-width:1190px) {
+                #autoSuggest {
+                    width: 99%;
+                    font-size: 13px;
+                }
             }
         </style>
 
@@ -263,7 +270,7 @@
         listeners: {
             'tap': '_simpleTap',
             'clearContainer.tap': '_clear'
-        },       
+        },
 
         attached: function () {
             AutoComplete({
@@ -294,6 +301,8 @@
          * works when focus on input autosuggest.
          **/
         _focusOnInput: function () {
+           this.$.autoSuggest.placeholder = this.domHost.HotelLocation;
+            this.label = "";
             this.domHost.querySelector("#travellerInput").fire('blur');
             var startDate = this.domHost.querySelector("#start");
             var endDate = this.domHost.querySelector("#end");
@@ -355,7 +364,7 @@
             event.stopImmediatePropagation();
             return false;
         },
-       
+
         /**
          * Clear the seledted input on click of cross button.
          **/
@@ -374,7 +383,7 @@
                 this.classList.remove('focused');
                 this.$.dropBox.className = "autocomplete ";
                 this.$.spinner.hidden = true;
-                this.$.autoSuggest.bindValue = '';
+                focusInputColor.bindValue = '';
             }
             else {
                 this.classList.remove('focused');
@@ -400,6 +409,8 @@
                 this.classList.add('label-is-floating');
             } else {
                 this.classList.remove('label-is-floating');
+                this.$.autoSuggest.placeholder = "";
+                this.label = this.domHost.hotelLocation;
             }
             this._showReadMoreDots();
         },
@@ -419,6 +430,8 @@
             this.selectedValue = "";
             this.$.autoSuggest.value = "";
             this.classList.remove('label-is-floating');
+            // this.$.autoSuggest.placeholder = this.domHost.HotelLocation;
+            // this.label = "";
         },
         /**
          * Function to set width of selected value of autosuggest in text input according to offsetwidth.
@@ -428,7 +441,7 @@
             if (this.$.autoSuggest.value.length > l) {
                 this.$.autoSuggest.value = this.$.autoSuggest.bindValue.substring(0, l) + "..."
             }
-             return l;
+            return l;
         },
     })
 

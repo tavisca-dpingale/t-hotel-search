@@ -1,10 +1,10 @@
-<link rel="import" href="bower_components/polymer/polymer.html">
-<link rel="import" href="bower_components/iron-icons/iron-icons.html">
-<link rel="import" href="bower_components/paper-dialog/paper-dialog.html">
-<link rel="import" href="bower_components/paper-item/paper-item.html">
-<link rel="import" href="bower_components/paper-dropdown-menu/paper-dropdown-menu.html">
-<link rel="import" href="bower_components/iron-media-query/iron-media-query.html">
-<link rel="import" href="bower_components/paper-listbox/paper-listbox.html">
+<link rel="import" href="../polymer/polymer.html">
+<link rel="import" href="../iron-icons/iron-icons.html">
+<link rel="import" href="../paper-dialog/paper-dialog.html">
+<link rel="import" href="../paper-item/paper-item.html">
+<link rel="import" href="../paper-dropdown-menu/paper-dropdown-menu.html">
+<link rel="import" href="../iron-media-query/iron-media-query.html">
+<link rel="import" href="../paper-listbox/paper-listbox.html">
 <link rel="import" href="t-input-date-picker/t-input-date-picker.html">
 <link rel="import" href="t-search-style.html">
 <link rel="import" href="choice-card.html">
@@ -124,14 +124,13 @@ The form handles below mentioned scenarios on its own.
 
               <div id="start1" class="col-lg-1 col-md-1 col-sm-3 col-xs-6">
                 <t-input-date-picker required auto-validate error-message="{{checkInError}}" class="suggestions" date-format="MM/DD/YYYY"
-                  id="start" label="{{checkin}}" min-date="[[minDateToday]]" max-date="[[maxDate]]" on-tap="_openDatePicker"
-                  on-focus="this.blur()">
+                  id="start" label="{{checkin}}" min-date="[[minDateToday]]" max-date="[[maxDate]]" on-tap="_openDatePicker">
                 </t-input-date-picker>
               </div>
 
               <div id="end1" class="col-lg-1 col-md-1 col-sm-3 col-xs-6">
                 <t-input-date-picker required auto-validate error-message="{{checkOutError}}" class="suggestions" id="end" label="{{checkout}}"
-                  date-format="MM-DD-YYYY" max-date="[[maxDate]]" on-tap="_openDatePicker" on-focus="this.blur()">
+                  date-format="MM-DD-YYYY" max-date="[[maxDate]]" on-tap="_openDatePicker">
                 </t-input-date-picker>
               </div>
 
@@ -404,6 +403,10 @@ The form handles below mentioned scenarios on its own.
           type: String,
           value: "Search by Airport, Destination etc."
         },
+        HotelLocation: {
+          type: String,
+          value: "City, Airport, Address or Point of Interest"
+        },
         destinationError: {
           type: String,
           value: "Please enter your destination"
@@ -570,6 +573,11 @@ The form handles below mentioned scenarios on its own.
 
       _dismisCard: function () {
         var travellerLabelShow = this.$$("#deskinput1");
+        var tabsView = window.matchMedia("(min-width:768px) and (max-width:1190px)").matches;
+        if (tabsView) {
+          travellerLabelShow.querySelector("#input").style.fontSize = "13px";
+        }
+
         travellerLabelShow.label = this.travelers;
         travellerLabelShow.querySelector("#paper-input-label-3").style.color = "lightgray";
         var pCard = Polymer.dom(this.$.paperCard).node;
@@ -593,6 +601,8 @@ The form handles below mentioned scenarios on its own.
       * Function to open full screen calendar dialog at mobile screen.
       **/
       _openDatePicker: function () {
+        var startInput = Polymer.dom(this.$.start).node;
+        var endInput = Polymer.dom(this.$.end).node;
         if (mq) {
           this.$.end.invalid = false;
           Polymer.dom(this.$.toolbarDatePicker).node.style.display = "block";
@@ -604,12 +614,15 @@ The form handles below mentioned scenarios on its own.
           Polymer.dom(this.$.start1).node.classList.add("divColorofDatepicker");
           Polymer.dom(this.$.end1).node.classList.add("divColorofDatepicker");
           Polymer.dom(this.$.mainToolbar).node.classList.add("divColorofDatepicker");
-          var startInput = Polymer.dom(this.$.start).node;
-          var endInput = Polymer.dom(this.$.end).node;
           startInput.children[0].style.textAlign = "center";
           endInput.children[0].style.textAlign = "center";
           startInput.querySelector("#input").querySelector("#input").style.color = "black";
           endInput.querySelector("#input").querySelector("#input").style.color = "black";
+        }
+        var tabView = window.matchMedia("(min-width:768px) and (max-width:1190px)").matches;
+        if (tabView) {
+          startInput.querySelector("#input").querySelector("#input").style.fontSize = "13px";
+          endInput.querySelector("#input").querySelector("#input").style.fontSize = "13px";
         }
         if (this.showTravellersCard == true) {
           this.showTravellersCard = !this.showTravellersCard
@@ -693,10 +706,16 @@ The form handles below mentioned scenarios on its own.
       * Function called upon done button click for calendar on mobile screen.
       **/
       _doneDatePicker: function () {
+        var startDialog = this.querySelector("#start");
+        var endDialog = this.querySelector("#end");
+        startDialog.querySelector("#dialog").style.display = "none";
+        endDialog.querySelector("#dialog").style.display = "none";
+        startDialog.querySelector(".underline").style.border = "none";
+        endDialog.querySelector(".underline").style.border = "none";
         this.doneDatePicker = true;
         this._showDateToolbarFun();
-        doneStartDate = this.querySelector("#start").value;
-        doneEndDate = this.querySelector("#end").value;
+        doneStartDate = startDialog.value;
+        doneEndDate = endDialog.value;
       },
       /**
       * This function will work after clicking on back button on travellers toolbar in mobile screen.
@@ -743,12 +762,14 @@ The form handles below mentioned scenarios on its own.
           startDateValue.value = doneStartDate;
           endDateValue.value = doneEndDate;
         }
-        this.querySelector("#end").querySelector(".underline").style.border = "none";
-        this.querySelector("#start").querySelector("#dialog").style.display = "block";
+        endDateValue.querySelector(".underline").style.border = "none";
+        startDateValue.querySelector(".underline").style.border = "none";
+        startDateValue.querySelector("#dialog").style.display = "block";
         if (startDateValue.value === undefined) {
           this.querySelector("#calendar").children[0].scrollTop = 0;
         }
-        this.querySelector("#start").querySelector("#dialog").style.display = "none";
+        startDateValue.querySelector("#dialog").style.display = "none";
+        endDateValue.querySelector("#dialog").style.display = "none";
       },
 
       /**
@@ -783,6 +804,8 @@ The form handles below mentioned scenarios on its own.
        **/
 
       _showACMainToolbar: function () {
+        this.querySelector("#autoSuggest").placeholder = "";
+        this.querySelector("#location").label = this.hotelLocation;
         this.showTravellersCard = true;
         this.showToolbar = true;
         Polymer.dom(this.$.toolbarAutoComplete).node.style.display = "none";
@@ -1004,58 +1027,64 @@ The form handles below mentioned scenarios on its own.
           else {
             this.checkout = this.resources.labels.checkout;
           }
-           if (this.resources.labels.hotelLocation === undefined) {
-          this.hotelLocation;
-        }
-        else {
-          this.hotelLocation = this.resources.labels.hotelLocation;
-        }
+          if (this.resources.labels.hotelLocation === undefined) {
+            this.hotelLocation;
+          }
+          else {
+            this.hotelLocation = this.resources.labels.hotelLocation;
+          }
+          if (this.resources.labels.HotelLocation === undefined) {
+            this.HotelLocation;
+          }
+          else {
+            this.HotelLocation = this.resources.labels.HotelLocation;
+          }
         }
 
         /**WaterMark**/
-        if(this.resources.watermark === undefined){
-           this.checkIn;
-           this.checkOut;
-        }
-        else{
-        if (this.resources.watermark.checkIn === undefined) {
+        if (this.resources.watermark === undefined) {
           this.checkIn;
-        }
-        else {
-          this.checkIn = this.resources.watermark.checkIn;
-        }
-        if (this.resources.watermark.checkOut === undefined) {
           this.checkOut;
         }
         else {
-          this.checkOut = this.resources.watermark.checkOut;
+          if (this.resources.watermark.checkIn === undefined) {
+            this.checkIn;
+          }
+          else {
+            this.checkIn = this.resources.watermark.checkIn;
+          }
+          if (this.resources.watermark.checkOut === undefined) {
+            this.checkOut;
+          }
+          else {
+            this.checkOut = this.resources.watermark.checkOut;
+          }
         }
-        }
-        if(this.resources.errorMessage === undefined){
-           this.destinationError;
-           this.checkInError;
-            this.checkOutError;
-                    }
-                    else{
-        if (this.resources.errorMessage.destinationError === undefined) {
+        if (this.resources.errorMessage === undefined) {
           this.destinationError;
-        }
-        else {
-          this.destinationError = this.resources.errorMessage.destinationError;
-        }
-        if (this.resources.errorMessage.checkInError === undefined) {
           this.checkInError;
-        }
-        else {
-          this.checkInError = this.resources.errorMessage.checkInError;
-        }
-        if (this.resources.errorMessage.checkOutError === undefined) {
           this.checkOutError;
         }
         else {
-          this.checkOutError = this.resources.errorMessage.checkOutError;
+          if (this.resources.errorMessage.destinationError === undefined) {
+            this.destinationError;
+          }
+          else {
+            this.destinationError = this.resources.errorMessage.destinationError;
+          }
+          if (this.resources.errorMessage.checkInError === undefined) {
+            this.checkInError;
+          }
+          else {
+            this.checkInError = this.resources.errorMessage.checkInError;
+          }
+          if (this.resources.errorMessage.checkOutError === undefined) {
+            this.checkOutError;
+          }
+          else {
+            this.checkOutError = this.resources.errorMessage.checkOutError;
+          }
         }
-                    }
       },
 
       /*
@@ -1208,10 +1237,15 @@ The form handles below mentioned scenarios on its own.
 
         var travelLableColor = this.$$("#deskinput1");
         travelLableColor.querySelector("#input").style.color = "lightgray";
-
+        var deskView = window.matchMedia("(min-width:1024px) and (max-width:1260px)").matches;
+        if (deskView) {
+          var travellerDD = this.$$("#deskinput1").children[1].children[1];
+          travellerDD.style.width = "120%";
+          travellerDD.style.marginTop = "5px";
+        }
         if (mql) {
           var inputContent = this.$$("#deskinput1").children[1].children[1];
-          inputContent.style.width = "177%";
+          inputContent.style.width = "120%";
         }
       },
     });

@@ -36,6 +36,7 @@ var AutoComplete = (function () {
                             component.querySelector("#dropBox").style.display = "none";
                             component.querySelector("#clearContainer").style.display = "block";
                             ul.removeAttribute("class");
+                            component.label = component.domHost.hotelLocation;
                         }
                         closeBox(component.querySelector(".autocomplete"), false);
                     },
@@ -252,6 +253,12 @@ var AutoComplete = (function () {
                         }
                         //--------------------------------------------
 
+                        if(keyCode == 8){
+                            if(inputValue.length <= 0){
+                                component.label = "";
+                            }
+                        }
+
                         if (keyCode == 13 && attrClass(result).indexOf("open") != -1) {
                             liActive = result.querySelector("li.active");
                             if (liActive !== null) {
@@ -304,6 +311,12 @@ var AutoComplete = (function () {
                                 }
                             } else if (keyCode < 35 || keyCode > 40) {
                                 if (inputValue && custParams.url) {
+                                     if (inputValue.length >= 0) {
+                                         this.domHost.label = this.domHost.domHost.hotelLocation;
+                                     }
+                                      else{
+                                          this.domHost.label = "";
+                                     }
                                     if (inputValue.length >= component.minimumCharacters && component.selectedValue != inputValue) {                                        
                                         component.$.spinner.hidden = false;
                                         setTimeout(function () {
@@ -325,6 +338,7 @@ var AutoComplete = (function () {
                                                 component.domHost.querySelector("#Button").style.display = "none";
                                                 component.domHost.querySelector("#dropBox").style.display = "block";
                                             }
+                                            this.domHost.label = this.domHost.domHost.hotelLocation;
                                             var toolbar = component.domHost.querySelector("#toolbarAutoComplete");
                                             var itm = this;
                                             var cln;
@@ -338,8 +352,7 @@ var AutoComplete = (function () {
                                                 div.style.position = "relative";
                                                 div.style.height = "15px";
                                                 div.style.width = "100%";
-                                                div.setAttribute("id", "cloneDiv")
-                                                // div.style.top = "-40px";
+                                                div.setAttribute("id", "cloneDiv");
                                                 div.style.fontSize = "18px";
                                                 div.style.fontFamily = "roboto";
                                                 div.appendChild(cln);
@@ -392,6 +405,7 @@ var AutoComplete = (function () {
                                             }
                                         }
                                         else {
+                                            this.domHost.label = "";
                                             component.domHost.querySelector("#toolbarAutoComplete").style.display = "none";
                                             if (result.hasChildNodes()) {
                                                 result.removeChild(result.lastChild);

@@ -1,4 +1,4 @@
-<link rel="import" href="bower_components/polymer/polymer.html">
+<link rel="import" href="../polymer/polymer.html">
 <link rel="import" href="choice-form.html">
 <!--
 This component is a form that fires an event with request object on click of dropdown option 'need more rooms or have children'. 
@@ -379,11 +379,11 @@ The form handles below mentioned scenarios on its own.
                 this.inputAdultCount;
                 this.push('rooms', { room: "" }); //to show intial 1 room which is compulsory to select.
                 this.roomCount = this.roomCount + 1;
-                if(this.roomlabel === undefined){
-                   var roomlabels = "Room"
+                if (this.roomlabel === undefined) {
+                    var roomlabels = "Room"
                 }
-                else{
-                var roomlabels = this.roomlabel;
+                else {
+                    var roomlabels = this.roomlabel;
                 }
                 this._labelRoom(roomlabels);
             },
@@ -449,7 +449,7 @@ The form handles below mentioned scenarios on its own.
                 var form = this.querySelector("#choiceRoom");
                 form._calResultOfRoom(e.model.index);
                 this.roomCount = this.roomCount - 1;
-                 this.querySelector("#button1").style.visibility = "visible";
+                this.querySelector("#button1").style.visibility = "visible";
             },
             /**
             *Function works for delete button .
