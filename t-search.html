@@ -1107,14 +1107,14 @@ The form handles below mentioned scenarios on its own.
           this.querySelector("#autoInput").invalid = true;
           this.$.start.invalid = true;
           this.$.end.invalid = true;
-          this.querySelector("#start").querySelector("#paper-input-label-1").style.color = "lightgray";
-          this.querySelector("#end").querySelector("#paper-input-label-2").style.color = "lightgray";
+          this.querySelector("#start").querySelector("[id^='paper-input-label']").style.color = "lightgray";
+          this.querySelector("#end").querySelector("[id^='paper-input-label']").style.color = "lightgray";
         }
         else if (data[1] == undefined && data[2] == undefined) {
           this.$.start.invalid = true;
           this.$.end.invalid = true;
-          this.querySelector("#start").querySelector("#paper-input-label-1").style.color = "lightgray";
-          this.querySelector("#end").querySelector("#paper-input-label-2").style.color = "lightgray";
+          this.querySelector("#start").querySelector("[id^='paper-input-label']").style.color = "lightgray";
+          this.querySelector("#end").querySelector("[id^='paper-input-label']").style.color = "lightgray";
         }
         else if (data[0] == "") {//show error        
           this.querySelector("#autoInput").invalid = true;
