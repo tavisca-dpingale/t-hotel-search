@@ -1,6 +1,7 @@
 
 # \<t-search\>
 
+[![Build Status](https://travis-ci.org/nxtComponent/t-hotel-search.svg?branch=master)](https://travis-ci.org/nxtComponent/t-hotel-search)
 
 
 ## Install the Polymer-CLI
