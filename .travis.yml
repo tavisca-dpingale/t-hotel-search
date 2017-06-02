@@ -10,6 +10,7 @@ before_install:
   - sudo dpkg -i google-chrome*.deb
   - rm google-chrome-stable_current_amd64.deb
   - "npm install -g bower"
+  - "bower install"
   - "npm i -g web-component-tester@4.3.1 istanbul https://github.com/t2ym/web-component-tester-istanbul/tarball/0.10.1"
   - "npm install coveralls"
   - "export DISPLAY=:99.0"
@@ -18,4 +19,6 @@ script:
   - wct
 after_script:
   - "cat ./coverage/lcov.info | ./node_modules/coveralls/bin/coveralls.js"
-  
+deploy:
+  provider: script
+  script: "bash ./gpages_build.sh tavisca-gpawade t-hotel-search"
