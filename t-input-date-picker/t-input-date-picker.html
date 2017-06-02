@@ -465,8 +465,10 @@ Example:
     _showDialog: function (event) {
       var startDate = this.domHost.querySelector("#start");
       var endDate = this.domHost.querySelector("#end");
-      this.domHost.querySelector("#start").querySelector("#paper-input-label-1").style.color ="lightgray";
-      this.domHost.querySelector("#end").querySelector("#paper-input-label-2").style.color ="lightgray";
+      this.domHost.querySelector("#start").querySelector("[id^='paper-input-label']").style.color ="lightgray";
+      this.domHost.querySelector("#end").querySelector("[id^='paper-input-label']").style.color ="lightgray";
+      // this.domHost.querySelector("#start").querySelector("#paper-input-label-1").style.color ="lightgray";
+      // this.domHost.querySelector("#end").querySelector("#paper-input-label-2").style.color ="lightgray";
       if (this.id == 'end' && startDate.value != undefined) {
         endDate.querySelector(".underline").style.border = "1px solid #4cb050";
         endDate.querySelector(".unfocused-line").style.display = "none";
@@ -491,8 +493,8 @@ Example:
         });
       }
       else if (this.id == 'start') {
-        startDate.waterMark = this.domHost.checkIn;
-        endDate.waterMark = this.domHost.checkOut;
+        startDate.placeholder = this.domHost.checkIn;
+        endDate.placeholder = this.domHost.checkOut;
         startDate.querySelector(".underline").style.border = "1px solid #4cb050";
         startDate.querySelector(".unfocused-line").style.display = "none";
         startDate.invalid = false;

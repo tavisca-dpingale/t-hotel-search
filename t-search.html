@@ -579,7 +579,7 @@ The form handles below mentioned scenarios on its own.
         }
 
         travellerLabelShow.label = this.travelers;
-        travellerLabelShow.querySelector("#paper-input-label-3").style.color = "lightgray";
+        travellerLabelShow.querySelector("[id^='paper-input-label']").style.color = "lightgray";
         var pCard = Polymer.dom(this.$.paperCard).node;
         pCard.style.display = 'none';
         var paperItem = this.$$("#needRoom");
