@@ -379,6 +379,9 @@
             var focusInputColor = this.domHost.querySelector("#autoSuggest");
             focusInputColor.style.color = "white";
             if (this.selectedValue == '') {
+             if(focusInputColor.value.length >= 1){
+                    this.$.autoSuggest.placeholder = "";
+                }
                 this._clear(event);
                 this.classList.remove('focused');
                 this.$.dropBox.className = "autocomplete ";
