@@ -151,7 +151,7 @@ The form handles below mentioned scenarios on its own.
               <div id="Button" class="col-lg-1 col-md-1 col-sm-2 col-xs-12 text-center">
                 <paper-button on-tap="_submitSearchFormInput" class="button" id="button">Search</paper-button>
               </div>
-
+             
             </form>
           </app-toolbar>
         </div>
@@ -266,68 +266,111 @@ The form handles below mentioned scenarios on its own.
           type: String,
           value: 0
         },
-
+        /**
+        *@private
+        **/
         choices: {
           type: Array
         },
-
+        /**
+        *@private
+        **/
         checkInAllowFromNow: {
           type: Number,
           value: 0
         },
-
+        /**
+        *@private
+        **/
         minAdultCount: {
           type: Number,
           value: 2
-        },
+        },  
+        /**
+        *@private
+        **/
         maxAdultCount: {
           type: Number,
           value: 6
         },
+        /**
+        *@private
+        **/
         minChildCount: {
           type: Number,
           value: 0
         },
+        /**
+        *@private
+        **/
         maxChildCount: {
           type: Number,
           value: 5
         },
+        /**
+        *@private
+        **/
         minChildAge: {
           type: Number,
           value: 1
         },
+        /**
+        *@private
+        **/
         maxChildAge: {
           type: Number,
           value: 7
         },
+        /**
+        *@private
+        **/
         totalRoomPaxCount: {
           type: Number,
           value: 6
         },
+        /**
+        *@private
+        **/
         maxRoomCount: {
           type: Number,
           value: 2
         },
+        /**
+        *@private
+        **/
         defaultAdultCount: {
           type: Number,
           value: 0
         },
+        /**
+        *@private
+        **/
         defaultChildCount: {
           type: Number,
           value: 0
         },
+        /**
+        *@private
+        **/
         maxStayDuration: {
           type: Number,
           value: 30
         },
+        /**
+        *@private
+        **/
         defaultStayDuration: {
           type: Number,
           value: 4
         },
+        
         format: {
           type: String,
           value: "MM/DD/YYYY"
         },
+        /**
+        *@private
+        **/
         defaultSelectOption: {
           type: Object,
           value: [{
@@ -348,42 +391,72 @@ The form handles below mentioned scenarios on its own.
         /**
         Labels
         **/
+        /**
+        *@private
+        **/
         adult: {
           type: String,
           value: "Adult"
         },
+        /**
+        *@private
+        **/
         adults: {
           type: String,
           value: "Adults"
         },
+        /**
+        *@private
+        **/
         room: {
           type: String,
           value: "Room"
         },
+        /**
+        *@private
+        **/
         rooms: {
           type: String,
           value: "Rooms"
         },
+        /**
+        *@private
+        **/
         childrens: {
           type: String,
           value: "Children"
         },
+        /**
+        *@private
+        **/
         child: {
           type: String,
           value: "Child"
         },
+        /**
+        *@private
+        **/
         age: {
           type: String,
           value: "Age"
         },
+        /**
+        *@private
+        **/
         travelers: {
           type: String,
           value: "Travellers"
         },
+        /**
+        *@private
+        **/
         checkin: {
           type: String,
           value: "Check in"
         },
+        /**
+        *@private
+        **/
         checkout: {
           type: String,
           value: "Check out"
@@ -391,30 +464,51 @@ The form handles below mentioned scenarios on its own.
         /**
         WaterMark
         **/
+        /**
+        *@private
+        **/
         checkIn: {
           type: String,
           value: "MM/DD/YY"
         },
+        /**
+        *@private
+        **/
         checkOut: {
           type: String,
           value: "MM/DD/YY"
         },
+        /**
+        *@private
+        **/
         hotelLocation: {
           type: String,
           value: "Search by Airport, Destination etc."
         },
+        /**
+        *@private
+        **/
         HotelLocation: {
           type: String,
           value: "City, Airport, Address or Point of Interest"
         },
+        /**
+        *@private
+        **/
         destinationError: {
           type: String,
           value: "Please enter your destination"
         },
+        /**
+        *@private
+        **/
         checkInError: {
           type: String,
           value: "Please enter checkin date"
         },
+        /**
+        *@private
+        **/
         checkOutError: {
           type: String,
           value: "Please enter checkout date"
@@ -813,7 +907,6 @@ The form handles below mentioned scenarios on its own.
         this.querySelector("#travellField").style.display = "block";
         this.querySelector("#dropBox").style.display = "none";
       },
-
       /**
       *Function to clear autocomplete toolbar content when clicked on clear button for mobile screen.
       **/
@@ -1190,7 +1283,6 @@ The form handles below mentioned scenarios on its own.
             searchModel.checkOutDate = JsonData[2];
             searchModel.rooms = arrTravellers;
             searchModel.type = "Hotel";
-
             console.log(searchModel);
             return false;      // stop form from posting
           }
