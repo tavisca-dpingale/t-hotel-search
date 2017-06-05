@@ -28,45 +28,46 @@ The form handles below mentioned scenarios on its own.
              :host {
                 display: block;
             }
-
+            
             paper-dropdown-menu {
                 --paper-input-container-color: lightgray;
                 --paper-input-container-focus-color: #4cb050;
                 --paper-input-container-input-color: black;
                 --paper-input-container-label-focus: lightgray;
             }
-
+            
             paper-input {
                 --paper-input-container-focus-color: #4cb050;
                 --paper-input-container-color: lightgray;
                 --paper-input-container-input-color: white;
                 --paper-input-container-label-focus: lightgray;
             }
-
+            
             .age {
                 color: silver;
                 font-size: 11px;
                 font-family: Roboto;
             }
-
+            
             #size {
                 font-size: 11px;
                 color: silver;
                 font-family: Roboto;
             }
-
+            
             #listBox {
                 width: 60px;
+                height: 150px;
+                z-index: 103;
                 position: relative;
                 overflow-x: none;
             }
-
+            
             @media (min-width:1024px) and (max-width:1200px) {
                 #Adult {
                     width: 16%;
                     float: left;
                     float: clear;
-                    /*margin-top: -12px;*/
                     margin-left: 2%;
                 }
                 .childs {
@@ -74,21 +75,20 @@ The form handles below mentioned scenarios on its own.
                     float: left;
                     margin-left: 2%;
                     float: clear;
-                    /*margin-top: -12px;*/
                 }
                 .childs1 {
                     width: 18%;
                     float: left;
                     margin-left: 2%;
                     float: clear;
-                    /*margin-top: -12px;*/
                 }
                 .container1 {
                     width: 100%;
                     margin-left: 5px;
                 }
             }
-             @media (min-width:1200px) and (max-width:2200px) {
+            
+            @media (min-width:1200px) and (max-width:2200px) {
                 #Adult {
                     width: 16%;
                     float: left;
@@ -115,13 +115,12 @@ The form handles below mentioned scenarios on its own.
                     margin-left: 5px;
                 }
             }
-
+            
             @media (min-width:600px) and (max-width:1023px) {
                 #Adult {
                     width: 16%;
                     float: left;
                     float: clear;
-                    /*margin-top: -12px;*/
                     margin-left: 2%;
                 }
                 .childs {
@@ -129,21 +128,19 @@ The form handles below mentioned scenarios on its own.
                     float: left;
                     margin-left: 2%;
                     float: clear;
-                    /*margin-top: -12px;*/
                 }
                 .childs1 {
                     width: 18%;
                     float: left;
                     margin-left: 2%;
                     float: clear;
-                    /*margin-top: -12px;*/
                 }
                 .container1 {
                     width: 100%;
                     margin-left: 5px;
                 }
             }
-
+            
             @media (max-width: 600px) {
                 .container1 {
                     width: 100%;
@@ -167,7 +164,7 @@ The form handles below mentioned scenarios on its own.
                     float: clear;
                 }
             }
-
+            
             @media screen and (-ms-high-contrast: active),
             (-ms-high-contrast: none) {
                 #Adult {
@@ -458,20 +455,20 @@ The form handles below mentioned scenarios on its own.
                 this._removeError();
                 this.querySelector("#childAge").render();
                 var adultValue = this.querySelector(".inputAdultCount").value;
-                if(adultValue == 1){
+                if (adultValue == 1) {
                     this.adultLabel = this.dataHost.dataHost.domHost.domHost.adult;
                 }
-                else{
+                else {
                     this.adultLabel = this.dataHost.dataHost.domHost.domHost.adults;
                 }
                 var childValue = this.querySelector(".inputChildCount").value;
-                 if(childValue == 1){
+                if (childValue == 1) {
                     this.childLabel = "Child";
                 }
-                else{
+                else {
                     this.childLabel = this.dataHost.dataHost.domHost.domHost.childrens;
                 }
-            
+
                 if (childValue == setcount) {
                     this.querySelector(".inputAdultCount").querySelector(".paper-input").querySelector(".paper-input").style.color = "lightgray";
                     this.querySelector(".inputChildCount").querySelector(".paper-input").querySelector(".paper-input").style.color = "lightgray";
@@ -484,7 +481,7 @@ The form handles below mentioned scenarios on its own.
                     }
                 }
             },
-           
+
             /**
             * This function is used for removing error of adult and children dropdown after reclicking on it.
             **/
@@ -527,11 +524,11 @@ The form handles below mentioned scenarios on its own.
                     var totalRoomPaxCount = this.domHost.domHost.totalRoomPaxCount;
                     if (totalCount > totalRoomPaxCount) {
                         this.domHost.querySelectorAll(".head")[i].querySelector("#errfn").innerHTML = "Maximum Paxcount " + '' + totalRoomPaxCount;
-                        this.domHost.querySelectorAll(".head")[i].querySelector("#countError").style.display ="block";
+                        this.domHost.querySelectorAll(".head")[i].querySelector("#countError").style.display = "block";
                     }
                     else {
                         this.domHost.querySelectorAll(".head")[i].querySelector("#errfn").innerHTML = "";
-                         this.domHost.querySelectorAll(".head")[i].querySelector("#countError").style.display ="none";
+                        this.domHost.querySelectorAll(".head")[i].querySelector("#countError").style.display = "none";
                     }
                 }
             },
@@ -600,7 +597,7 @@ The form handles below mentioned scenarios on its own.
                     var deskOut = this.domHost.domHost.querySelector("#menuButton");
                     deskOut.domHost.querySelector("#input").value = spanData;
                 }
-                
+
                 if (mq) {
                     var toolbar = this.domHost.domHost.querySelector("#toolbarRoom")
                     var span = domCreate("span");
@@ -615,11 +612,11 @@ The form handles below mentioned scenarios on its own.
                     div.style.marginLeft = "21px";
                     div.style.width = "250px";
                     div.style.top = "-20px";
-                    var mqI =window.matchMedia("(max-width:330px)").matches;
-                    if(mqI){
+                    var mqI = window.matchMedia("(max-width:330px)").matches;
+                    if (mqI) {
                         div.style.fontSize = "13px";
-                    }else{
-                    div.style.fontSize = "15px";
+                    } else {
+                        div.style.fontSize = "15px";
                     }
                     div.style.fontFamily = "roboto";
                     var checkSpan = toolbar.querySelector("#spanId");
