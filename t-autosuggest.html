@@ -379,7 +379,7 @@
             var focusInputColor = this.domHost.querySelector("#autoSuggest");
             focusInputColor.style.color = "white";
             if (this.selectedValue == '') {
-             if(focusInputColor.value.length >= 1){
+                 if(focusInputColor.value.length >= 1){
                     this.$.autoSuggest.placeholder = "";
                 }
                 this._clear(event);
@@ -433,8 +433,6 @@
             this.selectedValue = "";
             this.$.autoSuggest.value = "";
             this.classList.remove('label-is-floating');
-            // this.$.autoSuggest.placeholder = this.domHost.HotelLocation;
-            // this.label = "";
         },
         /**
          * Function to set width of selected value of autosuggest in text input according to offsetwidth.
