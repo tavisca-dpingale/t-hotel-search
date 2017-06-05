@@ -42,435 +42,479 @@
       setup(function () {
         header = fixture('basic');
       });
-      test('_dismisCard', function () {
-        element = fixture('basic');
-        element._dismisCard();
-        var paperItem = element.$.needRoom;
-        assert.equal(paperItem.textContent, 'Need more rooms or have children?');
-      });
-
-      test('_openDatePicker--if', function () {
-        element = fixture('basic');
-        var mq = window.matchMedia("(min-width: 767px)").matches;
-        element._openDatePicker();
-        assert.equal(element.$.end.invalid, false);
-
-      });
-
-      test('_doneDatePicker', function () {
-        element = fixture('basic');
-        element._doneDatePicker();
-        assert.equal(element.doneDatePicker, true);
-      });
-
-      test('_showDPMainToolbar', function () {
-        element = fixture('basic');
-        var paperItem = element.$.needRoom;
-        element._showDPMainToolbar();
-        assert.equal(paperItem.textContent, 'Need more rooms or have children?');
-      });
-      test('_showDPMainToolbar-doneRoomCard', function () {
-        element = fixture('basic');
-        var paperItem = element.$.needRoom;
-        element.doneRoomCard = true;
-        element.doneRoomCardOutput = undefined;
-        element._showDPMainToolbar();
-        assert.equal(paperItem.textContent, 'Need more rooms or have children?');
-      });
-      test('_showDPMainToolbar-else', function () {
-        element = fixture('basic');
-        var paperItem = element.$.needRoom;
-        element.doneRoomCard = false;
-        element.doneRoomCardOutput = "abc";
-        element._showDPMainToolbar();
-        assert.equal(paperItem.textContent, 'Need more rooms or have children?');
-      });
-
-      test('_showACMainToolbar', function () {
-        element = fixture('basic');
-        element._showACMainToolbar();
-        assert.equal(element.showToolbar, true);
-      });
-      test('_showDateToolbar--if', function () {
-        element = fixture('basic');
-        var startDate = element.$.start.value;
-        element._showDateToolbar();
-        assert.equal(startDate, undefined)
-      });
-      test('_showDateToolbar--else', function () {
-        element = fixture('basic');
-        element.$.start.value = new Date("05/17/17");
-        element.$.end.value = new Date("05/19/17");
-        var startDate = element.$.start.value;
-        element._doneDatePicker();
-        element._showDateToolbar();
-        assert.equal(startDate.setHours(0, 0, 0, 0), new Date("05/17/17").setHours(0, 0, 0, 0));
-      });
-
-      test('_tabpress--if', function () {
-        element = fixture('basic');
-        var e = new KeyboardEvent("keypress", {
-          view: window,
-          bubbles: true,
-          cancelable: true,
-          key: "ArrowDown",
-          code: "ArrowDown",
-          keyCode: 40
+        test('_dismisCard', function () {
+          element = fixture('basic');
+          element._dismisCard();
+          var paperItem = element.$.needRoom;
+          assert.equal(paperItem.textContent, 'Need more rooms or have children?');
         });
-        element._tabPress(e);
-        var paperItem = element.$.needRoom;
-        assert.equal(paperItem.textContent, "Need more rooms or have children?")
-      });
-       test('_tabpress--else', function () {
-        element = fixture('basic');
-        var e = new KeyboardEvent("keypress", {
-          view: window,
-          bubbles: true,
-          cancelable: true,
-          key: "Enter",
-          code: "ArrowDown",
-          keyCode: 40
+
+        test('_openDatePicker--if', function () {
+          element = fixture('basic');
+          var mq = window.matchMedia("(min-width: 767px)").matches;
+          element._openDatePicker();
+          assert.equal(element.$.end.invalid, false);
+
         });
-         var paperItem = element._tabPress(e);
-        assert.equal(paperItem, undefined)
-      });
-      test('_doneRoomCard', function () {
-        element = fixture('basic');
-        var card = element.$.choiceCard;
-        card.$.choiceForms.render();
-        var validData = element._doneRoomCard();
-        assert.equal(validData, true);
-      });
-      test('_doneRoomCard', function () {
-        element = fixture('basic');
-        var card = element.$.choiceCard;
-        card._addRoom();
-        card.$.choiceForms.render();
-        var forms = card.querySelectorAll("#choiceRoom");
-        forms[1].countChildren = 2;
-        forms[1].$.childAge.render();
-        var validData = element._doneRoomCard();
-        assert.equal(validData, undefined);
-      });
-      function setDummyInputData() {
-        element = fixture('basic');
-        var loc = element.$.location;
-        var autoS = loc.$.autoSuggest;
-        autoS.value = "London, United Kingdom";
-        element.$.start.value = new Date("05/25/17");
-        element.$.end.value = new Date("05/30/17");
-        var menu = element.$.deskinput1;
-        var menuB = menu.$.menuButton;
-        var input = menuB.querySelector("#input");
-        input.value = "2 Adults in 1 room";
-      }
 
-      test('_submitSearchFormInput', function (done) {
-        element = fixture('basic');
-        setDummyInputData();
-        header = fixture('basic');
-        element.dataCity = {
-          additionalInfo: null,
-          cityName: "London",
-          code: "LON",
-          countryCode: "GB",
-          countryName: "United Kingdom",
-          formattedAddress: "London, United Kingdom",
-          geoCode: "51.50015,-0.1262362",
-          id: 5778,
-          name: "London",
-          stateCode: "",
-          stateName: "",
-          type: "City"
-        }
-        var card = header.$.choiceCard;
-        card.$.choiceForms.render();
-        var e = new MouseEvent("click", {
-          view: window,
-          bubbles: true,
-          cancelable: true,
-          clientX: 20,
+        test('_doneDatePicker', function () {
+          element = fixture('basic');
+          element._doneDatePicker();
+          assert.equal(element.doneDatePicker, true);
         });
-        var returnResult = element._submitSearchFormInput(e);
-        done();
-        assert.equal(returnResult, false);
 
-      });
-      test('_submitSearchFormInput-if', function (done) {
-        element = fixture('basic');
-        var loc = element.$.location;
-        var autoS = loc.$.autoSuggest;
-        autoS.value = "";
-        element.$.start.value = undefined;
-        element.$.end.value = undefined;
-        var e = new MouseEvent("click", {
-          view: window,
-          bubbles: true,
-          cancelable: true,
-          clientX: 20,
+        test('_showDPMainToolbar', function () {
+          element = fixture('basic');
+          var paperItem = element.$.needRoom;
+          element._showDPMainToolbar();
+          assert.equal(paperItem.textContent, 'Need more rooms or have children?');
         });
-        var returnResult = element._submitSearchFormInput(e);
-        done();
-        assert.equal(element.$.end.invalid, true);
-      });
-      test('_submitSearchFormInput-else-if', function (done) {
-        element = fixture('basic');
-        var loc = element.$.location;
-        var autoS = loc.$.autoSuggest;
-        autoS.value = "abc";
-        element.$.start.value = undefined;
-        element.$.end.value = undefined;
-        var e = new MouseEvent("click", {
-          view: window,
-          bubbles: true,
-          cancelable: true,
-          clientX: 20,
+        test('_showDPMainToolbar-doneRoomCard', function () {
+          element = fixture('basic');
+          var paperItem = element.$.needRoom;
+          element.doneRoomCard = true;
+          element.doneRoomCardOutput = undefined;
+          element._showDPMainToolbar();
+          assert.equal(paperItem.textContent, 'Need more rooms or have children?');
         });
-        var returnResult = element._submitSearchFormInput(e);
-        done();
-        assert.equal(element.$.start.invalid, true);
-      });
-      test('_submitSearchFormInput-else-if-autosuggestvalue', function (done) {
-        element = fixture('basic');
-        var loc = element.$.location;
-        var autoS = loc.$.autoSuggest;
-        autoS.value = "";
-        element.$.start.value = new Date("05/25/17");
-        element.$.end.value = new Date("05/31/17");
-        var e = new MouseEvent("click", {
-          view: window,
-          bubbles: true,
-          cancelable: true,
-          clientX: 20,
+        test('_showDPMainToolbar-else', function () {
+          element = fixture('basic');
+          var paperItem = element.$.needRoom;
+          element.doneRoomCard = false;
+          element.doneRoomCardOutput = "abc";
+          element._showDPMainToolbar();
+          assert.equal(paperItem.textContent, 'Need more rooms or have children?');
         });
-        var returnResult = element._submitSearchFormInput(e);
-        done();
-        assert.equal(loc.$.autoInput.invalid, true);
-      });
-       test('_submitSearchFormInput-else', function (done) {
-        element = fixture('basic');
-         var loc = element.$.location;
-        var autoS = loc.$.autoSuggest;
-        autoS.value = "abc";
-         element.$.start.value = new Date("05/25/17");
-        element.$.end.value = new Date("05/31/17");
-         var card = element.$.choiceCard;
-        card._addRoom();
-        card.$.choiceForms.render();
-        var forms = card.querySelectorAll("#choiceRoom");
-        forms[1].countChildren = 2;
-        forms[1].$.childAge.render();
-        var e = new MouseEvent("click", {
-          view: window,
-          bubbles: true,
-          cancelable: true,
-          clientX: 20,
+
+        test('_showACMainToolbar', function () {
+          element = fixture('basic');
+          element._showACMainToolbar();
+          assert.equal(element.showToolbar, true);
         });
-        var returnResult = element._submitSearchFormInput(e);
-        done();
-        assert.equal(returnResult, undefined);
-      });
-
-
-      /***************CHOICE-CARD*******************/
-
-      test('_onkeyPress', function () {
-        header = fixture('basic');
-        var card = header.$.choiceCard;
-         var e = {
-            "key": "Enter",
-          "model": {
-            "index": 1
-          },
-        }
-        card._addRoom();
-        card.$.choiceForms.render();
-        card.roomCount = 2;
-        card._onkeyPress(e);
-        assert.equal(card.roomCount, 1);
-      });
-       test('_onkeyPress', function () {
-        header = fixture('basic');
-        var card = header.$.choiceCard;
-        var e = new KeyboardEvent("keypress", {
-          view: window,
-          bubbles: true,
-          cancelable: true,
-          key: "delete",
-          code: "Enter",
-          keyCode: 13
+        test('_showDateToolbar--if', function () {
+          element = fixture('basic');
+          var startDate = element.$.start.value;
+          element._showDateToolbar();
+          assert.equal(startDate, undefined)
         });
-        card._addRoom();
-        card.$.choiceForms.render();
-        card.roomCount = 2;
-        card._onkeyPress(e);
-        assert.equal(card.roomCount, 2);
-      });
-
-      test('deleteRoom function', function () {
-        header = fixture('basic');
-        var card = header.$.choiceCard;
-        card.$.choiceForms.render();
-        var forms = card.querySelector("#choiceRoom");
-         var e = {
-          "model": {
-            "index": 1
-          },
-        }
-        forms.countChildren = 2;
-        forms._onCount();
-        card._deleteRoom(e);
-        roomCount = card.roomCount;
-        console.log(roomCount);
-        assert.equal(roomCount, 0);
-      });
-
-      test('_idDelCal -if', function () {
-        header = fixture('basic');
-        var card = header.$.choiceCard;
-        card._addRoom();
-        card.$.choiceForms.render();
-        var forms = card.querySelectorAll("#choiceRoom");
-        var e = {
-            "key": "Enter",
-          "model": {
-            "index": 0
-          },
-        }
-        forms[1].countChildren = 2;
-        card.$.choiceForms.render();
-        i = 0;
-        card._deleteRoom(e);
-        card._idDelCal();
-        assert.equal(roomIdArray[i], undefined);
-      });
-
-     test('_idDelCal -else', function () {
-        header = fixture('basic');
-        var card = header.$.choiceCard;
-        card._addRoom();
-        card.$.choiceForms.render();
-        var forms = card.querySelectorAll("#choiceRoom");
-        mockEvent = new Event('click');
-        sinon.spy(mockEvent, 'preventDefault');
-        e = mockEvent;
-        console.log(card.roomCount);
-        forms[1].countChildren = 2;
-        i = 0;
-        card._idDelCal(i);
-        assert.equal(roomIdArray[i], undefined);
-      });
-      test('Add Room function', function () {
-        header = fixture('basic');
-        var card = header.$.choiceCard;
-        card._addRoom();
-        roomCount = card.roomCount;
-        assert.equal(roomCount, 2);
-      });
-      test('displayIndex function', function () {
-        header = fixture('basic');
-        var card = header.$.choiceCard;
-        index = 0;
-        var roomIndex = card._displayIndex(index);
-        assert.equal(roomIndex, 1);
-      });
-
-      test('_lte', function () {
-        element = fixture('basic');
-        var card = element.$.choiceCard;
-        card._addRoom();
-        roomcount = card.roomCount;
-        var result = card._lte(roomcount, 1);
-        assert.equal(result, false);
-      });
-
-      test('showButton Property', function () {
-        element = fixture('basic');
-        var card = element.$.choiceCard;
-        var mq = window.matchMedia("(max-width: 767px)").matches;
-        if (mq) {
-          assert.equal(card.showButton, true);
-        }
-        else {
-          assert.equal(card.showButton, false);
-        }
-      });
-
-      test("show variable for hidden traveller dropdown toggle", function () {
-        assert.equal(header.showTravellersCard, true);
-      });
-      test("showDatePicker", function () {
-        assert.equal(header.showDatePicker, true);
-      });
-      test("showToolbar", function () {
-        assert.equal(header.showToolbar, true);
-      });
-      test("mobilePhone", function () {
-        var mq = window.matchMedia("(max-width: 767px)").matches;
-        if (mq) {
-          assert.equal(header.mobilePhone, true);
-        }
-        else {
-          assert.equal(header.mobilePhone, false);
-        }
-      });
-      test("tabletView", function () {
-        assert.equal(header.tabletView, false);
-      });
-      test("mediumTablet", function () {
-        var mq = window.matchMedia("(max-width: 600px)").matches;
-        if (mq) {
-          assert.equal(header.mediumTablet, true);
-        }
-        else {
-          assert.equal(header.mediumTablet, false);
-        }
-      });
-      test("choice", function () {
-        assert.equal(header.choice, 0);
-      });
-
-      test('_openChildForm--if', function () {
-        element = fixture('basic');
-        var card = header.$.choiceCard;
-        card.$.choiceForms.render();
-        var e = new MouseEvent("click", {
-          view: window,
-          bubbles: true,
-          cancelable: true,
-          clientX: 20,
+        test('_showDateToolbar--else', function () {
+          element = fixture('basic');
+          element.$.start.value = new Date("05/17/17");
+          element.$.end.value = new Date("05/19/17");
+          var startDate = element.$.start.value;
+          element._doneDatePicker();
+          element._showDateToolbar();
+          assert.equal(startDate.setHours(0, 0, 0, 0), new Date("05/17/17").setHours(0, 0, 0, 0));
         });
-        element._openChildForm(e);
-        assert.equal(element.choice, 0);
-      });
-      test('_doneRoom', function () {
-        element = fixture('basic');
-        var card = element.$.choiceCard;
-        card.$.choiceForms.render();
-        var forms = card.querySelector("#choiceRoom");
-        console.log(card.roomCount);
-        forms.countChildren = 5;
-         card.domHost.querySelector(".inputAdultCount").querySelector("#listBox").selected = 4;
-       card.$.choiceForms.render();
-        var validData = card._doneRoom();
-        assert.equal(validData, false);
-      });
-     test('_idCal',function(){
-        header = fixture('basic');
-        var card = header.$.choiceCard;
-        card._addRoom();
-        card.$.choiceForms.render();
-         card._addRoom();
-         card.$.choiceForms.render();
-          var e = {
-            "key": "Enter",
-          "model": {
-            "index": 1
-          },
+
+        test('_tabpress--if', function () {
+          element = fixture('basic');
+          var e = new KeyboardEvent("keypress", {
+            view: window,
+            bubbles: true,
+            cancelable: true,
+            key: "ArrowDown",
+            code: "ArrowDown",
+            keyCode: 40
+          });
+          element._tabPress(e);
+          var paperItem = element.$.needRoom;
+          assert.equal(paperItem.textContent, "Need more rooms or have children?")
+        });
+         test('_tabpress--else', function () {
+          element = fixture('basic');
+          var e = new KeyboardEvent("keypress", {
+            view: window,
+            bubbles: true,
+            cancelable: true,
+            key: "Enter",
+            code: "ArrowDown",
+            keyCode: 40
+          });
+           var paperItem = element._tabPress(e);
+          assert.equal(paperItem, undefined)
+        });
+        test('_doneRoomCard', function () {
+          element = fixture('basic');
+          var card = element.$.choiceCard;
+          card.$.choiceForms.render();
+          var validData = element._doneRoomCard();
+          assert.equal(validData, true);
+        });
+        test('_doneRoomCard', function () {
+          element = fixture('basic');
+          var card = element.$.choiceCard;
+          card._addRoom();
+          card.$.choiceForms.render();
+          var forms = card.querySelectorAll("#choiceRoom");
+          forms[1].countChildren = 2;
+          forms[1].$.childAge.render();
+          var validData = element._doneRoomCard();
+          assert.equal(validData, undefined);
+        });
+        function setDummyInputData() {
+          element = fixture('basic');
+          var loc = element.$.location;
+          var autoS = loc.$.autoSuggest;
+          autoS.value = "London, United Kingdom";
+          element.$.start.value = new Date("05/25/17");
+          element.$.end.value = new Date("05/30/17");
+          var menu = element.$.deskinput1;
+          var menuB = menu.$.menuButton;
+          var input = menuB.querySelector("#input");
+          input.value = "2 Adults in 1 room";
         }
+
+        test('_submitSearchFormInput', function (done) {
+          element = fixture('basic');
+          setDummyInputData();
+          header = fixture('basic');
+          element.dataCity = {
+            additionalInfo: null,
+            cityName: "London",
+            code: "LON",
+            countryCode: "GB",
+            countryName: "United Kingdom",
+            formattedAddress: "London, United Kingdom",
+            geoCode: "51.50015,-0.1262362",
+            id: 5778,
+            name: "London",
+            stateCode: "",
+            stateName: "",
+            type: "City"
+          }
+          var card = header.$.choiceCard;
+          card.$.choiceForms.render();
+          var e = new MouseEvent("click", {
+            view: window,
+            bubbles: true,
+            cancelable: true,
+            clientX: 20,
+          });
+          var returnResult = element._submitSearchFormInput(e);
+          done();
+          assert.equal(returnResult, false);
+
+        });
+        test('_submitSearchFormInput-if', function (done) {
+          element = fixture('basic');
+          var loc = element.$.location;
+          var autoS = loc.$.autoSuggest;
+          autoS.value = "";
+          element.$.start.value = undefined;
+          element.$.end.value = undefined;
+          var e = new MouseEvent("click", {
+            view: window,
+            bubbles: true,
+            cancelable: true,
+            clientX: 20,
+          });
+          var returnResult = element._submitSearchFormInput(e);
+          done();
+          assert.equal(element.$.end.invalid, true);
+        });
+        test('_submitSearchFormInput-else-if', function (done) {
+          element = fixture('basic');
+          var loc = element.$.location;
+          var autoS = loc.$.autoSuggest;
+          autoS.value = "abc";
+          element.$.start.value = undefined;
+          element.$.end.value = undefined;
+          var e = new MouseEvent("click", {
+            view: window,
+            bubbles: true,
+            cancelable: true,
+            clientX: 20,
+          });
+          var returnResult = element._submitSearchFormInput(e);
+          done();
+          assert.equal(element.$.start.invalid, true);
+        });
+        test('_submitSearchFormInput-else-if-autosuggestvalue', function (done) {
+          element = fixture('basic');
+          var loc = element.$.location;
+          var autoS = loc.$.autoSuggest;
+          autoS.value = "";
+          element.$.start.value = new Date("05/25/17");
+          element.$.end.value = new Date("05/31/17");
+          var e = new MouseEvent("click", {
+            view: window,
+            bubbles: true,
+            cancelable: true,
+            clientX: 20,
+          });
+          var returnResult = element._submitSearchFormInput(e);
+          done();
+          assert.equal(loc.$.autoInput.invalid, true);
+        });
+         test('_submitSearchFormInput-else', function (done) {
+          element = fixture('basic');
+           var loc = element.$.location;
+          var autoS = loc.$.autoSuggest;
+          autoS.value = "abc";
+           element.$.start.value = new Date("05/25/17");
+          element.$.end.value = new Date("05/31/17");
+           var card = element.$.choiceCard;
+          card._addRoom();
+          card.$.choiceForms.render();
+          var forms = card.querySelectorAll("#choiceRoom");
+          forms[1].countChildren = 2;
+          forms[1].$.childAge.render();
+          var e = new MouseEvent("click", {
+            view: window,
+            bubbles: true,
+            cancelable: true,
+            clientX: 20,
+          });
+          var returnResult = element._submitSearchFormInput(e);
+          done();
+          assert.equal(returnResult, undefined);
+        });
+         test('_adultLabel', function () {
+           element = fixture('basic');
+           element._adultLabel(2);
+           assert.equal(element.adults, "Adults");
+        });
+         test('_adultLabel', function () {
+           element = fixture('basic');
+           element._adultLabel(0);
+           assert.equal(element.adult, "Adult");
+        });
+         test('_roomLabel', function () {
+           element = fixture('basic');
+           element._roomLabel(2);
+           assert.equal(element.rooms, "Rooms");
+        });
+         test('_roomLabel', function () {
+           element = fixture('basic');
+           element._roomLabel(0);
+           assert.equal(element.room, "Room");
+        });
+
+        /***************CHOICE-CARD*******************/
+
+        test('_onkeyPress', function () {
+          header = fixture('basic');
+          var card = header.$.choiceCard;
+           var e = {
+              "key": "Enter",
+            "model": {
+              "index": 1
+            },
+          }
+          card._addRoom();
+          card.$.choiceForms.render();
+          card.roomCount = 2;
+          card._onkeyPress(e);
+          assert.equal(card.roomCount, 1);
+        });
+         test('_onkeyPress', function () {
+          header = fixture('basic');
+          var card = header.$.choiceCard;
+          var e = new KeyboardEvent("keypress", {
+            view: window,
+            bubbles: true,
+            cancelable: true,
+            key: "delete",
+            code: "Enter",
+            keyCode: 13
+          });
+          card._addRoom();
+          card.$.choiceForms.render();
+          card.roomCount = 2;
+          card._onkeyPress(e);
+          assert.equal(card.roomCount, 2);
+        });
+
+        test('deleteRoom function', function () {
+          header = fixture('basic');
+          var card = header.$.choiceCard;
+          card.$.choiceForms.render();
+          var forms = card.querySelector("#choiceRoom");
+           var e = {
+            "model": {
+              "index": 1
+            },
+          }
+          forms.countChildren = 2;
+          forms._onCount();
           card._deleteRoom(e);
-           card.$.choiceForms.render();
-        var forms = card.querySelectorAll("#choiceRoom");
+          roomCount = card.roomCount;
+          console.log(roomCount);
+          assert.equal(roomCount, 0);
+        });
+
+        test('_idDelCal -if', function () {
+          header = fixture('basic');
+          var card = header.$.choiceCard;
+          card._addRoom();
+          card.$.choiceForms.render();
+          var forms = card.querySelectorAll("#choiceRoom");
+          var e = {
+              "key": "Enter",
+            "model": {
+              "index": 0
+            },
+          }
+          forms[1].countChildren = 2;
+          card.$.choiceForms.render();
+          i = 0;
+          card._deleteRoom(e);
+          card._idDelCal();
+          assert.equal(roomIdArray[i], undefined);
+        });
+
+       test('_idDelCal -else', function () {
+          header = fixture('basic');
+          var card = header.$.choiceCard;
+          card._addRoom();
+          card.$.choiceForms.render();
+          var forms = card.querySelectorAll("#choiceRoom");
+          mockEvent = new Event('click');
+          sinon.spy(mockEvent, 'preventDefault');
+          e = mockEvent;
+          console.log(card.roomCount);
+          forms[1].countChildren = 2;
+          i = 0;
+          card._idDelCal(i);
+          assert.equal(roomIdArray[i], undefined);
+        });
+        test('Add Room function', function () {
+          header = fixture('basic');
+          var card = header.$.choiceCard;
+          card._addRoom();
+          roomCount = card.roomCount;
+          assert.equal(roomCount, 2);
+        });
+        test('displayIndex function', function () {
+          header = fixture('basic');
+          var card = header.$.choiceCard;
+          index = 0;
+          var roomIndex = card._displayIndex(index);
+          assert.equal(roomIndex, 1);
+        });
+
+        test('_lte', function () {
+          element = fixture('basic');
+          var card = element.$.choiceCard;
+          card._addRoom();
+          roomcount = card.roomCount;
+          var result = card._lte(roomcount, 1);
+          assert.equal(result, false);
+        });
+
+        test('showButton Property', function () {
+          element = fixture('basic');
+          var card = element.$.choiceCard;
+          var mq = window.matchMedia("(max-width: 767px)").matches;
+          if (mq) {
+            assert.equal(card.showButton, true);
+          }
+          else {
+            assert.equal(card.showButton, false);
+          }
+        });
+
+        test("show variable for hidden traveller dropdown toggle", function () {
+          assert.equal(header.showTravellersCard, true);
+        });
+        test("showDatePicker", function () {
+          assert.equal(header.showDatePicker, true);
+        });
+        test("showToolbar", function () {
+          assert.equal(header.showToolbar, true);
+        });
+        test("mobilePhone", function () {
+          var mq = window.matchMedia("(max-width: 767px)").matches;
+          if (mq) {
+            assert.equal(header.mobilePhone, true);
+          }
+          else {
+            assert.equal(header.mobilePhone, false);
+          }
+        });
+        test("tabletView", function () {
+          assert.equal(header.tabletView, false);
+        });
+        test("mediumTablet", function () {
+          var mq = window.matchMedia("(max-width: 600px)").matches;
+          if (mq) {
+            assert.equal(header.mediumTablet, true);
+          }
+          else {
+            assert.equal(header.mediumTablet, false);
+          }
+        });
+        test("choice", function () {
+          assert.equal(header.choice, 0);
+        });
+
+        test('_openChildForm--if', function () {
+          element = fixture('basic');
+          var card = header.$.choiceCard;
+          card.$.choiceForms.render();
+          var e = new MouseEvent("click", {
+            view: window,
+            bubbles: true,
+            cancelable: true,
+            clientX: 20,
+          });
+          element._openChildForm(e);
+          assert.equal(element.choice, 0);
+        });
+        test('_doneRoom', function () {
+          element = fixture('basic');
+          var card = element.$.choiceCard;
+          card.$.choiceForms.render();
+          var forms = card.querySelector("#choiceRoom");
+          forms.countChildren = 5;
+           card.domHost.querySelector(".inputAdultCount").querySelector("#listBox").selected = 4;
+         card.$.choiceForms.render();
+          var validData = card._doneRoom();
+          assert.equal(validData, false);
+        });
+         test('_doneRoom', function () {
+          element = fixture('basic');
+          var card = element.$.choiceCard;
+          card.$.choiceForms.render();
+          var forms = card.querySelector("#choiceRoom");
+          forms.countChildren = 1;
+        forms.querySelector(".ageOfChild").querySelector("#listBox").selected= 1;
+         card.$.choiceForms.render();
+          var validData = card._doneRoom();
+          assert.equal(validData, true);
+        });
+         test('_doneRoom', function () {
+          element = fixture('basic');
+          var card = element.$.choiceCard;
+          card.$.choiceForms.render();
+           card._addRoom();
+        card.$.choiceForms.render();
+          var forms = card.querySelector("#choiceRoom");
+          forms.countChildren = 1;
+        forms.querySelector(".ageOfChild").querySelector("#listBox").selected= 1;
+         card.$.choiceForms.render();
+          var validData = card._doneRoom();
+          assert.equal(validData, true);
+        });
+      test('_idCal', function () {
+        header = fixture('basic');
+        var card = header.$.choiceCard;
+        card._addRoom();
+        card.$.choiceForms.render();
+        card._addRoom();
+        card.$.choiceForms.render();
+        var e = {
+          "key": "Enter",
+          "model": {
+            "index": 1
+          },
+        }
+        card._deleteRoom(e);
+        card.$.choiceForms.render();
+        var forms = card.querySelector("#choiceRoom");
+        forms.countChildren = 2;
+         card.$.choiceForms.render();
         i = 0;
         card._idCal();
         assert.equal(roomIdArray[i], undefined);
@@ -527,38 +571,38 @@
         var input = menuB.querySelector("#input");
         assert.equal(input.value, "2 Adults in 1 Room");
       });
-        test('_calResultOfRoom', function(){
+      test('_calResultOfRoom', function () {
         element = fixture('basic');
         var card = element.$.choiceCard;
         card.$.choiceForms.render();
         var forms = card.querySelector("#choiceRoom");
-       card.domHost.querySelector(".inputAdultCount").querySelector("#listBox").selected = 0;
-       card.domHost.querySelector(".inputChildCount").querySelector("#listBox").selected = 1;      
+        card.domHost.querySelector(".inputAdultCount").querySelector("#listBox").selected = 0;
+        card.domHost.querySelector(".inputChildCount").querySelector("#listBox").selected = 1;
         room = 1;
         forms._calResultOfRoom(room);
-         var menu = element.$.deskinput1;
+        var menu = element.$.deskinput1;
         var menuB = menu.$.menuButton;
         var input = menuB.querySelector("#input");
         assert.equal(input.value, "2 Adults, 1 Child  in 0 Rooms");
       });
-      test('_removeError',function(){
-         header = fixture('basic');
-        var card = header.$.choiceCard;
-        card.$.choiceForms.render();
-        var forms = card.querySelector("#choiceRoom");
-         forms.countChildren = 5;
-        card.domHost.querySelector(".inputAdultCount").querySelector("#listBox").selected = 4;
-       card.$.choiceForms.render();
-        var returnIndex = forms._removeError();
-        var Value = card.querySelector("#errfn").innerHTML;
-        assert.equal(Value,"Maximum Paxcount 6");
-      });
-       test('_tabPress', function () {
+      test('_removeError', function () {
         header = fixture('basic');
         var card = header.$.choiceCard;
         card.$.choiceForms.render();
         var forms = card.querySelector("#choiceRoom");
-          forms.countChildren = 2;
+        forms.countChildren = 5;
+        card.domHost.querySelector(".inputAdultCount").querySelector("#listBox").selected = 4;
+        card.$.choiceForms.render();
+        var returnIndex = forms._removeError();
+        var Value = card.querySelector("#errfn").innerHTML;
+        assert.equal(Value, "Maximum Paxcount 6");
+      });
+      test('_tabPress', function () {
+        header = fixture('basic');
+        var card = header.$.choiceCard;
+        card.$.choiceForms.render();
+        var forms = card.querySelector("#choiceRoom");
+        forms.countChildren = 2;
         card.$.choiceForms.render();
         var e = {
           "currentTarget": forms.querySelector("#child1_1"),
@@ -567,12 +611,12 @@
         var returnIndex = forms._tabPress(e);
         assert.equal(e.currentTarget.invalid, false);
       });
-       test('_tabPress', function () {
+      test('_tabPress', function () {
         header = fixture('basic');
         var card = header.$.choiceCard;
         card.$.choiceForms.render();
         var forms = card.querySelector("#choiceRoom");
-          forms.countChildren = 2;
+        forms.countChildren = 2;
         card.$.choiceForms.render();
         var e = {
           "currentTarget": forms.querySelector("#child1_1"),
@@ -601,7 +645,7 @@
         autoSuggestion._focusingOut();
         assert.equal(spin.hidden, true);
       });
-    
+
       test('_clear', function () {
         header = fixture('basic');
         autoSuggestion = header.$.location;
@@ -708,7 +752,7 @@
         autoSuggestion._simpleTap(e);
         assert.equal(e.cancelBubble, true);
       });
-    
+
       test('_showReadMoreDots', function () {
         header = fixture('basic');
         autoSuggestion = header.$.location;
@@ -718,7 +762,7 @@
         var l = autoSuggestion._showReadMoreDots();
         assert.equal(l, len);
       });
-     
+
 
       //test case for travellers dropdown property in t-search.html 
       test("choice default value for travellers dropdown in property", function () {
@@ -954,17 +998,17 @@
         }
         isSelected();
       });
-      // test('dateFormat', function (isSelected) {
-      //   header = fixture('basic');
-      //   datePicker = header.$.start;
-      //   pick = datePicker.$.picker;
-      //   cal = pick.$.calendar;
-      //   var date = new Date("2017-05-01");
-      //   var d = cal.dateFormat(date);
-      //     assert.equal("2017-05-01T05:30:00+05:30", d);
-      //   isSelected();
-      // });
-      test('_localeChanged', function() {
+      test('dateFormat', function (isSelected) {
+        header = fixture('basic');
+        datePicker = header.$.start;
+        pick = datePicker.$.picker;
+        cal = pick.$.calendar;
+        var date = new Date("2017-05-01");
+        var d = cal.dateFormat(date);
+        assert.equal("2017-05-01T05:30:00+05:30", d);
+        isSelected();
+      });
+      test('_localeChanged', function () {
         header = fixture('basic');
         datePicker = header.$.start;
         pick = datePicker.$.picker;
@@ -972,20 +1016,20 @@
         var day = cal._localeChanged(cal.locale);
         assert.equal(day, 0);
       });
-      test('_changeMinDate', function() {
+      test('_changeMinDate', function () {
         header = fixture('basic');
         datePicker = header.$.start;
         pick = datePicker.$.picker;
         cal = pick.$.calendar;
         cal.minDate = null;
         cal.maxDate = null;
-         var screen = window.matchMedia("(max-width:767px)").matches;
-         if(screen){
-        var date = cal._changeMinDate();
-        assert.equal(date, 12);
-         }
+        var screen = window.matchMedia("(max-width:767px)").matches;
+        if (screen) {
+          var date = cal._changeMinDate();
+          assert.equal(date, 12);
+        }
       });
-      test('_isDisabled', function() {
+      test('_isDisabled', function () {
         header = fixture('basic');
         datePicker = header.$.start;
         pick = datePicker.$.picker;
@@ -996,21 +1040,21 @@
         assert.equal(val, true);
       });
 
-      test('_getMonthClass', function(){
+      test('_getMonthClass', function () {
         header = fixture('basic');
         datePicker = header.$.start;
         pick = datePicker.$.picker;
         cal = pick.$.calendar;
         name = "month";
         month = {
-                year: 2017, 
-                month: 6, 
-                date: "Sun Jul 02 2017 00:00:00 GMT+0530 (India Standard Time)"
-                }
+          year: 2017,
+          month: 6,
+          date: "Sun Jul 02 2017 00:00:00 GMT+0530 (India Standard Time)"
+        }
         var val = cal._getMonthClass(name, month);
         assert.equal("month month-2017-6", val);
       });
-      test('_swipePrevMonth--start', function() {
+      test('_swipePrevMonth--start', function () {
         header = fixture('basic');
         datePicker = header.$.start;
         pick = datePicker.$.picker;
@@ -1019,29 +1063,29 @@
         cal._swipePrevMonth();
         assert.equal(val, "start");
       });
-       test('_swipePrevMonth--end', function() {
+      test('_swipePrevMonth--end', function () {
         header = fixture('basic');
         datePickerStart = header.$.start;
         datePickerStart.value = new Date("05-19-2017");
-        datePickerEnd =header.$.end;
+        datePickerEnd = header.$.end;
         pick = datePickerEnd.$.picker;
         cal = pick.$.calendar;
         var val = datePickerEnd.id;
         cal._swipePrevMonth();
         assert.equal(val, "end");
       });
-      test('_swipePrevMonth--else', function() {
+      test('_swipePrevMonth--else', function () {
         header = fixture('basic');
         datePickerStart = header.$.start;
         datePickerStart.value = new Date("08-19-2017");
-        datePickerEnd =header.$.end;
+        datePickerEnd = header.$.end;
         pick = datePickerEnd.$.picker;
         cal = pick.$.calendar;
         var val = datePickerEnd.id;
         var Swipe = cal._swipePrevMonth();
         assert.equal(Swipe, undefined);
       });
-      test('_swipeNextMonth--if', function() {
+      test('_swipeNextMonth--if', function () {
         header = fixture('basic');
         datePicker = header.$.start;
         pick = datePicker.$.picker;
@@ -1049,7 +1093,7 @@
         cal._swipeNextMonth()
         assert.equal(!cal.maxDate, false);
       });
-       test('_swipeNextMonth--else', function() {
+      test('_swipeNextMonth--else', function () {
         header = fixture('basic');
         datePicker = header.$.start;
         pick = datePicker.$.picker;
@@ -1057,8 +1101,8 @@
         cal.currentYear = 2018;
         var val = cal._swipeNextMonth()
         assert.equal(val, undefined);
-        });
-      test('_withinValidRange', function(){
+      });
+      test('_withinValidRange', function () {
         header = fixture('basic');
         datePicker = header.$.start;
         pick = datePicker.$.picker;
@@ -1068,7 +1112,7 @@
         assert.equal(val, true);
       });
 
-      test('_monthWithinValidRange', function(){
+      test('_monthWithinValidRange', function () {
         header = fixture('basic');
         datePicker = header.$.start;
         pick = datePicker.$.picker;
@@ -1078,7 +1122,7 @@
         var val = cal._monthWithinValidRange(year, month);
         assert.equal(val, true);
       });
-      test('_getDayName', function() {
+      test('_getDayName', function () {
         header = fixture('basic');
         datePicker = header.$.start;
         pick = datePicker.$.picker;
@@ -1088,7 +1132,7 @@
         assert.equal(val, "2017-11-9");
       });
 
- test('_onSwipe--left', function() {
+      test('_onSwipe--left', function () {
         header = fixture('basic');
         datePicker = header.$.start;
         pick = datePicker.$.picker;
@@ -1098,7 +1142,7 @@
           bubbles: true,
           cancelable: true,
           clientX: 20,
-          detail:{
+          detail: {
             direction: 'left'
           },
           type: 'swiped'
@@ -1106,20 +1150,20 @@
         var val = cal._onSwipe(e);
         assert.equal(val, true);
       });
-     test('_onSwipe--right', function() {
+      test('_onSwipe--right', function () {
         header = fixture('basic');
         datePicker = header.$.start;
         pick = datePicker.$.picker;
         cal = pick.$.calendar;
         var e = {
           "detail": {
-            "direction":"right" 
+            "direction": "right"
           },
         }
         var val = cal._onSwipe(e);
         assert.equal(val, true);
       });
-        test('_tapDay--start', function () {
+      test('_tapDay--start', function () {
         header = fixture('basic');
         var startInput = header.$.start;
         var startCal = startInput.querySelector("#calendar");
@@ -1128,15 +1172,21 @@
             "item": {
               "date": new Date("08-19-2017"),
               "day": 19,
-              "month":8,
+              "month": 8,
               "year": 2017
             }
           },
         }
         startCal._tapDay(e);
         assert.equal(startInput.value, startCal.date);
-        
       });
+      
+       test('_defaultOptionValue', function () {
+         header = fixture('basic');
+         header.option.traveller = undefined;
+         header._defaultOptionValue();
+         assert.equal(header.minAdultCount, 2);
+          });
     });
   </script>
 </body>
