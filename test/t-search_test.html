@@ -1003,9 +1003,9 @@
         datePicker = header.$.start;
         pick = datePicker.$.picker;
         cal = pick.$.calendar;
-        var date = new Date("2017-05-01");
+        var date = new Date("2017-05-01").setHours(0, 0, 0, 0);
         var d = cal.dateFormat(date);
-        assert.equal("2017-05-01T05:30:00+05:30", d);
+        assert.equal("2017-05-01T00:00:00+05:30", d);
         isSelected();
       });
       test('_localeChanged', function () {
