@@ -371,7 +371,7 @@ The form handles below mentioned scenarios on its own.
                 childLabel: {
                     type: String,
                     value: function () {
-                        var labelChild = this.dataHost.dataHost.domHost.domHost.childrens;
+                        var labelChild = this.dataHost.dataHost.domHost.domHost.childLabel;
                         return labelChild;
                     }
                 },
@@ -466,7 +466,7 @@ The form handles below mentioned scenarios on its own.
                     this.childLabel = "Child";
                 }
                 else {
-                    this.childLabel = this.dataHost.dataHost.domHost.domHost.childrens;
+                    this.childLabel = this.dataHost.dataHost.domHost.domHost.childLabel;
                 }
 
                 if (childValue == setcount) {
