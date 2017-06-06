@@ -1,9 +1,10 @@
-
-# \<t-search\>
+[![Coverage Status](https://coveralls.io/repos/github/travelnxtComponents/t-hotel-search/badge.svg?branch=master)](https://coveralls.io/github/travelnxtComponents/t-hotel-search?branch=master)
 
 [![Build Status](https://travis-ci.org/nxtComponent/t-hotel-search.svg?branch=master)](https://travis-ci.org/nxtComponent/t-hotel-search)
 
-[![Coverage Status](https://coveralls.io/repos/github/travelnxtComponents/t-hotel-search/badge.svg?branch=master)](https://coveralls.io/github/travelnxtComponents/t-hotel-search?branch=master)
+
+# \<t-search\>
+
 
 ## Install the Polymer-CLI
 
