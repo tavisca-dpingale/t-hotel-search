@@ -422,7 +422,7 @@ The form handles below mentioned scenarios on its own.
         /**
         *@private
         **/
-        childrens: {
+        childLabel: {
           type: String,
           value: "Children"
         },
@@ -1051,7 +1051,7 @@ The form handles below mentioned scenarios on its own.
           this.adults;
           this.room;
           this.rooms;
-          this.childrens;
+          this.childLabel;
           this.child;
           this.age;
           this.travelers;
@@ -1084,11 +1084,11 @@ The form handles below mentioned scenarios on its own.
           else {
             this.rooms = this.resources.labels.rooms;
           }
-          if (this.resources.labels.childrens === undefined) {
-            this.childrens;
+          if (this.resources.labels.children === undefined) {
+            this.childLabel;
           }
           else {
-            this.childrens = this.resources.labels.childrens;
+            this.childLabel = this.resources.labels.children;
           }
           if (this.resources.labels.child === undefined) {
             this.child;
