@@ -1283,6 +1283,7 @@ The form handles below mentioned scenarios on its own.
             searchModel.checkOutDate = JsonData[2];
             searchModel.rooms = arrTravellers;
             searchModel.type = "Hotel";
+            this.fire('Search', {searchModel: true});
             console.log(searchModel);
             return false;      // stop form from posting
           }
