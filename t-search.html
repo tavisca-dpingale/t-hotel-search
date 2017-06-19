@@ -151,7 +151,7 @@ The form handles below mentioned scenarios on its own.
               <div id="Button" class="col-lg-1 col-md-1 col-sm-2 col-xs-12 text-center">
                 <paper-button on-tap="_submitSearchFormInput" class="button" id="button">Search</paper-button>
               </div>
-             
+
             </form>
           </app-toolbar>
         </div>
@@ -285,7 +285,7 @@ The form handles below mentioned scenarios on its own.
         minAdultCount: {
           type: Number,
           value: 2
-        },  
+        },
         /**
         *@private
         **/
@@ -363,7 +363,7 @@ The form handles below mentioned scenarios on its own.
           type: Number,
           value: 4
         },
-        
+
         format: {
           type: String,
           value: "MM/DD/YYYY"
@@ -1283,7 +1283,7 @@ The form handles below mentioned scenarios on its own.
             searchModel.checkOutDate = JsonData[2];
             searchModel.rooms = arrTravellers;
             searchModel.type = "Hotel";
-            this.fire('Search', {searchModel: true});
+            this.fire('dosearch', { model: searchModel });
             console.log(searchModel);
             return false;      // stop form from posting
           }
