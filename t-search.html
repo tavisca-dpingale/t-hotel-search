@@ -1187,27 +1187,26 @@ The form handles below mentioned scenarios on its own.
       */
 
       _submitSearchFormInput: function (e) {
-        var input = [];
-        input[0] = this.querySelector("#autoSuggest").value;
-        input[1] = this.querySelector("#start").value;
-        input[2] = this.querySelector("#end").value;
-        input[3] = this.querySelector("#menuButton").querySelector("#input").value;
+        var txtStart = this.querySelector("#start"),
+            txtEnd = this.querySelector("#end");
         var data = [];
-        for (var i = 0; i < 4; i++) {
-          data[i] = input[i];
-        }
+        data[0] = this.querySelector("#autoSuggest").value;
+        data[1] = txtStart.value;
+        data[2] = txtEnd.value;
+        data[3] = this.querySelector("#menuButton").querySelector("#input").value;
+        
         if (data[0] == "" && data[1] == undefined && data[2] == undefined) {
           this.querySelector("#autoInput").invalid = true;
           this.$.start.invalid = true;
           this.$.end.invalid = true;
-          this.querySelector("#start").querySelector("[id^='paper-input-label']").style.color = "lightgray";
-          this.querySelector("#end").querySelector("[id^='paper-input-label']").style.color = "lightgray";
+          txtStart.querySelector("[id^='paper-input-label']").style.color = "lightgray";
+          txtEnd.querySelector("[id^='paper-input-label']").style.color = "lightgray";
         }
         else if (data[1] == undefined && data[2] == undefined) {
           this.$.start.invalid = true;
           this.$.end.invalid = true;
-          this.querySelector("#start").querySelector("[id^='paper-input-label']").style.color = "lightgray";
-          this.querySelector("#end").querySelector("[id^='paper-input-label']").style.color = "lightgray";
+          txtStart.querySelector("[id^='paper-input-label']").style.color = "lightgray";
+          txtEnd.querySelector("[id^='paper-input-label']").style.color = "lightgray";
         }
         else if (data[0] == "") {//show error        
           this.querySelector("#autoInput").invalid = true;
@@ -1224,64 +1223,34 @@ The form handles below mentioned scenarios on its own.
           }
           var validData = card._doneRoom();
           if (validData == true) {
-            var button = this.$.button;
-            button.textContent = 'searching';
+            this.$.button.textContent = 'searching';
             var searchModel = {};
-            var JsonData = [];
+            searchModel.destination = this.dataCity;
+            searchModel.checkIn = txtStart.querySelector("#input").value;
+            searchModel.checkOut = txtEnd.querySelector("#input").value;
+            searchModel.rooms = [];
+            
 
-            JsonData[0] = this.dataCity;
-            var arrDestination = {};
-            arrDestination.id = JsonData[0].id;
-            arrDestination.name = JsonData[0].name;
-            arrDestination.geoCode = JsonData[0].geoCode;
-            arrDestination.type = JsonData[0].type;
-            arrDestination.code = JsonData[0].code;
-            arrDestination.formattedAddress = JsonData[0].formattedAddress;
-
-            JsonData[1] = this.querySelector("#start").querySelector("#input").value;
-            JsonData[2] = this.querySelector("#end").querySelector("#input").value;
-            JsonData[3] = this.travellersFinalData;
-            JsonData1 = JsonData[3];
-            var arrTravellers = {};
-            var arrAdult = {};
-            var arrChild = {};
-
-            for (var i = 0; i < JsonData1.length; i++) {
-              var str = JsonData1[i];
-              str = str.replace("[[", "")
-              str = str.replace("]]", "")
-              var resTravellers = str.split("],[");
-              arrTravellers[i] = {};
-
-              arrAdult = new Object();
-              arrChild = new Object();
-
-              var strAdult = resTravellers[0];
-              var resAdult = strAdult.split(",");
-              arrAdult.Quantity = parseInt(resAdult[0].replace(/"/g, ""));
-
-              arrAdult.Type = resAdult[1].replace(/"/g, "");
-              arrAdult.Age = resAdult[2].replace(/"/g, "");
-
-              var strChild = resTravellers[1];
-              var resChild = strChild.split(",");
-              arrChild.Quantity = parseInt(resChild[0].replace(/"/g, ""));
-              arrChild.Type = resChild[1].replace(/"/g, "");
-              arrChild.Age = "";
-              for (var j = 2; j < resChild.length; j++) {
-                if (arrChild.Age != "") {
-                  arrChild.Age = arrChild.Age + ",";
-                }
-                arrChild.Age = arrChild.Age + resChild[j].replace(/"/g, "");
-              }
-
-              arrTravellers[i].Adult = arrAdult;
-              arrTravellers[i].children = arrChild;
+            for (var i = 0; i < this.travellersFinalData.length; i++) {
+              var tinfo =JSON.parse(this.travellersFinalData[i]);
+              var obj ={};
+              tinfo.forEach(trav=>{
+                   if(trav[0]){
+                     var traveler = {
+                            qty : trav[0],
+                            ages : trav[2]
+                        };
+                      if(trav[1]=="Adult"){
+                        obj.adult = traveler;
+                      }
+                      else if(trav[1]=="Child"){
+                        obj.children = traveler;
+                      }
+                   }
+              });
+              searchModel.rooms.push(obj);
             }
-            searchModel.destination = arrDestination;
-            searchModel.checkInDate = JsonData[1];
-            searchModel.checkOutDate = JsonData[2];
-            searchModel.rooms = arrTravellers;
+           
             searchModel.type = "Hotel";
             this.fire('dosearch', { model: searchModel });
             console.log(searchModel);
