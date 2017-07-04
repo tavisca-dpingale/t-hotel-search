@@ -12,33 +12,38 @@ var AutoComplete = (function () {
                     paramName: "query",
                     select: function (input, item) {
                         attr(input, { "data-autocomplete-old-value": input.value = attr(item, "data-autocomplete-value", item.innerHTML) });
-                        component.selectedValue = attr(item, "data-autocomplete-value", item.innerHTML);
-                        component.selectedItem = component.response[attr(item)];
-                        component.domHost.querySelector("#dropBox").style.display = "none";
+                        // component.selectedValue = attr(item, "data-autocomplete-value", item.innerHTML);
+                        // component.selectedItem = component.response[attr(item)];
+                        component.$.dropBox.style.display = "none";
                         if (item.nodeName != "LI") {
                             item = item.parentNode;
                         }
                         var itemIndex = item.getAttribute("data-index");
                         var dataAutocompleteDetail = component.response[itemIndex];
-                        component.domHost.dataCity = dataAutocompleteDetail;
-                        component.fire('autosuggest-select', component.selectedItem);
-                        var setClear = component.children[1];
-                        component.fire('tab-next');
-                        if (mq) {
-                            component.domHost.querySelector("#start1").style.display = "block";
-                            component.domHost.querySelector("#end1").style.display = "block";
-                            component.domHost.querySelector("#travellField").style.display = "block";
-                            component.domHost.querySelector("#Button").style.display = "block";
-                            setClear.style.display = "block";
-                            var tool = component.domHost.querySelector("#toolbarAutoComplete");
+                        component.selectedItem = dataAutocompleteDetail;
+                        component.selectedValue = component.selectedItem[component.tokenParam];
+                        component.dispatchEvent(new CustomEvent("autosuggest-select",{
+                            detail: component.selectedItem
+                        }));
+                        // component.fire('autosuggest-select', component.selectedItem);
+                        // var setClear = component.children[1];
+                        // component.fire('tab-next');
+                        component.dispatchEvent(new CustomEvent("tab-next"));
+                        if (params.isMobile) {
+                            // component.domHost.querySelector("#start1").style.display = "block";
+                            // component.domHost.querySelector("#end1").style.display = "block";
+                            // component.domHost.querySelector("#travellField").style.display = "block";
+                            // component.domHost.querySelector("#Button").style.display = "block";
+                            // setClear.style.display = "block";
+                            var tool = component.domHost.shadowRoot.querySelector("#toolbarAutoComplete");
                             tool.hidden = true;
-                            var ul = component.querySelector("ul.ulClassMobile");
-                            component.querySelector("#dropBox").style.display = "none";
-                            component.querySelector("#clearContainer").style.display = "block";
+                            var ul = component.shadowRoot.querySelector("ul.ulClassMobile");
+                            component.$.dropBox.style.display = "none";
+                            component.$.clearContainer.style.display = "block";
                             ul.removeAttribute("class");
                             component.label = component.domHost.hotelLocation;
                         }
-                        closeBox(component.querySelector(".autocomplete"), false);
+                        closeBox(component.shadowRoot.querySelector(".autocomplete"), false);
                     },
                     open: function (input, result) {
                         var self = this;
@@ -65,7 +70,7 @@ var AutoComplete = (function () {
                             component.$.spinner.hidden = true;
                             var response = JSON.parse(res);
                             if (response.status.isSuccessful) {
-                                var node = component.querySelector("#dropBox");
+                                var node = component.$.dropBox;
                                 while (node.hasChildNodes()) {
                                     node.removeChild(node.lastChild);
                                 }
@@ -140,8 +145,7 @@ var AutoComplete = (function () {
                                         response = autoReverse(groupedByType[typeArr2[t]], limit);
                                         var item = null;
                                         for (; i < length && (i < Math.abs(limit) || !limit); i++) {
-                                            if (component.tokenParam != '')
-                                                item = response[i][component.tokenParam];
+                                                item = response[i][component.tokenParam||"formattedAddress"];
                                             li = addLi(ul, li, item, dataIndex++);
                                         }
                                     }
@@ -156,8 +160,8 @@ var AutoComplete = (function () {
                                 if (result.hasChildNodes()) {
                                     result.removeChild(result.lastChild);
                                 }
-                                if (mq) {
-                                    var tool = component.domHost.querySelector("#toolbarAutoComplete");
+                                if (params.isMobile) {
+                                    var tool = component.domHost.shadowRoot.querySelector("#toolbarAutoComplete");
                                     tool.style.display = "block";
                                     tool.hidden = false;
                                     var inPut = tool.childNodes[2];
@@ -192,7 +196,7 @@ var AutoComplete = (function () {
                 selectors = [selectors];
             }
             selectors.forEach(function (selector) {
-                Array.prototype.forEach.call(component.querySelectorAll(selector), function (input) {
+                Array.prototype.forEach.call(component.shadowRoot.querySelectorAll(selector), function (input) {
                     if (input.nodeName.match(/^INPUT$/i) && input.type.match(/^TEXT|SEARCH$/i)) {
                         var oldValueLabel = "data-autocomplete-old-value",
                             result = component.$.dropBox,
@@ -223,7 +227,7 @@ var AutoComplete = (function () {
                         positionLambda(input, result);
                         input.addEventListener("position", positionLambda);
                         input.addEventListener("destroy", destroyLambda);
-                        Polymer.dom(component.querySelector('#append')).appendChild(result);
+                        component.$.append.appendChild(result);
                         input.onfocus = focusLamdba;
                         input.onblur = closeBox(null, result);
                         Polymer.dom(component.$.clearContainer).node.setAttribute('class', 'hide')
@@ -247,14 +251,15 @@ var AutoComplete = (function () {
                             Polymer.dom(component.$.clearContainer).node.setAttribute('class', 'hide')
                         }
                         else {
-                            this.domHost.querySelector("#autoSuggest").style.color = "lightgray";
+
+                            component.$.autoSuggest.style.color = "lightgray";
                             Polymer.dom(component.$.autoInput).node.setAttribute("style", "width:99%");
                             Polymer.dom(component.$.clearContainer).node.setAttribute('class', 'unhide')
                         }
                         //--------------------------------------------
 
-                        if(keyCode == 8){
-                            if(inputValue.length <= 0){
+                        if (keyCode == 8) {
+                            if (inputValue.length <= 0) {
                                 component.label = "";
                             }
                         }
@@ -278,18 +283,18 @@ var AutoComplete = (function () {
                                 if (liActive) {
                                     currentIndex = Array.prototype.indexOf.call(liActive.parentNode.children, liActive);
                                     position = currentIndex + (keyCode - 39);
-                                     ////////////////////////
-                                     if(position === 1){
-                                        this.domHost.querySelector("#dropBox").scrollTop = 0;
+                                    ////////////////////////
+                                    if (position === 1) {
+                                        component.$.dropBox.scrollTop = 0;
                                     }
-                                     if(position === 9){
-                                         this.domHost.querySelector("#dropBox").scrollTop = 300;
-                                     }
-                                     if(position >= 2 && position <= 10 && keyCode ==40){
-                                     this.domHost.querySelector("#dropBox").scrollTop = this.domHost.querySelector("#dropBox").scrollTop + 20;
+                                    if (position === 9) {
+                                        component.$.dropBox.dropBox.scrollTop = 300;
                                     }
-                                     if(keyCode == 38){
-                                        this.domHost.querySelector("#dropBox").scrollTop = this.domHost.querySelector("#dropBox").scrollTop - 20;
+                                    if (position >= 2 && position <= 10 && keyCode == 40) {
+                                        component.$.dropBox.scrollTop = component.$.dropBox.scrollTop + 20;
+                                    }
+                                    if (keyCode == 38) {
+                                        component.$.dropBox.scrollTop = component.$.dropBox.scrollTop - 20;
                                     }
                                     ///////////////////////////////
                                     lisCount = result.getElementsByTagName("li").length + 2;
@@ -311,35 +316,35 @@ var AutoComplete = (function () {
                                 }
                             } else if (keyCode < 35 || keyCode > 40) {
                                 if (inputValue && custParams.url) {
-                                     if (inputValue.length >= 0) {
-                                         this.domHost.label = this.domHost.domHost.hotelLocation;
-                                     }
-                                      else{
-                                          this.domHost.label = "";
-                                     }
-                                    if (inputValue.length >= component.minimumCharacters && component.selectedValue != inputValue) {                                        
+                                    if (inputValue.length >= 0) {
+                                        component.label = component.resource.locationPlaceholder;
+                                    }
+                                    else {
+                                        component.label = "";
+                                    }
+                                    if (inputValue.length >= component.minimumCharacters && component.selectedValue != inputValue) {
                                         component.$.spinner.hidden = false;
                                         setTimeout(function () {
                                             request = ajax(request, custParams, inputValue.trim(), input, result, component.subType, component.queryParams);
                                         }, component.delay);
-                                        component.domHost.querySelector("#dropBox").style.display = "block";
+                                        component.$.dropBox.style.display = "block";
                                     }
                                     else {
                                         if (result.hasChildNodes()) {
                                             result.removeChild(result.lastChild);
                                         }
                                     }
-                                    if (mq) {
+                                    if (params.isMobile) {
                                         if (inputValue.length >= 0) {
-                                            if (mq) {
-                                                component.domHost.querySelector("#start1").style.display = "none";
-                                                component.domHost.querySelector("#end1").style.display = "none";
-                                                component.domHost.querySelector("#travellField").style.display = "none";
-                                                component.domHost.querySelector("#Button").style.display = "none";
-                                                component.domHost.querySelector("#dropBox").style.display = "block";
+                                            if (params.isMobile) {
+                                                // component.domHost.querySelector("#start1").style.display = "none";
+                                                // component.domHost.querySelector("#end1").style.display = "none";
+                                                // component.domHost.querySelector("#travellField").style.display = "none";
+                                                // component.domHost.querySelector("#Button").style.display = "none";
+                                                component.$.dropBox.style.display = "block";
                                             }
-                                            this.domHost.label = this.domHost.domHost.hotelLocation;
-                                            var toolbar = component.domHost.querySelector("#toolbarAutoComplete");
+                                            component.label = component.resource.locationPlaceholder;
+                                            var toolbar = component.domHost.shadowRoot.querySelector("#toolbarAutoComplete");
                                             var itm = this;
                                             var cln;
                                             var div;
@@ -379,7 +384,7 @@ var AutoComplete = (function () {
                                                     request = ajax(request, custParams, inputValue.trim(), input, result, component.subType, component.queryParams);
                                                 }, component.delay);
                                             }
-                                            var setvalue = component.domHost.querySelector("#spanAutoId");
+                                            var setvalue = component.shadowRoot.querySelector("#spanAutoId");
                                             setvalue.focus();
                                             setvalue.onkeyup = function (e) {
                                                 inputValue = cln.value;
@@ -388,11 +393,11 @@ var AutoComplete = (function () {
                                                         request = ajax(request, custParams, inputValue.trim(), input, result, component.subType, component.queryParams);
                                                     }
                                                     if (inputValue.length >= 0) {
-                                                        var node = component.querySelector("#dropBox");
+                                                        var node = component.$.dropBox;
                                                         while (node.hasChildNodes()) {
                                                             node.removeChild(node.lastChild);
                                                         }
-                                                        var toolbar = component.domHost.querySelector("#toolbarAutoComplete");
+                                                        var toolbar = component.domHost.shadowRoot.querySelector("#toolbarAutoComplete");
                                                         var ul = domCreate("ul");
                                                         toolbar.style.display = "block";
                                                         toolbar.hidden = false;
@@ -406,7 +411,7 @@ var AutoComplete = (function () {
                                         }
                                         else {
                                             this.domHost.label = "";
-                                            component.domHost.querySelector("#toolbarAutoComplete").style.display = "none";
+                                            component.domHost.shadowRoot.querySelector("#toolbarAutoComplete").style.display = "none";
                                             if (result.hasChildNodes()) {
                                                 result.removeChild(result.lastChild);
                                             }
@@ -499,6 +504,7 @@ var AutoComplete = (function () {
     function toTitleCase(str) {
         return str.replace(/\w\S*/g, function (txt) { return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase(); });
     }
+
 
     function closeBox(result, closeNow) {
         if (closeNow) {

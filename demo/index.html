@@ -3,47 +3,60 @@
 
 <head>
   <meta charset="utf-8">
-  <meta http-equiv="X-UA-Compatible" content="IE=11; IE=9; IE=8; IE=7; IE=EDGE">
-  <meta name="viewport" content="width=device-width, minimum-scale=1, initial-scale=1, user-scalable=0">
-  <meta http-equiv="Cache-control" content="no-cache">
-  <title>t-search demo</title>
+  <meta name="viewport" content="width=device-width, minimum-scale=1, initial-scale=1, user-scalable=yes">
 
-  <style is="custom-style">
-    t-search {
-      /* Variables for colors */
-      --outer-container-color: #424d51;
-      --search-button-color: #4CB050;
-      --dropdown-element-link-color: #4CB050;
-      --button-color-for-rooms: #478BD7;
-      --border-color-for-cards: lightgray;
-      --background-color-for-traveller-card: white;
-      --color-for-calendar-dates: #4CB050;
-      --color-for-calendar-background: white;
-      --color-for-calendar-selected-range: #4CB050;
-      --background-img-for-selected-date: url('../demo/Green circle.svg');
-      --background-img-for-today-date: url('../demo/todayCircle.svg');
-    }
-  </style>
+  <title>t-hotel-search demo</title>
+
+  <script src="../../webcomponentsjs/webcomponents-lite.js"></script>
+
+  <link rel="import" href="../../iron-demo-helpers/demo-pages-shared-styles.html">
+  <link rel="import" href="../../iron-demo-helpers/demo-snippet.html">
+  <link rel="import" href="../../t-mystique-auth/t-mystique-auth.html">
+  <link rel="import" href="../t-hotel-search.html">
+
+  <custom-style>
+    <style is="custom-style" include="demo-pages-shared-styles">
+
+         t-search {
+        /* Variables for colors */
+        --outer-container-color: #424d51;
+        --search-button-color: #4CB050;
+        --dropdown-element-link-color: #4CB050;
+        --button-color-for-rooms: #478BD7;
+        --border-color-for-cards: lightgray;
+        --background-color-for-traveller-card: white;
+        --color-for-calendar-dates: #4CB050;
+        --color-for-calendar-background: white;
+        --color-for-calendar-selected-range: #4CB050;
+        --background-img-for-selected-date: url('../green-circle.svg');
+        --background-img-for-today-date: url('../today-circle.svg');
+      }
+    </style>
+  </custom-style>
+  
   <style>
     body {
       margin: 0;
     }
+
     * {
-        -webkit-box-sizing: border-box;
-        -moz-box-sizing: border-box;
-        box-sizing: border-box;
+      -webkit-box-sizing: border-box;
+      -moz-box-sizing: border-box;
+      box-sizing: border-box;
     }
-    </style>
+  </style>
 
 </head>
 
-<body unresolved>
+<body>
+  <dom-bind>
+    <template>
 
-  <template is="dom-bind" id="domBindTemplate">
-    <t-mystique-auth name="mystique" url="http://demo.travelnxt.com/api/authentication/authenticate/context" token-response="{{tokenResponse}}"
+
+      <t-mystique-auth name="mystique" url="http://demo.travelnxt.com/api/authentication/authenticate/context" token-response="{{tokenResponse}}"
       auto>
     </t-mystique-auth>
-    <t-search option='{"traveller": {
+      <t-hotel-search option='{"traveller": {
 		"minAdultCount": 1,
 		"maxAdultCount": 8,
 		"minChildCount": 0,
@@ -100,14 +113,11 @@
   
   }
  }'
-  dataUrl="http://demo.travelnxt.com/api/content/autosuggest/" token-response="{{tokenResponse}}">
-    </t-search>
-  </template>
+  auto-suggest-url="http://demo.travelnxt.com/api/content/autosuggest/" token-response="{{tokenResponse}}"></t-hotel-search>
+    </template>
 
-  <script src="../../webcomponentsjs/webcomponents-lite.min.js"></script>
-  <link rel="import" href="../../t-mystique-auth/t-mystique-auth.html">
-  <link rel="import" href="../t-autosuggest.html">
-  <link rel="import" href="../t-search.html">
+  </dom-bind>
+
 
 </body>
 

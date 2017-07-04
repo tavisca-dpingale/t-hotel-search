@@ -80,8 +80,8 @@
         -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
         --ease-in-sine: cubic-bezier(0.47, 0, 0.745, 0.715);
         --ease-out-sine: cubic-bezier(0.39, 0.575, 0.565, 1);
-        @apply(--paper-font-body1);
-        @apply(--paper-calendar);
+        @apply --paper-font-body1;
+        @apply --paper-calendar;
         overflow: hidden;
         -webkit-touch-callout: none;
         -webkit-user-select: none;
@@ -89,20 +89,20 @@
         -moz-user-select: none;
         -ms-user-select: none;
         user-select: none;
-        @apply(--paper-calendar);
+        @apply --paper-calendar;
       }
       
       #calendar {
         position: relative;
         width: 100%;
         height: 100%;
-        @apply(--layout-horizontal);
+        @apply --layout-horizontal;
       }
       
       #months {
         width: 100%;
         height: 100%;
-        @apply(--layout-horizontal);
+        @apply --layout-horizontal;
       }
       
       #months.animating .month-nav {
@@ -128,9 +128,9 @@
       
       .month {
         height: 100%;
-        @apply(--layout-vertical);
-        @apply(--layout-justified);
-        @apply(--layout-flex);
+        @apply --layout-vertical;
+        @apply --layout-justified;
+        @apply --layout-flex;
         border-left: 1px solid lightgray;
       }
       
@@ -144,8 +144,8 @@
       
       .month-col {
         position: relative;
-        @apply(--layout-vertical);
-        @apply(--layout-flex);
+        @apply --layout-vertical;
+        @apply --layout-flex;
       }
       
       .month-nav {
@@ -154,14 +154,14 @@
         left: 0;
         width: 40px;
         opacity: 1;
-        @apply(--layout-horizontal);
-        @apply(--layout-center);
+        @apply --layout-horizontal;
+        @apply --layout-center;
       }
       
       .month-nav .col {
         position: relative;
-        @apply(--layout-vertical);
-        @apply(--layout-center-center);
+        @apply --layout-vertical;
+        @apply --layout-center-center;
       }
       
       .month-nav .btn .icon {
@@ -188,39 +188,39 @@
         text-align: center;
         font-weight: bold;
         color: black;
-        @apply(--paper-font-body2);
-        @apply(--layout-horizontal);
-        @apply(--layout-center);
-        @apply(--layout-center-justified);
-        @apply(--layout-flex);
+        @apply --paper-font-body2;
+        @apply --layout-horizontal;
+        @apply --layout-center;
+        @apply --layout-center-justified;
+        @apply --layout-flex;
       }
       
       .month-weekdays {
         color: gray;
-        @apply(--layout-horizontal);
-        @apply(--layout-justified);
-        @apply(--layout-flex);
+        @apply --layout-horizontal;
+        @apply --layout-justified;
+        @apply --layout-flex;
       }
       
       .month-days {
-        @apply(--layout-horizontal);
-        @apply(--layout-justified);
-        @apply(--layout-flex);
+        @apply --layout-horizontal;
+        @apply --layout-justified;
+        @apply --layout-flex;
       }
       
       .month-col .day {
         cursor: default;
         pointer-events: none;
-        @apply(--layout-fit);
-        @apply(--layout-vertical);
-        @apply(--layout-center-center);
+        @apply --layout-fit;
+        @apply --layout-vertical;
+        @apply --layout-center-center;
       }
       
       .month-col {
         position: relative;
         width: 100%;
         height: 100%;
-        @apply(--layout-center-center);
+        @apply --layout-center-center;
       }
       
       .day-item {
@@ -252,11 +252,11 @@
       }
       
       .flex {
-        @apply(--layout-flex);
+        @apply --layout-flex;
       }
       
       .flex-5 {
-        @apply(--layout-flex-5);
+        @apply --layout-flex-5;
       }
       
       @media (min-width: 300px) {
@@ -274,8 +274,8 @@
           -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
           --ease-in-sine: cubic-bezier(0.47, 0, 0.745, 0.715);
           --ease-out-sine: cubic-bezier(0.39, 0.575, 0.565, 1);
-          @apply(--paper-font-body1);
-          @apply(--paper-calendar);
+          @apply --paper-font-body1;
+          @apply --paper-calendar;
           overflow: hidden;
           -webkit-touch-callout: none;
           -webkit-user-select: none;
@@ -283,7 +283,7 @@
           -moz-user-select: none;
           -ms-user-select: none;
           user-select: none;
-          @apply(--paper-calendar);
+          @apply --paper-calendar;
         }
         .month-nav {
           position: absolute;
@@ -292,8 +292,8 @@
           width: 100%;
           min-width: 100%;
           opacity: 1;
-          @apply(--layout-horizontal);
-          @apply(--layout-center);
+          @apply --layout-horizontal;
+          @apply --layout-center;
         }
         .month-row,
         .month-nav {
@@ -305,8 +305,8 @@
         }
         .month-col {
           position: relative;
-          @apply(--layout-vertical);
-          @apply(--layout-flex);
+          @apply --layout-vertical;
+          @apply --layout-flex;
         }
       }
       
@@ -315,9 +315,9 @@
           min-width: 100%;
           height: 100%;
           overflow: auto;
-          @apply(--layout-vertical);
-          @apply(--layout-justified);
-          @apply(--layout-flex);
+          @apply --layout-vertical;
+          @apply --layout-justified;
+          @apply --layout-flex;
           border-left: 1px solid lightgray;
         }
         .month-nav {
@@ -357,8 +357,8 @@
           -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
           --ease-in-sine: cubic-bezier(0.47, 0, 0.745, 0.715);
           --ease-out-sine: cubic-bezier(0.39, 0.575, 0.565, 1);
-          @apply(--paper-font-body1);
-          @apply(--paper-calendar);
+          @apply --paper-font-body1;
+          @apply --paper-calendar;
           overflow: hidden;
           -webkit-touch-callout: none;
           -webkit-user-select: none;
@@ -366,7 +366,7 @@
           -moz-user-select: none;
           -ms-user-select: none;
           user-select: none;
-          @apply(--paper-calendar);
+          @apply --paper-calendar;
         }
         .month-nav {
           position: absolute;
@@ -374,8 +374,8 @@
           left: 0;
           width: 350px;
           opacity: 1;
-          @apply(--layout-horizontal);
-          @apply(--layout-center);
+          @apply --layout-horizontal;
+          @apply --layout-center;
         }
         .month-row,
         .month-nav {
@@ -386,8 +386,8 @@
         }
         .month-col {
           position: relative;
-          @apply(--layout-vertical);
-          @apply(--layout-flex);
+          @apply --layout-vertical;
+          @apply --layout-flex;
         }
         #monthNav {
           width: 114%;
@@ -416,8 +416,8 @@
           -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
           --ease-in-sine: cubic-bezier(0.47, 0, 0.745, 0.715);
           --ease-out-sine: cubic-bezier(0.39, 0.575, 0.565, 1);
-          @apply(--paper-font-body1);
-          @apply(--paper-calendar);
+          @apply --paper-font-body1;
+          @apply --paper-calendar;
           overflow: hidden;
           -webkit-touch-callout: none;
           -webkit-user-select: none;
@@ -425,7 +425,7 @@
           -moz-user-select: none;
           -ms-user-select: none;
           user-select: none;
-          @apply(--paper-calendar);
+          @apply --paper-calendar;
         }
         .month-nav {
           position: absolute;
@@ -433,8 +433,8 @@
           left: 0;
           width: 350px;
           opacity: 1;
-          @apply(--layout-horizontal);
-          @apply(--layout-center);
+          @apply --layout-horizontal;
+          @apply --layout-center;
         }
         .month-row,
         .month-nav {
@@ -445,8 +445,8 @@
         }
         .month-col {
           position: relative;
-          @apply(--layout-vertical);
-          @apply(--layout-flex);
+          @apply --layout-vertical;
+          @apply --layout-flex;
         }
         #monthNav {
           width: 112%;
@@ -475,8 +475,8 @@
           -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
           --ease-in-sine: cubic-bezier(0.47, 0, 0.745, 0.715);
           --ease-out-sine: cubic-bezier(0.39, 0.575, 0.565, 1);
-          @apply(--paper-font-body1);
-          @apply(--paper-calendar);
+          @apply --paper-font-body1;
+          @apply --paper-calendar;
           overflow: hidden;
           -webkit-touch-callout: none;
           -webkit-user-select: none;
@@ -484,7 +484,7 @@
           -moz-user-select: none;
           -ms-user-select: none;
           user-select: none;
-          @apply(--paper-calendar);
+          @apply --paper-calendar;
         }
         .month-nav {
           position: absolute;
@@ -492,8 +492,8 @@
           left: 0;
           width: 350px;
           opacity: 1;
-          @apply(--layout-horizontal);
-          @apply(--layout-center);
+          @apply --layout-horizontal;
+          @apply --layout-center;
         }
         .month-row,
         .month-nav {
@@ -504,8 +504,8 @@
         }
         .month-col {
           position: relative;
-          @apply(--layout-vertical);
-          @apply(--layout-flex);
+          @apply --layout-vertical;
+          @apply --layout-flex;
         }
         #monthNav {
           width: 112%;
@@ -604,6 +604,8 @@
               return new Date();
             },
           },
+
+          isMobile:Boolean,
           /**
            * The current locale
            */
@@ -802,8 +804,8 @@
             if (date > this.maxDate) {
               return cssClass;
             }
-            var startdate = this.domHost.domHost.domHost.querySelector("#start").value;
-            var endDate = this.domHost.domHost.domHost.querySelector("#end").value;
+            var startdate = this.domHost.domHost.domHost.$.start.value;
+            var endDate = this.domHost.domHost.domHost.$.end.value;
             if (startdate === undefined) {
               startDateDefined = false;
             }
@@ -970,7 +972,7 @@
          * To check first day of week.
          **/
         _checkFirstDayofWeek: function (date) {
-          var dayName = this.querySelector("#weekday").textContent;
+          var dayName = this.shadowRoot.querySelector("#weekday").textContent;
           if (dayName === "M") {
             return "Monday";
           }
@@ -982,7 +984,7 @@
          * To check last day of week.
          **/
         _checkLastDayofWeek: function (date) {
-          var dayName = this.querySelector("#weekday").textContent;
+          var dayName = this.shadowRoot.querySelector("#weekday").textContent;
           if (dayName === "M") {
             return "Sunday";
           }
@@ -1004,8 +1006,8 @@
          * To swipe on previous month after clicking on back arrow.
          **/
         _swipePrevMonth: function () {
-          var startDate = this.domHost.domHost.domHost.querySelector("#start");
-          var endDate = this.domHost.domHost.domHost.querySelector("#end");
+          var startDate = this.domHost.domHost.domHost.$.start;
+          var endDate = this.domHost.domHost.domHost.$.end;
           var scrollPrevMonth = this.domHost.domHost.id;
           if (scrollPrevMonth === "start" && this.today.getMonth() + 1 === this.currentMonth && this.today.getFullYear() === this.currentYear) {
             this._populate(this.today.getFullYear(), this.today.getMonth() + 1);
@@ -1069,8 +1071,8 @@
          * To select dates after clicking or tapping on date.
          **/
         _tapDay: function (event) {
-          var startDate = this.domHost.domHost.domHost.querySelector("#start");
-          var endDate = this.domHost.domHost.domHost.querySelector("#end");
+          var startDate = this.domHost.domHost.domHost.$.start;
+          var endDate = this.domHost.domHost.domHost.$.end;
           var modelItemDate = event.model.item.date;
           var newDate;
           if (!this._withinValidRange(modelItemDate)) {
@@ -1094,7 +1096,7 @@
             startDate.value = newDate;
             if(endDate.value === undefined || startDate.value > endDate.value){
               var startDateValue = new Date(startDate.value);
-              startDateValue.setDate(startDateValue.getDate() + this.domHost.domHost.domHost.defaultStayDuration);
+              startDateValue.setDate(startDateValue.getDate() + this.domHost.domHost.domHost._searchOption.defaultStayDuration);
               var maxDt = this.maxDate;
                 maxDt.setHours(0, 0, 0, 0);
                 if (startDateValue > maxDt) {
@@ -1107,7 +1109,7 @@
                 endDate.minDate = startDate.value;
                 var setCheckOutMin = startDate.value;
                 var setMax = new Date(setCheckOutMin);
-                setMax.setDate(setCheckOutMin.getDate() + this.domHost.domHost.domHost.maxStayDuration);
+                setMax.setDate(setCheckOutMin.getDate() + this.domHost.domHost.domHost._searchOption.maxStayDuration);
                  if(setMax < this.maxDate){
                 endDate.maxDate = setMax;
                 }
@@ -1130,7 +1132,7 @@
               return;
             }
             endDate.value = newDate;
-            if (mq) {
+            if (this.isMobile) {
               event.stopPropagation();
             }
             if (startDate.value.getMonth() === endDate.value.getMonth()) {
@@ -1143,8 +1145,9 @@
 
           var isIE = /*@cc_on!@*/false || !!document.documentMode;
           if (isIE) {
-            this.domHost.domHost.querySelector("#input").querySelector("#input").focus();
-            this.domHost.domHost.querySelector("#input").querySelector("#input").blur();
+            //TODO
+            // this.domHost.domHost.querySelector("#input").querySelector("#input").focus();
+            // this.domHost.domHost.querySelector("#input").querySelector("#input").blur();
           }
         },
 

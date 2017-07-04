@@ -57,7 +57,7 @@ styling:
   /* includes dialog style at document-level for backward compatibility */
 </style>
 
-<dom-module id="paper-date-picker">
+<dom-module id="t-paper-date-picker">
   <template>
     <style>
        :host {
@@ -69,22 +69,22 @@ styling:
         user-select: none;
         display: inline-block;
         color: var(--primary-text-color);
-        @apply(--paper-font-body1);
-        @apply(--paper-date-picker);
+        @apply --paper-font-body1;
+        @apply --paper-date-picker;
       }
       /** Landscape ******************/
       
       #datePicker {
         width: 40%;
         height: 248px;
-        @apply(--layout-horizontal);
+        @apply --layout-horizontal;
       }
       /** Narrow *********************/
       
        :host([narrow]) #datePicker {
         width: 140px;
         height: 428px;
-        @apply(--layout-vertical);
+        @apply --layout-vertical;
       }
       
        :host([narrow]) #heading {
@@ -99,8 +99,8 @@ styling:
         box-sizing: border-box;
         color: var(--text-primary-color);
         background: var(--default-primary-color);
-        @apply(--layout-vertical);
-        @apply(--layout-around-justfied);
+        @apply --layout-vertical;
+        @apply --layout-around-justfied;
       }
       
       #heading .date,
@@ -109,10 +109,10 @@ styling:
       }
       
       #heading .date {
-        @apply(--paper-font-display1);
+        @apply --paper-font-display1;
         font-weight: bold;
         margin-top: 2px;
-        @apply(--paper-date-picker-heading-date);
+        @apply --paper-date-picker-heading-date;
       }
       
       #heading div.date {
@@ -124,9 +124,9 @@ styling:
       }
       
       #heading .year {
-        @apply(--paper-font-body2);
+        @apply --paper-font-body2;
         font-size: 16px;
-        @apply(--paper-date-picker-heading-date);
+        @apply --paper-date-picker-heading-date;
       }
       
       #heading:not(.pg-chooseYear) .year,
@@ -140,14 +140,14 @@ styling:
       }
       
       #pages {
-        @apply(--layout-flex);
+        @apply --layout-flex;
         width: 300px;
         background: var(--default-background-color);
       }
       
       #calendar {
         --paper-calendar: {
-          @apply(--paper-date-picker-calendar);
+          @apply --paper-date-picker-calendar;
         }
       }
       
@@ -156,7 +156,7 @@ styling:
         #datePicker {
           width: 90%;
           height: 248px;
-          @apply(--layout-horizontal);
+          @apply --layout-horizontal;
         }
       }
       
@@ -164,7 +164,7 @@ styling:
         #datePicker {
           width: 100%;
           height: 100%;
-          @apply(--layout-horizontal);
+          @apply --layout-horizontal;
         }
       }
       
@@ -172,7 +172,7 @@ styling:
         #datePicker {
           width: 100%;
           height: 100%;
-          @apply(--layout-horizontal);
+          @apply --layout-horizontal;
         }
       }
       
@@ -180,14 +180,14 @@ styling:
         #datePicker {
           width: 100%;
           height: 100%;
-          @apply(--layout-horizontal);
+          @apply --layout-horizontal;
         }
       }
     </style>
     <div id="datePicker">
       <neon-animated-pages id="pages" attr-for-selected="id">
         <neon-animatable id="chooseDate">
-          <t-calendar id="calendar" locale="{{locale}}" date="{{date}}" min-date="{{minDate}}" max-date="{{maxDate}}">
+          <t-calendar id="calendar" is-mobile="[[mobilePhone]]" locale="{{locale}}" date="{{date}}" min-date="{{minDate}}" max-date="{{maxDate}}">
           </t-calendar>
         </neon-animatable>
       </neon-animated-pages>
@@ -195,7 +195,7 @@ styling:
   </template>
   <script>
     Polymer({
-      is: 'paper-date-picker',
+      is: 't-paper-date-picker',
       properties: {
         /**
          * The selected date (YYYY-MM-DD)
@@ -204,6 +204,8 @@ styling:
           type: Date,
           notify: true
         },
+
+        isMobile:Boolean,
         /**
          * Maximum screen width at which the picker uses a vertical layout
          */
@@ -217,6 +219,11 @@ styling:
         locale: {
           type: String,
           value: 'en'
+        },
+
+        format : {
+          type:String,
+          value:"MM/DD/YYYY"
         },
         /**
          * The format of the date displayed in the heading.
@@ -289,7 +296,7 @@ styling:
         this._selectPage('chooseDate');
       },
       dateFormat: function () {
-        arguments[1] = this.domHost.domHost.format;
+        arguments[1] = this.format;
         return this.$.calendar.dateFormat.apply(this.$.calendar, arguments);
       },
       _tapHeadingDate: function () {
