@@ -401,6 +401,10 @@ Example:
         return this.$picker.dateFormat(this.value, this.inputDisplayFormat);
       },
 
+      close : function(){
+          this.$.dialog.style.display = "none";
+      },
+
 
       _dismissDialog: function (event) {
         //TODO
@@ -472,8 +476,8 @@ Example:
           var deskView = window.matchMedia("(max-width:767px)").matches;
           if (deskView) {
             this.$.dialog.style.display = "block";
-            endDate.querySelector("#dialog").style.display = "none";
-            endDate.querySelector(".underline").style.border = "none";
+            endDate.$.dialog.style.display = "none";
+            endDate.$.input.$.container.shadowRoot.querySelector(".underline").style.border = "none";
           }
           else {
             this.$.dialog.toggle();

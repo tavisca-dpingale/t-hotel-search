@@ -286,9 +286,6 @@ The form handles below mentioned scenarios on its own.
 
     </template>
     <script>
-        //  (function () {
-        // var idArray = [], childAge = [], totalData = [], roomIdArray = [], roomChildIdArray = [], roomCount;
-        // var inputAdultCount, inputChildCount;
 
         Polymer({
             is: 'choice-card',
@@ -334,18 +331,6 @@ The form handles below mentioned scenarios on its own.
                         }
                     }
                 },
-                /**
-                 * To set label of room.
-                *@private
-                **/
-                // roomLabel: {
-                //     type: String,
-                // },
-
-                /**
-                *This property is set for total count of rooms.
-                *@private
-                **/
 
                 roomCount: {
                     type: Number,
@@ -371,37 +356,7 @@ The form handles below mentioned scenarios on its own.
             _lte: function (roomLength, hiddenButtonRoomNumber) {
                 return roomLength <= hiddenButtonRoomNumber;
             },
-            /**
-            *To set the label of room.
-            **/
-            // _labelRoom: function (roomlabels) {
-            //     this.roomLabel = roomlabels;
-            // },
-
-            /**
-            * Defines the array for rooms
-            **/
-
-            ready: function () {
-                // this.rooms = [];
-                // this.idArray = [];
-                // this.childAge = [];
-                // this.totalData = [];
-                // this.roomIdArray = [];
-                // this.roomChildIdArray = [];
-                // this.roomCount;
-                // this.inputChildCount;
-                // this.inputAdultCount;
-                // this.push('rooms', { adult: 1, child : 0, childAge:[] }); //to show intial 1 room which is compulsory to select.
-                // this.roomCount = this.roomCount + 1;
-                // if (this.roomlabel === undefined) {
-                //     var roomlabels = "Room"
-                // }
-                // else {
-                //     var roomlabels = this.roomlabel;
-                // }
-                // this._labelRoom(roomlabels);
-            },
+           
             /**
              * To delete rooms on enter key press.
              * */
@@ -446,111 +401,8 @@ The form handles below mentioned scenarios on its own.
 
             _deleteRoom: function (e) {
                 this.splice('rooms', e.model.index, 1);
-                // var item = this.get(['totalData', e.model.index]);
-                // var index = this.totalData.indexOf(item);
-                // if (index != -1) {
-                //     totalData.splice(index);
-                // }
-                // this.idArray = new Array();
-                // if (idArray.length === 0) {
-                //     this._idCal();
-                // }
-                // this._idDelCal(e.model.index);
-                // idArray.splice(e.model.index, 1);
-                // console.log(idArray);
-                // var form = this.querySelector("#choiceRoom");
-                // form._calResultOfRoom(e.model.index);
-                // this.roomCount = this.roomCount - 1;
                 this.$.btnAddRoom.style.visibility = "visible";
             },
-            /**
-            *Function works for delete button .
-            *on click it count id's of adult, children and child age drop down to calculate data.
-            *It calculate id's runtime while clicking on delete button.
-            **/
-            // _idDelCal: function (delIndex) {
-            //     inputChildCount = this.domHost.querySelectorAll(".inputChildCount");
-            //     roomChildIdArray = [];
-            //     roomIdArray = [];
-            //     roomCount = this.roomCount;
-            //     for (var i = delIndex + 1; i < roomCount; i++) {
-            //         var countId = +2 + +inputChildCount[i].value;
-            //         if (this.querySelector('#adult' + i) != null) {
-            //             roomIdArray[0] = this.querySelector('#adult' + i).id = 'adult' + (i - 1);
-            //             roomIdArray[1] = this.querySelector('#child' + i).id = 'child' + (i - 1);
-            //             roomChildIdArray = new Array();
-            //             for (var j = 0; j < inputChildCount[i].value; j++) {
-            //                 if (this.querySelector("#child" + (i + 1) + "_" + (j + 1)) != null) {
-            //                     roomChildIdArray[j] = this.querySelector("#child" + (i + 1) + "_" + (j + 1)).id = 'child' + (i) + '_' + (j + 1);
-            //                     this.querySelector("#size1" + (i + 1) + "_" + (j + 1)).id = 'size1' + (i) + '_' + (j + 1);
-            //                 }
-            //             }
-            //             roomIdArray[2] = roomChildIdArray;
-            //             roomChildIdArray = new Array();
-
-            //         }
-            //         else {
-            //             roomIdArray[0] = this.querySelector('#adult').id = 'adult' + (i - 1);
-            //             roomIdArray[1] = this.querySelector('#child').id = 'child' + (i - 1);
-            //             roomChildIdArray = new Array();
-            //             for (var j = 0; j < inputChildCount[i].value; j++) {
-            //                 if (this.querySelector("#child" + (i + 1) + "_" + (j + 1)) != null) {
-            //                     roomChildIdArray[j] = this.querySelector("#child" + (i + 1) + "_" + (j + 1)).id = 'child' + (i) + '_' + (j + 1);
-            //                     this.querySelector("#size1" + (i + 1) + "_" + (j + 1)).id = 'size1' + (i) + '_' + (j + 1);
-            //                 }
-            //             }
-            //             roomIdArray[2] = roomChildIdArray;
-            //             roomChildIdArray = new Array();
-            //         }
-            //         idArray[i] = JSON.stringify(roomIdArray);
-            //         roomIdArray = new Array();
-            //     }
-
-
-            /**
-           *Function works for done button .
-           *on click it count id's of adult, children and child age drop down to calculate data.
-           *it calculate id's runtime while clicking on done button.
-           **/
-            // },
-            // _idCal: function () {
-            //     inputChildCount = this.domHost.querySelectorAll(".inputChildCount");
-            //     roomChildIdArray = [];
-            //     roomIdArray = [];
-            //     roomCount = this.roomCount;
-            //     for (var i = 0; i < roomCount; i++) {
-            //         var countId = +2 + +inputChildCount[i].value;
-            //         if (this.querySelector("#adult" + (i)) == null) {
-            //             roomIdArray[0] = this.querySelector("#adult").id = 'adult' + i;
-            //             roomIdArray[1] = this.querySelector("#child").id = 'child' + i;
-            //             roomChildIdArray = new Array();
-            //             for (var j = 0; j < inputChildCount[i].value; j++) {
-            //                 if (this.querySelector("#child" + (i + 1) + "_" + (j + 1)) != null) {
-            //                     roomChildIdArray[j] = this.querySelector("#child" + (i + 1) + "_" + (j + 1)).id;
-            //                 }
-            //             }
-            //             roomIdArray[2] = roomChildIdArray;
-            //             roomChildIdArray = new Array();
-            //         }
-            //         else {
-            //             roomIdArray[0] = this.querySelector('#adult' + (i)).id;
-            //             roomIdArray[1] = this.querySelector('#child' + (i)).id;
-            //             roomChildIdArray = new Array();
-            //             for (var j = 0; j < inputChildCount[i].value; j++) {
-            //                 if (this.querySelector("#child" + (i + 1) + "_" + (j + 1)) != null) {
-            //                     roomChildIdArray[j] = this.querySelector("#child" + (i + 1) + "_" + (j + 1)).id;
-            //                 }
-            //             }
-            //             roomIdArray[2] = roomChildIdArray;
-            //             roomChildIdArray = new Array();
-            //         }
-
-            //         idArray[i] = JSON.stringify(roomIdArray);
-            //         roomIdArray = new Array();
-            //     }
-            //     // console.log(idArray);
-
-            // },
 
             /**
             *Function works for done button .
@@ -560,40 +412,7 @@ The form handles below mentioned scenarios on its own.
             **/
 
             _doneRoom: function (event) {
-                // inputAdultCount = this.domHost.querySelectorAll(".inputAdultCount");
-                // inputChildCount = this.domHost.querySelectorAll(".inputChildCount");
-                // var dataAdult = [];
-                // var dataChild = [];
-                // var dataRoom = [];
-                // var roomData = [];
-                // var adultCount = 0;
-                // var childCount = 0;
-                // var validdata = true;
-                // roomC = this.roomCount;
-                // roomCount = this.roomCount;
-
-                // for (var i = 0; i < roomCount; i++) {
-                //     // loop through each adult input on the page
-                //     dataAdult[i] = inputAdultCount[i].value;
-                //     dataChild[i] = inputChildCount[i].value;
-                //     var totalCount = +dataAdult[i] + +dataChild[i];
-                //     if (totalCount > this.domHost.totalRoomPaxCount) {
-                //         validdata = false;
-                //     }
-                //     adultCount = +adultCount + +dataAdult[i];
-
-                // }
-                // var inputAdult = JSON.stringify(adultCount);
-
-
-                // for (var i = 0; i < roomCount; i++) {
-                //     // loop through each child input on the page
-                //     dataChild[i] = inputChildCount[i].value;
-                //     childCount = +childCount + +dataChild[i];
-                // }
-                // var inputChild = JSON.stringify(childCount);
-                // var focused = false;
-
+            
                 var isValid = true;
                 for(var i=0; i< this.rooms.length; i++){
                     var room = this.rooms[i];
@@ -616,134 +435,16 @@ The form handles below mentioned scenarios on its own.
                         detail : this.rooms
                     }));
                 }
-
-                // for (var i = 0; i < roomCount; i++) {
-                //     // loop through each child input on the page
-                //     count = +2 + +inputChildCount[i].value;
-                //     dataRoom[0] = inputAdultCount[i].value;
-                //     dataRoom[1] = inputChildCount[i].value;
-                //     childAge = new Array();
-                //     for (var j = 0; j < inputChildCount[i].value; j++) {
-                //         childAge[j] = this.querySelector("#child" + (i + 1) + "_" + (j + 1)).value;
-                //         if (childAge[j] == undefined) {
-                //             validdata = false;
-                //             this.querySelector("#child" + (i + 1) + "_" + (j + 1)).invalid = true;
-                //             this.querySelector("#size1" + (i + 1) + "_" + (j + 1)).style.visibility = "hidden";
-                //             if (!focused) {
-                //                 this.querySelector("#child" + (i + 1) + "_" + (j + 1) + " input").focus();
-                //                 this.querySelector("#child" + (i + 1) + "_" + (j + 1) + " input").blur()
-                //                 focused = true;
-                //             }
-                //         }
-                //     }
-                //     dataRoom[2] = childAge;
-                //     totalData[i] = JSON.stringify(dataRoom);
-                // }
-                // var form = this.querySelector("#choiceRoom");
-                // form._calResultOfRoom();
-                // if (validdata) {
-                //     var Adults = [];
-                //     var Children = [];
-                //     var Age1 = [];
-                //     var dataArray = [];
-                //     var travellersdata = [];
-                //     var choiceDropdown = this.domHost.choice;
-                //     var totalDDOption = this.domHost.choices.length;
-                //     this.$.btnAddRoom.style.visibility = "hidden";
-                //     if (choiceDropdown >= 0 && choiceDropdown < totalDDOption) {
-                //         var countAdult = new Array();
-                //         var dropDownAdultCount = this.domHost.querySelector("#deskinput1").querySelector("#listbox").selectedItem.getAttribute("count-adult");
-                //         var totalRoom = this.domHost.querySelector("#deskinput1").querySelector("#listbox").selectedItem.getAttribute("count-room");
-                //         if (totalRoom >= 2) {
-                //             for (var i = 0; i < totalRoom; i++) {
-                //                 if (i != totalRoom - 1) {
-                //                     countAdult[i] = dropDownAdultCount - (dropDownAdultCount - 1);
-                //                 }
-                //                 else {
-                //                     countAdult[i] = dropDownAdultCount - i;
-                //                 }
-                //             }
-                //         }
-                //         else {
-                //             var dropdownSelectionAdult = dropDownAdultCount;
-                //         }
-                //         roomCount = totalRoom;
-                //         if (totalRoom >= 2) {
-                //             dataAdult = countAdult;
-                //         }
-                //         else {
-                //             dataAdult = dropdownSelectionAdult.split(",");
-                //         }
-                //         dataChild = 0;
-                //     }
-                //     for (var i = 0; i < roomCount; i++) {
-                //         Adults[0] = dataAdult[i];
-                //         Adults[1] = "Adult";
-                //         var Age = [];
-                //         Age = "";
-                //         Adults[2] = Age;
-
-                //         Children[0] = dataChild[i];
-                //         Children[1] = "Child";
-                //         childAge = new Array();
-                //         if (i < inputChildCount.length) {
-                //             for (var j = 0; j < inputChildCount[i].value; j++) {
-                //                 childAge[j] = this.querySelector("#child" + (i + 1) + "_" + (j + 1)).value;
-                //             }
-                //         }
-                //         Age1 = childAge;
-                //         Children[2] = Age1;
-
-                //         dataArray[0] = Adults;
-                //         dataArray[1] = Children;
-                //         travellersdata[i] = JSON.stringify(dataArray);
-                //     }
-
-                //     this.domHost.travellersFinalData = travellersdata;
-
-                //     if (idArray.length === 0) {
-                //         this._idCal();
-                //     }
-                //     var output;
-                //     if (inputAdult === "1") {
-                //         output = inputAdult + ' Adult ';
-                //     }
-                //     else {
-                //         output = inputAdult + ' Adults ';
-                //     }
-                //     if (inputChild === "0") {
-                //         output = output + '';
-                //     } else if (inputChild === "1") {
-                //         output = output + inputChild + ' Child ';
-                //     }
-                //     else {
-                //         output = output + inputChild + ' Children ';
-                //     }
-                //     if (roomCount === 1) {
-                //         output = output + ' in ' + roomCount + ' Room';
-                //     }
-                //     else {
-                //         output = output + ' in ' + roomCount + ' Rooms';
-                //     }
-                //     /*
-                //     to change the textcontent of dropodown list from 'need more rooms or have children to 'x adult, y children in z rooms'.
-                //     */
-                //     var need = this.domHost.querySelector("#paperCard");
-                //     var room = this.domHost.querySelector("#needRoom");
-                //     var toolbar = this.domHost.querySelector("#toolbarRoom");
-                //     /*
-                //     to toggle the paper-card used for 'need more room or have children form
-                //     */
-                //     room.textContent = "Need more rooms or have children?";
-                //     if (need.style.visibility == 'visible' || need.style.visibility == '') {
-                //         need.style.visibility = 'hidden';
-                //         toolbar.style.visibility = 'hidden';
-                //     }
-                //     this.domHost.doneRoomCardOutput = output;
-                // }
+                
                 return isValid;
+            },
+
+            /**
+            *
+            **/
+            triggerDone: function(){
+                this._doneRoom();
             }
         })
-        //  });
     </script>
 </dom-module>

@@ -214,9 +214,7 @@ The form handles below mentioned scenarios on its own.
             <form is="iron-form" id="form" method="post" action="/form/handler">
                 <div id="Adult">
                     <paper-dropdown-menu label="{{adultLabel}}" id$="adult{{_displayId()}}" on-iron-select="_onCount" class="inputAdultCount"
-                        required auto-validate error-message="Enter" 
-                        value="{{room.adult}}"
-                        >
+                        required auto-validate error-message="Enter" value="{{room.adult}}">
                         <paper-listbox slot="dropdown-content" id="listBox" class="dropdown-content" selected="0">
                             <template is='dom-repeat' items='[[_getAdultCountList(searchOption.minAdultCount, searchOption.maxAdultCount)]]'>
                                 <paper-item value="[[item]]">[[item]]</paper-item>
@@ -242,8 +240,8 @@ The form handles below mentioned scenarios on its own.
 
                 <template is='dom-repeat' items={{room.childAge}} id="childAge">
                     <div class="childs1">
-                        <paper-dropdown-menu  on-keydown="_tabPress" class="ageOfChild" required auto-validate error-message="Enter age"
-                            label="{{resources.child}} {{_childIndex(index)}}" id="child{{_childID(index)}}" value="{{item.age}}" invalid="[[item.invalid]]" >
+                        <paper-dropdown-menu on-keydown="_tabPress" class="ageOfChild" required auto-validate error-message="Enter age" label="{{resources.child}} {{_childIndex(index)}}"
+                            id="child{{_childID(index)}}" value="{{item.age}}" invalid="[[item.invalid]]">
                             <paper-listbox slot="dropdown-content" id="listBox" class="dropdown-content">
                                 <template is='dom-repeat' items='[[_getChildAgeList(searchOption.minChildAge, searchOption.maxChildAge)]]'>
                                     <paper-item value="{{item}}">{{item}}</paper-item>
@@ -272,10 +270,10 @@ The form handles below mentioned scenarios on its own.
                     notify: true
                 },
 
-                index:Number,
+                index: Number,
 
-                room:{
-                    type :Object
+                room: {
+                    type: Object
                 },
 
                 isMobile: Boolean,
@@ -289,9 +287,6 @@ The form handles below mentioned scenarios on its own.
                     type: Object,
                     value: {}
                 },
-
-                
-                
 
                 /**
                  * This property is set for search resources to set adult label.
@@ -348,13 +343,6 @@ The form handles below mentioned scenarios on its own.
            **/
 
             ready: function () {
-                //TODO
-                // var setAdultDropdownheight = this.$.Adult.children[0].children[1].children[1];
-                // setAdultDropdownheight.style.height = "150px";
-                // setAdultDropdownheight.children[0].children[0].style.overflowX = "hidden";
-                // var setDropdownheight = this.$.child.children[1].children[1];
-                // setDropdownheight.style.height = "150px";
-                // setDropdownheight.children[0].children[0].style.overflowX = "hidden";
                 this.children = [];
                 this.adultLabel = this.resources.adult;
                 this.childLabel = this.resources.child;
@@ -400,61 +388,19 @@ The form handles below mentioned scenarios on its own.
 
                     var ageArr = [];
                     var setcount = this.searchOption.minChildCount;
-                    var cCount = parseInt( this.room.child) + setcount;
+                    var cCount = parseInt(this.room.child) + setcount;
                     for (var i = 0; i < cCount; i++) {
-                        ageArr.push({ age : "0"});
+                        ageArr.push({ age: "0" });
                     }
 
                     this.set("room.childAge", ageArr);
 
-                    // this._calResultOfRoom();
-                    // this._removeError();
-                    this.$.childAge.render();
-                    // var adultValue = this.shadowRoot.querySelector(".inputAdultCount").value;
-                    // if (adultValue == 1) {
-                    //     this.adultLabel = this.resources.adult;
-                    // }
-                    // else {
-                    //     this.adultLabel = this.resources.adults;
-                    // }
-                    // var childValue = this.shadowRoot.querySelector(".inputChildCount").value;
-                    // if (childValue == 1) {
-                    //     this.childLabel = "Child";
-                    // }
-                    // else {
-                    //     this.childLabel = this.resources.childLabel;
-                    // }
 
-                    //TODO
-                    // if (childValue == setcount) {
-                    //     this.shadowRoot.querySelector(".inputAdultCount").querySelector(".paper-input").querySelector(".paper-input").style.color = "lightgray";
-                    //     this.querySelector(".inputChildCount").querySelector(".paper-input").querySelector(".paper-input").style.color = "lightgray";
-                    //     for (var i = 0; i < setcount; i++) {
-                    //         this.querySelectorAll(".ageOfChild")[i].querySelector(".paper-input").querySelector(".paper-input").style.color = "lightgray";
-                    //     }
-                    // } else {
-                    //     for (var i = 0; i < childValue; i++) {
-                    //         this.querySelectorAll(".ageOfChild")[i].querySelector(".paper-input").querySelector(".paper-input").style.color = "lightgray";
-                    //     }
-                    // }
+                    this.$.childAge.render();
+
                 });
             },
 
-            /**
-            * This function is used for removing error of adult and children dropdown after reclicking on it.
-            **/
-
-            /**
-            * This function is used for showing label 'Age' below each children age.
-            **/
-            // _ageLabelShow: function (event) {
-            //     var setAgeDropdownheight = event.currentTarget.children[1].children[1];
-            //     setAgeDropdownheight.style.height = "150px";
-            //     setAgeDropdownheight.children[0].children[0].style.overflowX = "hidden";
-            //     var lblsize = event.currentTarget.id.replace("child", "size1");
-            //     event.currentTarget.invalid = false;
-            //     this.$$("#" + lblsize).style.visibility = "";
-            // },
             /**
             * This function is used for keypress on children age drop down.
              **/
@@ -464,129 +410,7 @@ The form handles below mentioned scenarios on its own.
                     var lblsize = e.currentTarget.id.replace("child", "size1");
                     this.$$("#" + lblsize).style.visibility = "";
                 }
-            },
-            // /**
-            //  * To set the error message for room after exceeding total room pax count.
-            //  **/
-            // _removeError: function () {
-            //     var inputAdultCount = this.shadowRoot.querySelectorAll(".inputAdultCount");
-            //     var inputChildCount = this.shadowRoot.querySelectorAll(".inputChildCount");
-            //     var roomCount = this.domHost.roomCount;
-            //     var dataAdult = [];
-            //     var dataChild = [];
-            //     for (var i = 0; i < roomCount; i++) {
-            //         // loop through each adult & child input on the page   
-            //         dataAdult[i] = inputAdultCount[i].value;
-            //         dataChild[i] = inputChildCount[i].value;
-            //         var totalCount = +dataAdult[i] + +dataChild[i];
-            //         var totalRoomPaxCount = this.searchOption.totalRoomPaxCount;
-            //         if (totalCount > totalRoomPaxCount) {
-            //             this.domHost.shadowRoot.querySelectorAll(".head")[i].querySelector("#errfn").innerHTML = "Maximum Paxcount " + '' + totalRoomPaxCount;
-            //             this.domHost.shadowRoot.querySelectorAll(".head")[i].querySelector("#countError").style.display = "block";
-            //         }
-            //         else {
-            //             this.domHost.shadowRoot.querySelectorAll(".head")[i].querySelector("#errfn").innerHTML = "";
-            //             this.domHost.shadowRoot.querySelectorAll(".head")[i].querySelector("#countError").style.display = "none";
-            //         }
-            //     }
-            // },
-
-            /**
-             * This function is useful for displaying data like x Adults, Y Children in z rooms on mobile screen header.
-             * This is called by each selection of adult and children dropdown.
-             * It only works for mobile screen.
-             **/
-            // _calResultOfRoom: function (roomC) {
-            //     var adultCount = 0;
-            //     var dataAdultR = [];
-            //     var dataChild = [];
-            //     var childCount = 0;
-            //     var card = this.domHost;
-            //     var roomCount = card.roomCount;
-            //     var delRoomNo = roomC;
-            //     inputAdultCount = this.shadowRoot.querySelectorAll(".inputAdultCount");
-            //     inputChildCount = this.shadowRoot.querySelectorAll(".inputChildCount");
-            //     if (inputAdultCount != undefined && inputChildCount != undefined) {
-            //         for (var i = 0; i < roomCount; i++) {
-            //             // loop through each adult input on the page              
-            //             if (i != delRoomNo) {
-            //                 dataAdultR[i] = inputAdultCount[i].value;
-            //                 adultCount = +adultCount + +dataAdultR[i];
-            //             }
-            //         }
-            //         var inputAdult = JSON.stringify(adultCount);
-            //         for (var i = 0; i < roomCount; i++) {
-            //             // loop through each adult input on the page              
-            //             if (i != delRoomNo) {
-            //                 dataChild[i] = inputChildCount[i].value;
-            //                 childCount = +childCount + +dataChild[i];
-            //             }
-            //         }
-            //         var inputChild = JSON.stringify(childCount);
-            //     }
-            //     spanData = '';
-            //     if (inputAdult === "1") {
-            //         spanData = inputAdult + ' Adult';
-            //     }
-            //     else {
-            //         spanData = inputAdult + ' Adults';
-            //     }
-            //     if (inputChild === "0") {
-            //         spanData = spanData + '';
-            //     } else
-            //         if (inputChild === "1") {
-            //             spanData = spanData + ', ' + inputChild + ' Child ';
-            //         }
-            //         else {
-            //             spanData = spanData + ', ' + inputChild + ' Children ';
-            //         }
-            //     var finalRoomCount = roomCount - (roomC >= 0 ? 1 : 0)
-            //     if (finalRoomCount === 1) {
-            //         spanData = spanData + ' in ' + finalRoomCount + ' Room';
-            //     }
-            //     else {
-            //         spanData = spanData + ' in ' + finalRoomCount + ' Rooms';
-            //     }
-            //     var dropdownChoice = this.domHost.domHost.choice;
-            //     var totalDDOption = this.domHost.domHost.choices.length;
-            //     if (dropdownChoice >= 0 && dropdownChoice < totalDDOption) {
-            //         return false;
-            //     } else {
-            //         var deskOut = this.domHost.domHost.$.travelerInput.$.menuButton;
-            //         deskOut.querySelector("paper-input").$.input.value = spanData;
-            //     }
-
-            //     if (this.isMobile) {
-            //         var toolbar = this.domHost.domHost.$.toolbarRoom;
-            //         var span = domCreate("span");
-            //         var div = domCreate("div");
-            //         span.setAttribute("id", "spanId");
-            //         span.style.color = "lightgray";
-            //         span.innerHtml = "1 Adult in 1 Room";
-            //         span.innerHTML = spanData;
-            //         div.style.textAlign = "center";
-            //         div.style.position = "relative";
-            //         div.style.height = "50px";
-            //         div.style.marginLeft = "21px";
-            //         div.style.width = "250px";
-            //         div.style.top = "-20px";
-            //         var mqI = window.matchMedia("(max-width:330px)").matches;
-            //         if (mqI) {
-            //             div.style.fontSize = "13px";
-            //         } else {
-            //             div.style.fontSize = "15px";
-            //         }
-            //         div.style.fontFamily = "roboto";
-            //         var checkSpan = toolbar.shadowRoot.querySelector("#spanId");
-            //         div.appendChild(span);
-            //         if (checkSpan == null) {
-            //             toolbar.appendChild(div);
-            //         }
-            //         else {
-            //             checkSpan.innerHTML = spanData;
-            //         }
-            //     }
-            // },
+            }
         });
     </script>
 </dom-module>

@@ -74,44 +74,48 @@ The form handles below mentioned scenarios on its own.
       largeDesktopView$="{{_largeDesktopViewOther(largeDesktopView)}}" largeDesktopViewIE$="{{_largeDesktopViewIE(largeDesktopView)}}">
 
 
-
-      <div class="container-fluid">
-        <div class="row">
-
-          <!--Toolbar to show on mobile screen for Drop down link 'Need more rooms or have children' .
+      <!--Toolbar to show on mobile screen for Drop down link 'Need more rooms or have children' .
           This is hidden while user is working desktop mode or tablet mode.
           It will come in picture after user clicking on 'Need more rooms or have children' mobile screen..       -->
 
-          <app-toolbar id="toolbarRoom" hidden$="[[_hiddenToolbar]]" class="row-lg-height row-md-height row-sm-height row-xs-height">
-            <iron-icon icon="icons:arrow-back" id="backButtonRoom" on-tap="_showDPMainToolbar"></iron-icon>
-            <paper-button toggles id="buttons" on-tap='_doneRoomCard'>Done</paper-button>
-          </app-toolbar>
+      <app-toolbar id="toolbarRoom" hidden$="[[_hiddenToolbar]]" class="app-top-bar row-lg-height row-md-height row-sm-height row-xs-height">
+        <paper-button class="btnback" on-tap="_closeCardView">
+          <iron-icon icon="icons:arrow-back"></iron-icon>
+        </paper-button>
+        <paper-button toggles class="btndone" on-tap='_doneCardView'>Done</paper-button>
+      </app-toolbar>
 
-          <!--Toolbar to show on mobile screen for datepicker.
+      <!--Toolbar to show on mobile screen for datepicker.
           This is hidden while user is working desktop mode or tablet mode.
           It will come in picture after user clicking on datepicker at mobile screen.       -->
 
-          <app-toolbar id="toolbarDatePicker" hidden$="[[_hiddenDatePickerToolbar]]" class="row-lg-height row-md-height row-sm-height row-xs-height">
-            <div id="selectDate">
-              <iron-icon icon="icons:arrow-back" id="backButtonDatepicker" on-tap="_showDateToolbar"></iron-icon>
-              <span class="dateSpan" disabled>Select Dates</span>
-              <paper-button toggles id="buttons" on-tap='_doneDatePicker'>Done</paper-button>
-            </div>
-          </app-toolbar>
+      <app-toolbar id="toolbarDatePicker" hidden$="[[_hiddenDatePickerToolbar]]" class="app-top-bar row-lg-height row-md-height row-sm-height row-xs-height">
+        <paper-button class="btnback" on-tap="_closeDatePicker">
+          <iron-icon icon="icons:arrow-back"></iron-icon>
+        </paper-button>
+        <span class="dateSpan" main-title disabled>Select Dates</span>
+        <paper-button toggles class="btndone" on-tap='_doneDatePicker'>Done</paper-button>
+        <!--<div id="selectDate">
+          <iron-icon icon="icons:arrow-back" id="backButtonDatepicker" on-tap="_closeDatePicker"></iron-icon>
+          <span class="dateSpan" disabled>Select Dates</span>
+          <paper-button toggles class="btndone" on-tap='_doneDatePicker'>Done</paper-button>
+        </div>-->
+      </app-toolbar>
 
 
-          <!--Toolbar to show on mobile screen for Auto suggest.
+      <!--Toolbar to show on mobile screen for Auto suggest.
             This is hidden while user is working desktop mode or tablet mode.
             It will come in picture after user providing three input characters at autosuggest at mobile screen.       -->
 
-          <app-toolbar id="toolbarAutoComplete" hidden class="row-lg-height row-md-height row-sm-height row-xs-height">
-            <iron-icon id="backButtonAutoSuggest" icon="icons:arrow-back" on-tap="_showACMainToolbar"></iron-icon>
-            <div>
-              <iron-icon id="clearButton" icon="close" on-click="_clearInput"></iron-icon>
-            </div>
-          </app-toolbar>
+      <app-toolbar id="toolbarAutoComplete" hidden class="row-lg-height row-md-height row-sm-height row-xs-height">
+        <iron-icon id="backButtonAutoSuggest" icon="icons:arrow-back" on-tap="_showACMainToolbar"></iron-icon>
+        <div>
+          <iron-icon id="clearButton" icon="close" on-click="_clearInput"></iron-icon>
+        </div>
+      </app-toolbar>
 
-
+      <div class="container-fluid">
+        <div class="row">
           <!--Main toolbar which contains auto suggest dropdown, datepickers and travellers drop down at all screens. -->
           <app-toolbar id="mainToolbar" class="row row-lg-height row-md-height row-sm-height row-xs-height">
             <form is="iron-form" id="form" method="post" action="/form/handler">
@@ -200,6 +204,8 @@ The form handles below mentioned scenarios on its own.
           * Suggestions are requested after 3 characters(configurable) have been entered. 
           */
           autoSuggestUrl: String,
+
+          isMobile: Boolean,
 
           /**
           * This property stores the value of authentication token required for autosuggest API. 
@@ -329,6 +335,19 @@ The form handles below mentioned scenarios on its own.
           }
 
         };
+      }
+
+      static get observers() {
+        return [
+          'screenSizeChange(smallMobileView, mobileView)'
+        ]
+      }
+
+      screenSizeChange() {
+        if (this.smallMobileView || this.mobileView)
+          this.set("isMobile", true);
+        else
+          this.set("isMobile", false);
       }
 
       /* 
@@ -558,19 +577,22 @@ The form handles below mentioned scenarios on its own.
         var endInput = Polymer.dom(this.$.end).node;
         if (this.isMobile) {
           this.$.end.invalid = false;
-          Polymer.dom(this.$.toolbarDatePicker).node.style.display = "block";
-          Polymer.dom(this.$.deskinput).node.style.display = "none";
-          Polymer.dom(this.$.travellField).node.style.display = "none";
-          Polymer.dom(this.$.Button).node.style.display = "none";
-          Polymer.dom(this.$.mainToolbar).node.style.height = "0px";
-          Polymer.dom(this.$.mainToolbar).node.style.minHeight = "0px";
-          Polymer.dom(this.$.startContainer).node.classList.add("divColorofDatepicker");
-          Polymer.dom(this.$.endContainer).node.classList.add("divColorofDatepicker");
-          Polymer.dom(this.$.mainToolbar).node.classList.add("divColorofDatepicker");
-          startInput.children[0].style.textAlign = "center";
-          endInput.children[0].style.textAlign = "center";
-          startInput.shadowRoot.querySelector("#input").shadowRoot.querySelector("#input").style.color = "black";
-          endInput.shadowRoot.querySelector("#input").shadowRoot.querySelector("#input").style.color = "black";
+
+          this.set("_hiddenDatePickerToolbar", false);
+          this.$.autosuggestInput.style.display = "none";
+          this.$.travellField.style.display = "none";
+          this.$.btnContainer.style.display = "none";
+          this.$.mainToolbar.style.height = "0px";
+          this.$.mainToolbar.style.minHeight = "0px";
+          this.$.startContainer.classList.add("divColorofDatepicker");
+          this.$.endContainer.classList.add("divColorofDatepicker");
+          this.$.mainToolbar.classList.add("divColorofDatepicker");
+          this.$.start.updateStyles({"--paper-input-container-input-color":"black"});
+          this.$.end.updateStyles({"--paper-input-container-input-color":"black"});
+          // startInput.children[0].style.textAlign = "center";
+          // endInput.children[0].style.textAlign = "center";
+          // startInput.shadowRoot.querySelector("#input").shadowRoot.querySelector("#input").querySelector("input").style.color = "black";
+          // endInput.shadowRoot.querySelector("#input").shadowRoot.querySelector("#input").querySelector("input").style.color = "black";
         }
         var tabView = window.matchMedia("(min-width:768px) and (max-width:1190px)").matches;
         if (tabView) {
@@ -578,9 +600,6 @@ The form handles below mentioned scenarios on its own.
           endInput.shadowRoot.querySelector("#input").shadowRoot.querySelector("#input").style.fontSize = "13px";
         }
 
-        if (this.isMobile && this._hiddenDatePickerToolbar == true) {
-          this._hiddenDatePickerToolbar = !this._hiddenDatePickerToolbar;
-        }
       }
 
       /**
@@ -589,42 +608,48 @@ The form handles below mentioned scenarios on its own.
       _doneDatePicker() {
         var startDialog = this.$.start;
         var endDialog = this.$.end;
-        startDialog.$.dialog.style.display = "none";
-        endDialog.$.dialog.style.display = "none";
+        // startDialog.$.dialog.style.display = "none";
+        // endDialog.$.dialog.style.display = "none";
         startDialog.$.input.$.container.shadowRoot.querySelector(".underline").style.border = "none";
         endDialog.$.input.$.container.shadowRoot.querySelector(".underline").style.border = "none";
         this.doneDatePicker = true;
-        this._showDateToolbarFun();
-        doneStartDate = startDialog.value;
-        doneEndDate = endDialog.value;
+        this._closeDatePicker();
+   
       }
 
       /**
        * This is supportive function to maintain style of datepicker toolbar in mobile view.
        **/
-      _showDateToolbarFun() {
+      _closeDatePicker() {
         this._hiddenTravelerCard = true;
         this.showToolbar = true;
-        Polymer.dom(this.$.toolbarDatePicker).node.style.display = "none";
-        Polymer.dom(this.$.deskinput).node.style.display = "block";
-        Polymer.dom(this.$.travellField).node.style.display = "block";
-        Polymer.dom(this.$.Button).node.style.display = "block";
-        Polymer.dom(this.$.start1).node.classList.remove("divColorofDatepicker");
-        Polymer.dom(this.$.end1).node.classList.remove("divColorofDatepicker");
-        Polymer.dom(this.$.mainToolbar).node.classList.remove("divColorofDatepicker");
-        Polymer.dom(this.$.start1).node.classList.add("colorOfToolbarAtRuntime");
-        Polymer.dom(this.$.end1).node.classList.add("colorOfToolbarAtRuntime");
-        Polymer.dom(this.$.mainToolbar).node.classList.add("colorOfToolbarAtRuntime");
-        var startInput = Polymer.dom(this.$.start).node;
-        var endInput = Polymer.dom(this.$.end).node;
-        startInput.children[0].style.textAlign = "";
-        endInput.children[0].style.textAlign = "";
-        startInput.$.input.$.container.shadowRoot.querySelector(".unfocused-line").style.display = "block";
-        endInput.$.input.$.container.shadowRoot.querySelector(".unfocused-line").style.display = "block";
-        startInput.$.input.$.container.shadowRoot.querySelector("#labelAndInputContainer").style.marginRight = "";
-        endInput.$.input.$.container.shadowRoot.querySelector("#labelAndInputContainer").style.marginRight = "";
-        startInput.$.input.$.input.style.color = "white";
-        endInput.$.input.$.input.style.color = "white";
+        this.set("_hiddenDatePickerToolbar", true);
+
+        this.$.autosuggestInput.style.display = "block";
+        this.$.travellField.style.display = "block";
+        this.$.btnContainer.style.display = "block";
+        this.$.startContainer.classList.remove("divColorofDatepicker");
+        this.$.endContainer.classList.remove("divColorofDatepicker");
+        this.$.mainToolbar.classList.remove("divColorofDatepicker");
+        
+        this.$.start.updateStyles({"--paper-input-container-input-color":"white"});
+        this.$.end.updateStyles({"--paper-input-container-input-color":"white"});
+
+        this.$.start.close();
+        this.$.end.close();
+        // this.$.startContainer.classList.add("colorOfToolbarAtRuntime");
+        // this.$.endContainer.classList.add("colorOfToolbarAtRuntime");
+        // this.$.mainToolbar.classList.add("colorOfToolbarAtRuntime");
+
+        // startInput.children[0].style.textAlign = "";
+        // endInput.children[0].style.textAlign = "";
+        // startInput.shadowRoot.querySelector("#input").shadowRoot.querySelector("#input").style.color = "white";
+        // endInput.shadowRoot.querySelector("#input").shadowRoot.querySelector("#input").style.color = "white";
+
+        this.$.start.$.input.$.container.shadowRoot.querySelector(".unfocused-line").style.display = "block";
+        this.$.end.$.input.$.container.shadowRoot.querySelector(".unfocused-line").style.display = "block";
+        // startInput.$.input.$.container.shadowRoot.querySelector("#labelAndInputContainer").style.marginRight = "";
+        // endInput.$.input.$.container.shadowRoot.querySelector("#labelAndInputContainer").style.marginRight = "";
       }
 
 
@@ -686,11 +711,11 @@ The form handles below mentioned scenarios on its own.
       _openChildForm(e) {
         setTimeout(function () {
           if (this.isMobile) {
-            this.$.start1.style.display = "none";
-            this.$.end1.style.display = "none";
-            this.$.autosuggestInput.style.display = "none";
-            this.$.travelerInput.style.display = "none";
-            this.$.btnContainer.style.display = "none";
+            this.$.startContainer.hidden = true;
+            this.$.endContainer.hidden = true;
+            this.$.autosuggestInput.hidden = true;
+            this.$.travellField.hidden = true;
+            this.$.btnContainer.hidden = true;
           }
           // this.$.needRoom.textContent = "1 Adult in 1 Room";
           // var pCard = Polymer.dom(this.$.paperCard).node;
@@ -710,7 +735,7 @@ The form handles below mentioned scenarios on its own.
           // var toolbarSpan = this.$.choiceCard.shadowRoot.querySelector("#choiceRoom");
           // this.choice = this.choices.length;
           // toolbarSpan._calResultOfRoom();
-          if (this.isMobile && this.showToolbar == true) {
+          if (this.isMobile) {
             this.set("_hiddenToolbar", false);
           }
           // tBar.style.visibility = '' ? 'hidden' : '';
@@ -726,6 +751,27 @@ The form handles below mentioned scenarios on its own.
         }.bind(this), 0);
       }
 
+      /**
+      * this method will get executed when close button click on mobile view on card view popup.
+      **/
+
+      _closeCardView() {
+        this.set("_hiddenToolbar", true);
+        this.set("_hiddenTravelerCard", true);
+        this.$.startContainer.hidden = false;
+        this.$.endContainer.hidden = false;
+        this.$.autosuggestInput.hidden = false;
+        this.$.travellField.hidden = false;
+        this.$.btnContainer.hidden = false;
+      }
+
+      /**
+      * this method will get executed when done button click on mobile view on card view popup.
+      **/
+      _doneCardView() {
+        this.$.choiceCard.triggerDone();
+      }
+
       _onChoiceCardTravelerSelected(e) {
         console.log("traveler selected", e, e.detail);
         this.set("_selectedTraveller", e.detail);
@@ -733,7 +779,7 @@ The form handles below mentioned scenarios on its own.
         this.$.customTravelerMenu.textContent = this._getTravelerMenuLabel();
         this.set("choice", 0);
         this.set("choice", this.choices.length);
-        this._hiddenTravelerCard = true;
+        this._closeCardView()
       }
 
       _getTravelerMenuLabel() {
