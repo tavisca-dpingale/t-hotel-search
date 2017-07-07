@@ -41,7 +41,7 @@
                 transition-duration: 0.3s;
                 transition-property: all;
                 transition-timing-function: cubic-bezier(0, 1, 0.5, 1);
-                margin-top: 10px;
+                margin-top: 52px;
                 z-index: 100;
             }
 
@@ -61,10 +61,20 @@
             }
 
              :host .autocomplete ul {
-                padding: 0;
+                padding: 5px;
                 border: 2px solid lightgray;
                 margin: 0;
                 padding-bottom: 40px;
+            }
+
+            :host .autocomplete ul .line{
+                border-bottom: 1px silver solid;
+                margin: 3px 0 10px 0;
+            }
+
+            :host .autocomplete ul .line span{
+                background-color: white;
+                padding: 4px;
             }
 
              :host .autocomplete ul.ulClassMobile {
