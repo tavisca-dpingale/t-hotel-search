@@ -13,6 +13,10 @@
 <dom-module id="t-calendar">
   <template>
     <style>
+      :host{
+        --default-img-for-selected : url("../../green-circle.svg");
+        --default-img-for-today-date : url("../../today-circle.svg")
+      }
       .selectedRange {
         border-top: 1px solid var(--color-for-calendar-selected-range, #4CB050);
         border-bottom: 1px solid var(--color-for-calendar-selected-range, #4CB050);
@@ -46,13 +50,13 @@
       }
       
       .selectfirst {
-        background-image: var(--background-img-for-selected-date);
+        background-image: var(--background-img-for-selected-date, var(--default-img-for-selected));
         background-repeat: no-repeat;
         color: white;
       }
       
       .selectlast {
-        background-image: var(--background-img-for-selected-date);
+        background-image: var(--background-img-for-selected-date, var(--default-img-for-today-date));
         background-repeat: no-repeat;
         -webkit-text-fill-color: white;
         color: white;

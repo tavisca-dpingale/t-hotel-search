@@ -21,11 +21,11 @@
                 display: none !important;
             }
 
-             :host::content paper-button:focus {
+             :host::slotted( paper-button) :focus {
                 outline: none;
             }
 
-             :host::content .automobileInput {
+             :host::slotted(.automobileInput) {
                 background-color: transparent;
                 width: 130px;
                 border: none;
@@ -38,8 +38,8 @@
                 font-size: 15px;
             }
 
-             :host::content .automobileInput:focus,
-             :host::content .automobileInput:active {
+             :host::slotted( .automobileInput) :focus,
+             :host::slotted( .automobileInput) :active {
                 outline: none;
             }
 

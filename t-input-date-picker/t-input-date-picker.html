@@ -69,6 +69,11 @@ Example:
         margin: 0px;
       }
 
+      :host ::slotted(.underline)
+      {
+          height: 1px;
+      }
+
       @media (min-width: 300px) and (max-width: 767px) {
         paper-dialog {
           position: fixed;
@@ -449,6 +454,8 @@ Example:
         this.domHost.$.start.shadowRoot.querySelector("paper-input").shadowRoot.querySelector("[id^='paper-input-label']").style.color = "lightgray";
         this.domHost.$.end.shadowRoot.querySelector("paper-input").shadowRoot.querySelector("[id^='paper-input-label']").style.color = "lightgray";
 
+        this.$.input.$.container.shadowRoot.querySelector(".underline").style.height="0px";
+
         if (this.id == 'end' && startDate.value != undefined) {
           endDate.$.input.$.container.shadowRoot.querySelector(".underline").style.border = "1px solid #4cb050";
           endDate.$.input.$.container.shadowRoot.querySelector(".unfocused-line").style.display = "none";
@@ -495,7 +502,7 @@ Example:
         if (this.id == 'end' && startDate.value == undefined) {
           startDate.invalid = true;
           startDate.$.input.$.container.shadowRoot.querySelector(".underline").style.border = "none";
-          startDate.$.input.$.container.querySelector("#paper-input-add-on-1").style.width = "123%";
+          // startDate.$.input.$.container.querySelector("#paper-input-add-on-1").style.width = "123%";
         }
         //TODO
         // var pcard = this.domHost.querySelector("#paperCard");
