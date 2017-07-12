@@ -587,8 +587,8 @@ The form handles below mentioned scenarios on its own.
           this.$.startContainer.classList.add("divColorofDatepicker");
           this.$.endContainer.classList.add("divColorofDatepicker");
           this.$.mainToolbar.classList.add("divColorofDatepicker");
-          this.$.start.updateStyles({"--paper-input-container-input-color":"black"});
-          this.$.end.updateStyles({"--paper-input-container-input-color":"black"});
+          this.$.start.updateStyles({ "--paper-input-container-input-color": "black" });
+          this.$.end.updateStyles({ "--paper-input-container-input-color": "black" });
           // startInput.children[0].style.textAlign = "center";
           // endInput.children[0].style.textAlign = "center";
           // startInput.shadowRoot.querySelector("#input").shadowRoot.querySelector("#input").querySelector("input").style.color = "black";
@@ -614,7 +614,7 @@ The form handles below mentioned scenarios on its own.
         endDialog.$.input.$.container.shadowRoot.querySelector(".underline").style.border = "none";
         this.doneDatePicker = true;
         this._closeDatePicker();
-   
+
       }
 
       /**
@@ -631,9 +631,9 @@ The form handles below mentioned scenarios on its own.
         this.$.startContainer.classList.remove("divColorofDatepicker");
         this.$.endContainer.classList.remove("divColorofDatepicker");
         this.$.mainToolbar.classList.remove("divColorofDatepicker");
-        
-        this.$.start.updateStyles({"--paper-input-container-input-color":"white"});
-        this.$.end.updateStyles({"--paper-input-container-input-color":"white"});
+
+        this.$.start.updateStyles({ "--paper-input-container-input-color": "white" });
+        this.$.end.updateStyles({ "--paper-input-container-input-color": "white" });
 
         this.$.start.close();
         this.$.end.close();
@@ -773,7 +773,7 @@ The form handles below mentioned scenarios on its own.
       }
 
       _onChoiceCardTravelerSelected(e) {
-        console.log("traveler selected", e, e.detail);
+        // console.log("traveler selected", e, e.detail);
         this.set("_selectedTraveller", e.detail);
 
         this.$.customTravelerMenu.textContent = this._getTravelerMenuLabel();
@@ -855,8 +855,8 @@ The form handles below mentioned scenarios on its own.
             };
 
             if (obj.children > 0) {
-              obj.childAges.forEach(ag => {
-                obj.childAges.push(ag.age);
+              room.childAge.forEach(ag => {
+                obj.childAges.push(parseInt(ag.age));
               });
             }
             searchModel.rooms.push(obj);
@@ -866,7 +866,7 @@ The form handles below mentioned scenarios on its own.
             detail: searchModel
           }));
 
-          console.log(searchModel);
+          // console.log(searchModel);
         }
       }
 
