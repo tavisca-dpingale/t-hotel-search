@@ -58,8 +58,8 @@
       .selectlast {
         background-image: var(--background-img-for-selected-date, var(--default-img-for-today-date));
         background-repeat: no-repeat;
-        -webkit-text-fill-color: white;
-        color: white;
+        /* -webkit-text-fill-color: white;
+        color: white; */
       }
       
       .selectToday {
@@ -543,7 +543,7 @@
                   <div dialog-confirm class="month-col">
                     <div class$="{{_getDayClass('day-item selection', item.date, today, date)}}" disabled$="{{_isDisabled(item.day, item.date, minDate, maxDate)}}"
                       on-tap="_tapDay" date$="{{item.name}}">
-                      <div class="borderDiv" style="width:50%;height:100%;"></div>
+                      <div class="borderDiv" style="width:50%;height:96%;"></div>
                       <div style="width:50%; margin-left:22%;" class="day">{{item.day}}</div>
                     </div>
                   </div>
