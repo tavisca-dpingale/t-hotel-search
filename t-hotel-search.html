@@ -150,7 +150,7 @@ The form handles below mentioned scenarios on its own.
                   readonly on-keydown="_tabPress">
                   <paper-listbox slot="dropdown-content" class="dropdown-content" id="listbox" selected="{{choice}}">
                     <template is='dom-repeat' items='{{choices}}'>
-                      <paper-item class="trvellerItem" id="adult{{item.adult}}Room1" count-adult$="{{item.adult}}" count-room$="{{item.room}}"
+                      <paper-item class="trvellerItem" id="adult{{item.adult}}Room1" on-tap="_onTravelerSelected" count-adult$="{{item.adult}}" count-room$="{{item.room}}"
                         value="{{item}}">{{item.adult}} {{_adultLabel(item.adult)}} in {{item.room}} {{_roomLabel(item.room)}}</paper-item>
                     </template>
                     <paper-item id="customTravelerMenu" class="hidden">[[_getTravelerMenuLabel()]] </paper-item>
@@ -398,7 +398,13 @@ The form handles below mentioned scenarios on its own.
           inputContent.style.width = "120%";
         }
       }
-
+      _onTravelerSelected(e){
+       
+      var eventData = e.target.value;     
+       var traveler = { adult: eventData.adult,room:eventData.eventData, child: 0, childAge: [] }
+        this.set("_selectedTraveller", [traveler]);
+        
+      }
       _defaultOptionValue() {
         if (this.option.traveller) {
 
@@ -866,7 +872,7 @@ The form handles below mentioned scenarios on its own.
             detail: searchModel
           }));
 
-          // console.log(searchModel);
+           console.log(searchModel);
         }
       }
 
