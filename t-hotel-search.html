@@ -400,9 +400,20 @@ The form handles below mentioned scenarios on its own.
       }
       _onTravelerSelected(e){
        
-      var eventData = e.target.value;     
-       var traveler = { adult: eventData.adult,room:eventData.eventData, child: 0, childAge: [] }
-        this.set("_selectedTraveller", [traveler]);
+      var eventData = e.target.value;
+      var room = eventData.room;
+      var occupancyList = [];
+      var maxPassenger = 3;
+      var totalAdult = eventData.adult;
+      while(room>0){
+      var adult = totalAdult>maxPassenger?maxPassenger:totalAdult;
+      totalAdult-=adult; 
+       var occupancy= { adult: adult, child: 0, childAge: [] }
+       occupancyList.push(occupancy);
+       room--;
+      }
+       
+        this.set("_selectedTraveller", occupancyList);
         
       }
       _defaultOptionValue() {
