@@ -267,11 +267,11 @@ The form handles below mentioned scenarios on its own.
 
                             <div id="countError"><span id="errfn"></span></div>
                         </div>
-
+                      
                         <choice-form index="{{_displayIndex(index)}}"
                                 resources=[[resources]]
                                 is-mobile="[[isMobile]]"
-                                room = {{item}}
+                                room ="{{item}}"
                                 search-option=[[searchOption]] id="choiceRoom"></choice-form>
 
                     </template>
@@ -400,7 +400,7 @@ The form handles below mentioned scenarios on its own.
             **/
 
             _deleteRoom: function (e) {
-                this.splice('rooms', e.model.index, 1);
+                this.splice('rooms', e.model.index, 1);              
                 this.$.btnAddRoom.style.visibility = "visible";
             },
 

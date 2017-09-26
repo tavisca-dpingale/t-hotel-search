@@ -214,8 +214,8 @@ The form handles below mentioned scenarios on its own.
             <form is="iron-form" id="form" method="post" action="/form/handler">
                 <div id="Adult">
                     <paper-dropdown-menu label="{{adultLabel}}" id$="adult{{_displayId()}}" on-iron-select="_onCount" class="inputAdultCount"
-                        required auto-validate error-message="Enter" value="{{room.adult}}">
-                        <paper-listbox slot="dropdown-content" id="listBox" class="dropdown-content" selected="0">
+                        required auto-validate error-message="Enter" >
+                        <paper-listbox slot="dropdown-content" id="listBox" class="dropdown-content" selected="{{room.adult}}" attr-for-selected="value">
                             <template is='dom-repeat' items='[[_getAdultCountList(searchOption.minAdultCount, searchOption.maxAdultCount)]]'>
                                 <paper-item value="[[item]]">[[item]]</paper-item>
                             </template>
@@ -227,8 +227,8 @@ The form handles below mentioned scenarios on its own.
 
                 <div class="childs">
                     <paper-dropdown-menu label="{{childLabel}}" id="child" on-selected-item-changed='_onCount' class="inputChildCount" required
-                        auto-validate error-message="Enter Child Count" value="{{room.child}}">
-                        <paper-listbox slot="dropdown-content" id="listBox" class="dropdown-content" selected="0">
+                        auto-validate error-message="Enter Child Count">
+                        <paper-listbox slot="dropdown-content" id="listBox" class="dropdown-content" selected="{{room.child}}" attr-for-selected="value">
                             <template is='dom-repeat' items='[[_getChildCountList(searchOption.minChildCount, searchOption.maxChildCount)]]'>
                                 <paper-item value="[[item]]">[[item]]</paper-item>
                             </template>
@@ -237,18 +237,19 @@ The form handles below mentioned scenarios on its own.
                     <div id="size">({{searchOption.minChildAge}}-{{searchOption.maxChildAge}} Years)</div>
                     <input is="iron-input" type="hidden" bind-value="[[room.child]]">
                 </div>
-
-                <template is='dom-repeat' items={{room.childAge}} id="childAge">
+               
+                <template is='dom-repeat' items={{room.childAge}} as="data" id="childAge">
+                      
                     <div class="childs1">
                         <paper-dropdown-menu on-keydown="_tabPress" class="ageOfChild" required auto-validate error-message="Enter age" label="{{resources.child}} {{_childIndex(index)}}"
-                            id="child{{_childID(index)}}" value="{{item.age}}" invalid="[[item.invalid]]">
-                            <paper-listbox slot="dropdown-content" id="listBox" class="dropdown-content">
+                            id="child{{_childID(index)}}" invalid="[[data.invalid]]">
+                            <paper-listbox slot="dropdown-content" id="listBox" class="dropdown-content" selected="{{data.age}}" attr-for-selected="value">
                                 <template is='dom-repeat' items='[[_getChildAgeList(searchOption.minChildAge, searchOption.maxChildAge)]]'>
                                     <paper-item value="{{item}}">{{item}}</paper-item>
                                 </template>
                             </paper-listbox>
                         </paper-dropdown-menu>
-                        <div id="size1{{_childID(index)}}" class="age">[[resources.age]]</div>
+                        <div id="size1{{_childID(index)}}" class="age">[[resources.age]] - {{data.age}}</div>
                     </div>
                 </template>
             </form>
@@ -351,7 +352,7 @@ The form handles below mentioned scenarios on its own.
 
             _getAdultCountList: function (minimumAdult, maxAdultCount) {
 
-                var childArray = new Array();
+                var childArray = [];
                 if (minimumAdult >= 0 && maxAdultCount)
                     for (var i = minimumAdult; i <= maxAdultCount; i++) {
                         childArray.push(i);
@@ -359,7 +360,7 @@ The form handles below mentioned scenarios on its own.
                 return childArray;
             },
             _getChildCountList: function (minChildCount, maxChildCount) {
-                var childArray = new Array();
+                var childArray = [];
                 if (minChildCount >= 0 && maxChildCount)
                     for (var i = minChildCount; i <= maxChildCount; i++) {
                         childArray.push(i);
@@ -368,7 +369,7 @@ The form handles below mentioned scenarios on its own.
             },
 
             _getChildAgeList: function (minChildAge, maxChildAge) {
-                var childArray = new Array();
+                var childArray = [];
                 if (minChildAge >= 0 && maxChildAge)
                     for (var i = minChildAge; i <= maxChildAge; i++) {
                         childArray.push(i);
@@ -385,7 +386,10 @@ The form handles below mentioned scenarios on its own.
             _onCount: function () {
                 this.async(function () {
 
-
+                    if(this.room.childAge && this.room.childAge.length >0)
+                    {
+                        return;
+                    }
                     var ageArr = [];
                     var setcount = this.searchOption.minChildCount;
                     var cCount = parseInt(this.room.child) + setcount;
