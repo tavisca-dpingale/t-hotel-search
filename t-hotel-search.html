@@ -59,7 +59,20 @@ The form handles below mentioned scenarios on its own.
 <dom-module id="t-hotel-search">
   <template>
     <style include="t-hotel-search-style t-grid-layout-style">
-
+      :host{
+        --outer-container-color: #424d51;
+        --search-button-color: #4CB050;
+        --search-button-text-color: #fff;
+        --dropdown-element-link-color: #4CB050;
+        --button-color-for-rooms: #478BD7;
+        --border-color-for-cards: lightgray;
+        --background-color-for-traveller-card: white;
+        --color-for-calendar-dates: #4CB050;
+        --color-for-calendar-background: white;
+        --color-for-calendar-selected-range: #4CB050;
+        --background-img-for-selected-date: url('green-circle.svg');
+        --background-img-for-today-date: url('today-circle.svg');
+      }
     </style>
 
     <iron-media-query query="(max-width: 380px)" query-matches="{{smallMobileView}}"></iron-media-query>
