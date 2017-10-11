@@ -1,5 +1,6 @@
 <link rel="import" href="../polymer/polymer-element.html">
 <link rel="import" href="../iron-icons/iron-icons.html">
+<link rel="import" href="../app-layout/app-toolbar/app-toolbar.html">
 <link rel="import" href="../paper-dialog/paper-dialog.html">
 <link rel="import" href="../paper-item/paper-item.html">
 <link rel="import" href="../paper-dropdown-menu/paper-dropdown-menu.html">
@@ -59,7 +60,7 @@ The form handles below mentioned scenarios on its own.
 <dom-module id="t-hotel-search">
   <template>
     <style include="t-hotel-search-style t-grid-layout-style">
-      :host{
+       :host {
         --outer-container-color: #424d51;
         --search-button-color: #4CB050;
         --search-button-text-color: #fff;
@@ -72,6 +73,10 @@ The form handles below mentioned scenarios on its own.
         --color-for-calendar-selected-range: #4CB050;
         --background-img-for-selected-date: url('green-circle.svg');
         --background-img-for-today-date: url('today-circle.svg');
+
+        --paper-input-container-underline: {
+          border-color: #586367;
+        }
       }
     </style>
 
@@ -120,68 +125,66 @@ The form handles below mentioned scenarios on its own.
             This is hidden while user is working desktop mode or tablet mode.
             It will come in picture after user providing three input characters at autosuggest at mobile screen.       -->
 
-      <app-toolbar id="toolbarAutoComplete" hidden class="row-lg-height row-md-height row-sm-height row-xs-height">
+      <app-toolbar id="toolbarAutoComplete" hidden>
         <iron-icon id="backButtonAutoSuggest" icon="icons:arrow-back" on-tap="_showACMainToolbar"></iron-icon>
         <div>
           <iron-icon id="clearButton" icon="close" on-click="_clearInput"></iron-icon>
         </div>
       </app-toolbar>
 
-      <div class="container-fluid">
-        <div class="row">
-          <!--Main toolbar which contains auto suggest dropdown, datepickers and travellers drop down at all screens. -->
-          <app-toolbar id="mainToolbar" class="row row-lg-height row-md-height row-sm-height row-xs-height">
-            <form is="iron-form" id="form" method="post" action="/form/handler">
 
-              <div id="autosuggestInput" required auto-validate class="col-md-4 col-sm-11">
-                <t-autosuggest id="location" name="location" required auto-validate selected-item="{{location}}" query-params="token={{tokenResponse.authenticationToken}}"
-                  resource=[[_resources]] is-mobile="[[mobilePhone]]" data-url$="[[autoSuggestUrl]]">
-                </t-autosuggest>
+      <!--Main toolbar which contains auto suggest dropdown, datepickers and travellers drop down at all screens. -->
+      <app-toolbar id="mainToolbar">
+        <form is="iron-form" id="form" method="post" action="/form/handler">
 
-              </div>
+          <!-- ENTER DESTINATION -->
+          <div id="autosuggestInput" required auto-validate>
+            <t-autosuggest id="location" name="location" required auto-validate selected-item="{{location}}" query-params="token={{tokenResponse.authenticationToken}}"
+              resource=[[_resources]] is-mobile="[[mobilePhone]]" data-url$="[[autoSuggestUrl]]">
+            </t-autosuggest>
+          </div>
 
+          <!-- START DATE -->
+          <div id="startContainer">
+            <t-input-date-picker required auto-validate error-message="[[_resources.checkInError]]" class="suggestions" date-format="MM/DD/YYYY"
+              id="start" label="[[_resources.checkin]]" min-date="[[_searchOption.minDateToday]]" max-date="[[_searchOption.maxDate]]"
+              on-tap="_openDatePicker" is-mobile="[[mobilePhone]]">
+              <!-- placeholder="[[_resources.datePlaceholder]]" -->
+            </t-input-date-picker>
+          </div>
 
-              <div id="startContainer" class="col-md-1 col-sm-3 col-xs-5">
-                <t-input-date-picker required auto-validate error-message="[[_resources.checkInError]]" class="suggestions" date-format="MM/DD/YYYY"
-                  id="start" label="[[_resources.checkin]]" min-date="[[_searchOption.minDateToday]]" max-date="[[_searchOption.maxDate]]"
-                  on-tap="_openDatePicker" is-mobile="[[mobilePhone]]" placeholder="[[_resources.datePlaceholder]]">
-                </t-input-date-picker>
+          <!-- END DATE -->
+          <div id="endContainer">
+            <t-input-date-picker required auto-validate error-message="[[resource.checkOutError]]" class="suggestions" id="end" label="[[_resources.checkout]]"
+              date-format="MM/DD/YYYY" is-mobile="[[mobilePhone]]" max-date="[[_searchOption.maxDate]]" on-tap="_openDatePicker">
+              <!-- placeholder="[[_resources.datePlaceholder]]" -->
+            </t-input-date-picker>
+          </div>
 
-              </div>
+          <!-- ENTER TRAVELLER COUNT -->
+          <div id="travellField">
+            <paper-dropdown-menu on-tap="_dismisCard" required auto-validate error-message="Required Field" id="travelerInput" label="[[_resources.travelers]]"
+              readonly on-keydown="_tabPress">
+              <paper-listbox slot="dropdown-content" class="dropdown-content" id="listbox" selected="{{choice}}">
+                <template is='dom-repeat' items='{{choices}}'>
+                  <paper-item class="trvellerItem" id="adult{{item.adult}}Room1" on-tap="_onTravelerSelected" count-adult$="{{item.adult}}"
+                    count-room$="{{item.room}}" value="{{item}}">{{item.adult}} {{_adultLabel(item.adult)}} in {{item.room}} {{_roomLabel(item.room)}}</paper-item>
+                </template>
+                <paper-item id="customTravelerMenu" class="hidden">[[_getTravelerMenuLabel()]] </paper-item>
+                <paper-item on-tap="_openChildForm" id="needRoom" class="trvellerItem">Need more rooms or have children? </paper-item>
+              </paper-listbox>
+            </paper-dropdown-menu>
 
-              <div id="endContainer" class="col-md-1 col-sm-3 col-xs-5">
-                <t-input-date-picker required auto-validate error-message="[[resource.checkOutError]]" class="suggestions" id="end" label="[[_resources.checkout]]"
-                  date-format="MM/DD/YYYY" is-mobile="[[mobilePhone]]" max-date="[[_searchOption.maxDate]]" on-tap="_openDatePicker"
-                  placeholder="[[_resources.datePlaceholder]]">
-                </t-input-date-picker>
+            <input id="travellerInput" is="iron-input" type="hidden" bind-value="[[choice]]">
+          </div>
 
-              </div>
+          <!-- SEARCH BUTTON -->
+          <div id="btnContainer" class="text-center">
+            <paper-button on-tap="_onSearchClick" class="button" id="btnSearch">Search</paper-button>
+          </div>
+        </form>
+      </app-toolbar>
 
-              <div class="col-md-3 col-sm-4 col-xs-11" id="travellField">
-
-                <paper-dropdown-menu on-tap="_dismisCard" required auto-validate error-message="Required Field" id="travelerInput" label="[[_resources.travelers]]"
-                  readonly on-keydown="_tabPress">
-                  <paper-listbox slot="dropdown-content" class="dropdown-content" id="listbox" selected="{{choice}}">
-                    <template is='dom-repeat' items='{{choices}}'>
-                      <paper-item class="trvellerItem" id="adult{{item.adult}}Room1" on-tap="_onTravelerSelected" count-adult$="{{item.adult}}" count-room$="{{item.room}}"
-                        value="{{item}}">{{item.adult}} {{_adultLabel(item.adult)}} in {{item.room}} {{_roomLabel(item.room)}}</paper-item>
-                    </template>
-                    <paper-item id="customTravelerMenu" class="hidden">[[_getTravelerMenuLabel()]] </paper-item>
-                    <paper-item on-tap="_openChildForm" id="needRoom" class="trvellerItem">Need more rooms or have children? </paper-item>
-                  </paper-listbox>
-                </paper-dropdown-menu>
-
-                <input id="travellerInput" is="iron-input" type="hidden" bind-value="[[choice]]">
-              </div>
-
-              <div id="btnContainer" class="col-md-1 col-sm-2 col-xs-11 text-center">
-                <paper-button on-tap="_onSearchClick" class="button" id="btnSearch">Search</paper-button>
-              </div>
-            </form>
-          </app-toolbar>
-
-        </div>
-      </div>
     </div>
 
     <div class="item" id="card" smallMobileView$="{{smallMobileView}}" MobileView$="{{mobileView}}" TabletView$="{{tabletView}}"
@@ -406,23 +409,23 @@ The form handles below mentioned scenarios on its own.
           inputContent.style.width = "120%";
         }
       }
-      _onTravelerSelected(e){
-       
-      var eventData = e.target.value;
-      var room = eventData.room;
-      var occupancyList = [];
-      var maxPassenger = 3;
-      var totalAdult = eventData.adult;
-      while(room>0){
-      var adult = totalAdult>maxPassenger?maxPassenger:totalAdult;
-      totalAdult-=adult; 
-       var occupancy= { adult: adult, child: 0, childAge: [] }
-       occupancyList.push(occupancy);
-       room--;
-      }
-       
+      _onTravelerSelected(e) {
+
+        var eventData = e.target.value;
+        var room = eventData.room;
+        var occupancyList = [];
+        var maxPassenger = 3;
+        var totalAdult = eventData.adult;
+        while (room > 0) {
+          var adult = totalAdult > maxPassenger ? maxPassenger : totalAdult;
+          totalAdult -= adult;
+          var occupancy = { adult: adult, child: 0, childAge: [] }
+          occupancyList.push(occupancy);
+          room--;
+        }
+
         this.set("_selectedTraveller", occupancyList);
-        
+
       }
       _defaultOptionValue() {
         if (this.option.traveller) {
@@ -891,7 +894,7 @@ The form handles below mentioned scenarios on its own.
             detail: searchModel
           }));
 
-           console.log(searchModel);
+          console.log(searchModel);
         }
       }
 
