@@ -1,4 +1,3 @@
-
 <dom-module id="t-hotel-search-style">
     <template>
         <style>
@@ -14,6 +13,10 @@
                     color: white;
                     background-color: var(--search-button-color, #4CB050);
                     font-size: small;
+                }
+
+                --paper-input-container: {
+                    padding: 0;
                 }
             }
 
@@ -46,16 +49,14 @@
             .colorOfToolbarAtRuntime {
                 background-color: var(--outer-container-color, #424d51);
             }
-
-            .divColorofDatepicker {
+            /* .divColorofDatepicker {
                 background-color: white;
-            }
+            } */
 
             paper-item.trvellerItem {
                 --paper-item: {
                     color: silver;
                 }
-                ;
                 ;
                 --paper-item-selected: {
                     color: black;
@@ -63,21 +64,21 @@
                 }
                 ;
             }
-
-            #autosuggestInput {
+            /* #autosuggestInput {
                 height: 80px;
             }
 
             #location {
                 height: 0px;
-            }
-
-            #startContainer,
+            } */
+            /* #startContainer,
             #endContainer,
             #travellField,
             #btnContainer {
                 height: 80px;
-            }
+            } */
+
+            
 
             #paperCard {
                 z-index: 3;
@@ -86,19 +87,22 @@
             #toolbarRoom {
                 height: 80px;
             }
-            #toolbarRoom .btnback{
+
+            #toolbarRoom .btnback {
                 padding: 0px;
             }
-            .app-top-bar  paper-button, .app-top-bar iron-icon{
+
+            .app-top-bar paper-button,
+            .app-top-bar iron-icon {
                 color: lightgray;
             }
 
-            .app-top-bar [main-title]{
+            .app-top-bar [main-title] {
                 display: inline-block;
                 color: lightgray;
             }
 
-            .btndone{
+            .btndone {
                 float: right;
                 padding-top: 20px;
             }
@@ -123,7 +127,7 @@
 
             .trvellerItem {
                 font-size: 15px;
-                margin-top: -15px;
+                /* margin-top: -15px; */
             }
 
             #toolbarAutoComplete {
@@ -150,8 +154,8 @@
             app-toolbar {
                 background-color: var(--outer-container-color, #424d51);
                 display: block;
-                height: 100px;
-                margin-top: -20px;
+                height: auto;
+                /* margin-top: -20px; */
                 padding: 0px;
             }
             /*CSS for icon used in toolbar Arrow back for mobile view*/
@@ -164,11 +168,11 @@
 
             #btnSearch {
                 color: var(--search-button-text-color, white);
-                float: right;
+                /* float: right; */
                 /*z-index: 2;*/
-                min-width: 95%;
-                height: 40px;
-                margin-top: 41px;
+                width: 85px;
+                /* height: 40px;
+                margin-top: 41px; */
                 background-color: #4CB050;
                 font-size: small;
             }
@@ -180,7 +184,7 @@
                 --paper-input-container-label-focus: lightgray;
                 font-size: small;
             }
-           
+
             paper-dropdown-menu {
                 --paper-input-container-color: lightgray;
                 --paper-input-container-focus-color: #4cb050;
@@ -195,12 +199,6 @@
                 ;*/
             }
 
-            #clearButton {
-                float: right;
-                top: -33px;
-                right: 10px;
-                z-index: 1;
-            }
             /*DATE PICKER */
 
             .suggestions#end,
@@ -251,28 +249,27 @@
             .item[smallMobileView] #listbox {
                 height: 210px;
             }
-
-             :host .item[largeDesktopView] {
+            /* :host .item[largeDesktopView] {
                 display: block;
                 padding: 24px;
                 margin: 0px;
-            }
+            } */
             /** Large Desktop view **/
 
-            .item[largeDesktopView] .button {
+            /* .item[largeDesktopView] .button {
                 margin-left: 70px;
                 min-width: 95%;
                 height: 40px;
                 margin-top: 41px;
                 @apply --paper-button-search;
-            }
+            } */
 
-            .item[largeDesktopView] .row-lg-height {
+            /* .item[largeDesktopView] .row-lg-height {
                 display: table;
                 table-layout: fixed;
                 height: 100px;
                 width: 100%;
-            }
+            } */
 
             .item[largeDesktopView] #toolbar {
                 display: none;
@@ -286,13 +283,11 @@
                 max-height: 450px;
                 @apply --paper-card;
             }
-
-            .item[largeDesktopView] #start {
+            /* .item[largeDesktopView] #start {
                 margin-top: 25px;
                 width: 100%;
-            }
-
-            .item[largeDesktopView] #end {
+            } */
+            /* .item[largeDesktopView] #end {
                 margin-top: 25px;
                 width: 100%;
             }
@@ -300,37 +295,35 @@
             .item[largeDesktopView] #travelerInput {
                 margin-top: 25px;
                 width: 100%;
-            }
-
-            .item[largeDesktopView] #autosuggestInput {
+            } */
+            /* .item[largeDesktopView] #autosuggestInput {
                 margin-top: 25px;
-            }
+            } */
             /** Desktop view **/
 
-             :host .item[desktopView] {
+             /* :host .item[desktopView] {
                 display: block;
                 padding: 24px;
                 margin: 0px;
-            }
-
-            .item[desktopView] .row-lg-height {
+            } */
+            /* .item[desktopView] .row-lg-height {
                 display: table;
                 table-layout: fixed;
                 height: 100px;
                 width: 100%;
-            }
+            } */
 
             .item[desktopView] #toolbar {
                 display: none;
             }
 
-            .item[desktopView] .button {
+            /* .item[desktopView] .button {
                 margin-left: 12px;
                 min-width: 75%;
                 height: 40px;
                 margin-top: 41px;
                 @apply --paper-button-search;
-            }
+            } */
 
             .item[desktopView] .paperCard {
                 top: 110px !important;
@@ -341,7 +334,7 @@
                 @apply --paper-card;
             }
 
-            .item[desktopView] #start {
+            /* .item[desktopView] #start {
                 margin-top: 25px;
                 width: 100%;
             }
@@ -349,25 +342,25 @@
             .item[desktopView] #end {
                 margin-top: 25px;
                 width: 100%;
-            }
+            } */
 
-            .item[desktopView] #travelerInput {
+            /* .item[desktopView] #travelerInput {
                 margin-top: 25px;
                 margin-left: -4px;
                 width: 115%;
-            }
-
+            } */
+/* 
             .item[desktopView] #autosuggestInput {
                 margin-top: 25px;
-            }
+            } */
             /** Tablet view **/
 
-            .item[tabletView] .row-sm-height {
+            /* .item[tabletView] .row-sm-height {
                 display: table;
                 table-layout: fixed;
                 height: 150px;
                 width: 100%;
-            }
+            } */
 
             .item[tabletView] paper-container {
                 position: fixed;
@@ -385,15 +378,14 @@
                 @apply --paper-card;
             }
 
-            .item[tabletView] paper-button {
+            /* .item[tabletView] paper-button {
                 margin-top: 15px;
                 min-width: 90%;
                 height: 40px;
                 margin-left: 12px;
                 @apply --paper-button-search;
-            }
-
-            .item[tabletView] #start {
+            } */
+            /* .item[tabletView] #start {
                 width: 100%;
             }
 
@@ -403,23 +395,23 @@
 
             .item[tabletView] #travelerInput {
                 width: 104%;
-            }
+            } */
             /** Mobile view **/
 
-            .item[mobileView] .row-xs-height {
+            /* .item[mobileView] .row-xs-height {
                 display: table;
                 table-layout: fixed;
-                /*height: 350px;*/
+                height: 350px;
                 width: 100%;
-            }
+            } */
 
-            .item[mobileView] .button {
+            /* .item[mobileView] .button {
                 margin-top: 18px;
                 height: 40px;
                 bottom: 5px;
                 text-align: center;
                 padding: 13px;
-            }
+            } */
 
             .item[mobileView] paper-card {
                 top: 45px !important;
@@ -455,21 +447,21 @@
                 cursor: url(cursor.cur);
             }
 
-            .item[smallMobileView] .row-xs-height {
+            /* .item[smallMobileView] .row-xs-height {
                 display: table;
                 table-layout: fixed;
                 height: 100%;
                 width: 100%;
-            }
+            } */
 
-            .item[smallMobileView] .button {
+            /* .item[smallMobileView] .button {
                 margin-top: 18px;
                 min-width: 65%;
                 bottom: 5px;
                 text-align: center;
                 padding: 12px;
                 @apply --paper-button-search;
-            }
+            } */
 
             .item[smallMobileView] paper-card {
                 top: 45px !important;
@@ -494,16 +486,16 @@
                 width: 100%;
             }
 
-            .item[smallMobileView] #autosuggestInput {
+            /* .item[smallMobileView] #autosuggestInput {
                 margin-top: 30px;
-            }
+            } */
 
-            .item[smallMobileView] #clearButton {
+            /* .item[smallMobileView] #clearButton {
                 float: right;
                 top: -33px;
                 right: 10px;
                 z-index: 1;
-            }
+            } */
 
             .item[smallMobileView] #selectDate span {
                 margin-left: -125px;
@@ -516,19 +508,19 @@
                 margin: 0px;
             }
 
-            .item[largeDEsktopViewIE] .row-lg-height {
+            /* .item[largeDEsktopViewIE] .row-lg-height {
                 display: table;
                 table-layout: fixed;
                 height: 100px;
                 width: 100%;
-            }
+            } */
 
             .item[largeDEsktopViewIE] #toolbar {
                 display: none;
             }
 
             .item[largeDEsktopViewIE] .button {
-                
+
                 /*width: 95%;
                 min-width: 55%;*/
                 height: 40px;
@@ -569,14 +561,69 @@
                 margin-top: -4px;
             }
 
-
-            @media (min-width: 1200px) {
-                .container {
-                    width: 1170px;
-                }
+            /* DP STYLES */
+            #mainToolbar form {
+                @apply --layout-horizontal;
+                padding-right: 24px;
             }
 
-            
+            #mainToolbar form>* {
+                @apply --layout-flex;
+                padding: 24px 0 24px 24px;
+            }
+
+            #travellField paper-dropdown-menu {
+                display: block;
+            }
+
+            #btnContainer {
+                @apply --layout-vertical;
+                @apply --layout-end-justified;
+                @apply --layout-end;
+            }
+
+            #mainToolbar #autosuggestInput {
+                @apply --layout-flex-4;
+            }
+
+            #mainToolbar #startContainer t-input-date-picker,
+            #mainToolbar #endContainer t-input-date-picker{
+                @apply --layout-horizontal;
+                @apply --layout-flex-2;
+            }
+            #mainToolbar #travellField {
+                @apply --layout-flex-3;
+            }
+            [mobileview] #mainToolbar #travellField,
+            [smallmobileview] #mainToolbar #travellField {
+                @apply --layout-flex-auto;
+                width: 100%;
+            }
+
+            [tabletView] #mainToolbar form,
+            [mobileview] #mainToolbar form,
+            [smallmobileview] #mainToolbar form {
+                @apply --layout-wrap;
+                padding-right: 16px;
+            }
+            [tabletView] #mainToolbar form>*,
+            [mobileview] #mainToolbar form>*,
+            [smallmobileview] #mainToolbar form>* {  
+                padding-left: 16px;
+            }
+            [tabletView] #mainToolbar #autosuggestInput,
+            [mobileview] #mainToolbar #autosuggestInput,
+            [smallmobileview] #mainToolbar #autosuggestInput {
+                @apply --layout-flex-auto;
+                width: 100%;
+            }
+
+            [mobileview] #mainToolbar #startContainer t-input-date-picker,
+            [mobileview] #mainToolbar #endContainer t-input-date-picker,
+            [smallmobileview] #mainToolbar #endContainer t-input-date-picker {
+                @apply --layout-flex-auto;
+            }
+
         </style>
     </template>
 </dom-module>
