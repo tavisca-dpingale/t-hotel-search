@@ -81,14 +81,12 @@ The form handles below mentioned scenarios on its own.
     </style>
 
     <iron-media-query query="(max-width: 380px)" query-matches="{{smallMobileView}}"></iron-media-query>
-    <iron-media-query query="(min-width: 380px) and (max-width:767px)" query-matches="{{mobileView}}"></iron-media-query>
+    <iron-media-query query="(max-width:767px)" query-matches="{{mobileView}}"></iron-media-query>
     <iron-media-query query="(min-width: 768px) and (max-width:1023px)" query-matches="{{tabletView}}"></iron-media-query>
     <iron-media-query query="(min-width: 1024px) and (max-width: 1200px)" query-matches="{{desktopView}}"></iron-media-query>
     <iron-media-query query="(min-width: 1200px)" query-matches="{{largeDesktopView}}"></iron-media-query>
-    <iron-media-query query="(max-width: 600px)" query-matches="{{mediumTablet}}"></iron-media-query>
-    <iron-media-query query="(max-width: 767px)" query-matches="{{mobilePhone}}"></iron-media-query>
 
-    <div class="item" smallMobileView$="{{smallMobileView}}" desktopView$="{{desktopView}}" tabletView$="{{tabletView}}" mobileView$="{{mobileView}}"
+    <div class="item" mobileView$="{{mobileView}}" smallMobileView$="{{smallMobileView}}" desktopView$="{{desktopView}}" tabletView$="{{tabletView}}" mobileView$="{{mobileView}}"
       largeDesktopView$="{{_largeDesktopViewOther(largeDesktopView)}}" largeDesktopViewIE$="{{_largeDesktopViewIE(largeDesktopView)}}">
 
 
@@ -140,7 +138,7 @@ The form handles below mentioned scenarios on its own.
           <!-- ENTER DESTINATION -->
           <div id="autosuggestInput" required auto-validate>
             <t-autosuggest id="location" name="location" required auto-validate selected-item="{{location}}" query-params="token={{tokenResponse.authenticationToken}}"
-              resource=[[_resources]] is-mobile="[[mobilePhone]]" data-url$="[[autoSuggestUrl]]">
+              resource=[[_resources]] is-mobile="[[mobileView]]" data-url$="[[autoSuggestUrl]]">
             </t-autosuggest>
           </div>
 
@@ -148,7 +146,7 @@ The form handles below mentioned scenarios on its own.
           <div id="startContainer">
             <t-input-date-picker required auto-validate error-message="[[_resources.checkInError]]" class="suggestions" date-format="MM/DD/YYYY"
               id="start" label="[[_resources.checkin]]" min-date="[[_searchOption.minDateToday]]" max-date="[[_searchOption.maxDate]]"
-              on-tap="_openDatePicker" is-mobile="[[mobilePhone]]">
+              on-tap="_openDatePicker" is-mobile="[[mobileView]]">
               <!-- placeholder="[[_resources.datePlaceholder]]" -->
             </t-input-date-picker>
           </div>
@@ -156,7 +154,7 @@ The form handles below mentioned scenarios on its own.
           <!-- END DATE -->
           <div id="endContainer">
             <t-input-date-picker required auto-validate error-message="[[resource.checkOutError]]" class="suggestions" id="end" label="[[_resources.checkout]]"
-              date-format="MM/DD/YYYY" is-mobile="[[mobilePhone]]" max-date="[[_searchOption.maxDate]]" on-tap="_openDatePicker">
+              date-format="MM/DD/YYYY" is-mobile="[[mobileView]]" max-date="[[_searchOption.maxDate]]" on-tap="_openDatePicker">
               <!-- placeholder="[[_resources.datePlaceholder]]" -->
             </t-input-date-picker>
           </div>
