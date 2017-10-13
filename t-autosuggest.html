@@ -10,10 +10,7 @@
                 position: relative;
                 display: block;
                 outline: none;
-                /* height: 500px; */
             }
-
-            
 
              :host .autocomplete ul>li.liColor {
                 color: gray;
@@ -178,14 +175,6 @@
             #labelId {
                 color: lightgray;
             }
-            /* #autoSuggest {
-                width: 99%;
-            } */
-/* 
-            #autoInput {
-                width: 100%;
-                float: left;
-            } */
 
             #clearButton {
                 float: right;
@@ -211,9 +200,9 @@
 
         <div>
             <div id="mainBody">
-                <paper-input-container required auto-validate invalid="{{isInvalid}}" id="autoInput">
+                <paper-input-container required auto-validate invalid="{{isInvalid}}" id="autoInput" always-float-label="[[labelFloat]]">
 
-                    <label id="labelId" slot="label" label="">[[resource.locationPlaceholder]]</label>
+                    <label id="labelId" slot="label">[[resource.locationPlaceholder]]</label>
 
                     <input class="suggestions" slot="input" id="autoSuggest" is="iron-input" disabled$="[[disabled]]" data-autocomplete$="{{dataUrl}}"
                         data-autocomplete-method="GET" data-autocomplete-type="JSON" data-autocomplete-limit="10" data-autocomplete-param-name$="{{param}}"
