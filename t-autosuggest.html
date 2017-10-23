@@ -223,7 +223,7 @@
             data-autocomplete-method="GET" data-autocomplete-type="JSON" data-autocomplete-limit="10" data-autocomplete-param-name$="{{param}}"
             data-autocomplete-no-result$="{{emptyMessage}}" on-mouseUp="_onFocus" bind-value$="[[selectedValue]]" on-search="_onClear"
             on-tap="_focusOnInput" autocapitalize="on" autocorrect="off" autocomplete="additional-name">
-            <iron-icon id="clearButton" icon="icons:close"></iron-icon>
+            <iron-icon id="clearButton" on-tap="_clear" icon="icons:close" ></iron-icon>
         </div>
         <div id="spinner" class="horizontal layout flex center-justified" hidden>
             <paper-spinner active></paper-spinner>
@@ -586,6 +586,7 @@
                 // this.classList.add('focused');
                 this.selectedValue = "";
                 this.$.autoSuggest.value = "";
+                this.selectedItem = null;
                 this.classList.remove('label-is-floating');
             }
             /**
