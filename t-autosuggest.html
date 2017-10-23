@@ -13,7 +13,7 @@
             }
 
              :host .autocomplete ul>li.liColor {
-                color: gray;
+                color: var(--autosuggest-text-color, #212121);
             }
 
             .suggestions::-ms-clear {
@@ -23,7 +23,7 @@
             }
 
              :host .autocomplete li>span.boldText {
-                color: black;
+                color: var(--autosuggest-bold-text-color, #404040);
                 font-weight: bold;
             }
 
@@ -62,19 +62,22 @@
 
              :host .autocomplete ul {
                 padding: 5px;
-                border: 2px solid lightgray;
+                border: 2px solid var(--autosuggest-item-border-color, #d1d1d1);
                 margin: 0;
                 padding-bottom: 40px;
             }
 
              :host .autocomplete ul .line {
-                border-bottom: 1px silver solid;
-                margin: 3px 0 10px 0;
+                border-bottom: 1px var(--autosuggest-item-border-color, #d1d1d1) solid;
+                margin: 3px 0 15px 0;
+                height: 14px;
             }
 
              :host .autocomplete ul .line span {
                 background-color: white;
                 padding: 4px;
+                font-size: 14px;
+                color: var(--autosuggest-item-border-color, #d1d1d1);
             }
 
              :host .autocomplete ul.ulClassMobile {
@@ -95,6 +98,7 @@
              :host .autocomplete ul li:hover {
                 background-color: #EEEEEE;
                 transition: all 0.5s ease 0s;
+                color: var(--autosuggest-text-color, #212121);
             }
 
              :host .autocomplete ul>li {
@@ -107,7 +111,7 @@
                 margin: 0;
                 text-overflow: ellipsis;
                 background-color: transparent;
-                border-color: var(--autosuggest-item-border-color);
+                border-color: var(--autosuggest-item-border-color, #d1d1d1);
             }
 
              :host .autocomplete ul>li:first-child {
@@ -135,7 +139,7 @@
 
             #spinner {
                 background-color: var(--autosuggest-item-bg-color);
-                border-color: var(--autosuggest-item-border-color);
+                border-color: var(--autosuggest-item-border-color, #d1d1d1);
             }
 
              :host #cancel {
@@ -173,7 +177,7 @@
             }
 
             #labelId {
-                color: lightgray;
+                color: var(--autosuggest-label-color, #b0b0b0);
             }
 
             #clearButton {
