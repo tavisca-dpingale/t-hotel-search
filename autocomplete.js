@@ -126,8 +126,8 @@ var AutoComplete = (function () {
                                             var p = domCreate("span");
                                             // tdiv.id = "line";
                                             tdiv.classList.add("line")
-                                            tdiv.style.height = "10px";
-                                            p.style.color = "Silver";
+                                            // tdiv.style.height = "10px";
+                                            // p.style.color = "Silver";
                                             p.style.borderbottomstyle = "solid";
                                             p.innerHTML = response;
                                             tdiv.appendChild(p);
