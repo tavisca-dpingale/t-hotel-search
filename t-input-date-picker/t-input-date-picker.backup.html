@@ -8,8 +8,7 @@
 <link rel="import" href="../../paper-dialog/paper-dialog.html">
 <link rel="import" href="../t-input-date-picker/t-date-picker/t-date-picker.html">
 <link rel="import" href="../t-input-date-picker/moment-with-locales-import.html">
-<link rel="import" href="../../vaadin-date-picker/vaadin-date-picker-light.html">
-<link rel="import" href="../../vaadin-date-picker/vaadin-date-picker.html">
+
 <!--
 An element providing a solution to no problem in particular.
 
@@ -167,15 +166,17 @@ Example:
       }
     </style>
 
-<vaadin-date-picker-light value="{{value}}">
-    <paper-input  style="width:100%" id="input" value="[[value]]"
-    type="[[type]]" name="[[name]]" placeholder="[[placeholder]]" always-float-label="[[alwaysFloatLabel]]" auto-validate="[[autoValidate]]"
-    label="[[label]]" readonly >
-  
-  </paper-input>
-
- </vaadin-date-picker-light>
-
+    <paper-button on-tap="_showDialog" focus-target="[[_dropdownContent]]" tabindex="-1">
+      <paper-input style="width:100%" id="input" disabled="[[disabled]]" value="[[_computeInputText(value)]]" invalid="{{invalid}}"
+        type="[[type]]" name="[[name]]" placeholder="[[placeholder]]" always-float-label="[[alwaysFloatLabel]]" auto-validate="[[autoValidate]]"
+        label="[[label]]" on-blur="_onInputBlur" on-keydown="_onInputKeyDown" on-keyup="_onInputKeyUp" tabindex="-1" readonly>
+      </paper-input>
+    </paper-button>
+    <paper-dialog id="dialog" class="t-date-picker-dialog dialogPosition" modal="[[modal]]" on-iron-overlay-closed="_dismissDialog">
+      <t-paper-date-picker id="picker" is-mobile="[[mobilePhone]]" format="[[dateFormat]]" locale="[[locale]]" min-date="[[_computeMinDate(minDate)]]"
+        max-date="[[_computeMaxDate(maxDate)]]">
+        </t-paper-date-picker>
+    </paper-dialog>
   </template>
 
 
@@ -379,7 +380,6 @@ Example:
         if (!this.locale) {
           this.locale = window.navigator.userLanguage || window.navigator.language;
         }
-
       },
 
       // Element Behavior

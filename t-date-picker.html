@@ -1,0 +1,123 @@
+<link rel="import" href="../polymer/polymer.html">
+<link rel="import" href="../paper-input/paper-input.html">
+<link rel="import" href="../iron-input/iron-input.html">
+
+<link rel="import" href="t-input-date-picker/moment-with-locales-import.html">
+<link rel="import" href="../vaadin-date-picker/vaadin-date-picker-light.html">
+
+
+<dom-module id="t-date-picker">
+  <template>
+    <style>
+       :host {
+        display: block;
+      }
+
+      paper-input {
+        --paper-input-container-focus-color: #4cb050;
+        --paper-input-container-underline-focus-color: #4cb050;
+        --paper-input-container-label: lightgray;
+        --paper-input-container-color: lightgray;
+        --paper-input-container-input-color: white;
+        --paper-input-container-underline: #4cb050;
+        font-size: small;
+      }
+    </style>
+
+
+    <vaadin-date-picker-light id="datePicker" attr-for-value="value" min="[[min]]" max="[[max]]" initial-position="[[initialDate]]">
+      <paper-input style="width:100%" id="input" class="input" placeholder="[[placeholder]]" always-float-label="[[alwaysFloatLabel]]"
+        label="[[label]]" readonly invalid$="[[invalid]]" value="{{value}}">
+
+      </paper-input>
+
+
+    </vaadin-date-picker-light>
+
+
+  </template>
+
+  <script>
+    class TDatePicker extends Polymer.Element {
+      static get is() {
+        return 't-date-picker';
+      }
+
+      static get properties() {
+        return {
+          required: {
+            type: Boolean,
+            value: true,
+            reflectToAttribute: true
+          },
+          value: {
+            type: String,
+            value: '',
+            notify: true
+          },
+          /**
+           * The earliest date that can be selected. All earlier dates will be disabled.
+           *
+           * Supported date formats:
+           * - ISO 8601 `"YYYY-MM-DD"` (default)
+           *
+           * @type {String}
+           */
+          min: {
+            type: String
+          },
+
+          /**
+           * The latest date that can be selected. All later dates will be disabled.
+           *
+           * Supported date formats:
+           * - ISO 8601 `"YYYY-MM-DD"` (default)
+           *
+           * @type {String}
+           */
+          max: {
+            type: String
+          },
+          /**
+           * Date which should be visible when there is no value selected.
+           *
+           * The same date formats as for the `value` property are supported.
+           */
+          initialDate: String
+        };
+      }
+      connectedCallback() {
+
+        Polymer.Base.async(function () {
+          // Set up the parser library for Finnish locale      
+          let dateFormat = this.dateFormat;
+          var datepicker = this.shadowRoot.querySelector('#datePicker');
+
+          datepicker.set("i18n.formatDate", (d) => {
+            if (!d) {
+              return d;
+            }
+            return moment(d).format(dateFormat);
+          });
+
+          datepicker.set("i18n.parseDate", function (dateString) {
+            return moment(dateString, dateFormat).toDate();
+          });
+
+        }.bind(this));
+      }
+      validate() {
+        this.invalid = false;
+        this.invalid = !this.value;
+        if (!this.invalid) {
+          this.invalid = !this.$.datePicker.validate();
+        }
+
+        return !this.invalid;
+      }
+
+    }
+
+    window.customElements.define(TDatePicker.is, TDatePicker);
+  </script>
+</dom-module>
