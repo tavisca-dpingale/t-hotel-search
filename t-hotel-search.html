@@ -9,7 +9,7 @@
 <link rel="import" href="t-input-date-picker/t-input-date-picker.html">
 <!-- <link rel="import" href="../vaadin-date-picker/vaadin-date-picker.html">
 <link rel="import" href="../vaadin-date-picker/vaadin-date-picker-light.html"> -->
-<link rel="import" href="../../paper-input/paper-input.html">
+<!-- <link rel="import" href="../paper-input/paper-input.html"> -->
 <link rel="import" href="t-hotel-search-style.html">
 <link rel="import" href="t-grid-layout-style.html">
 <link rel="import" href="choice-card.html">
@@ -162,8 +162,9 @@ The form handles below mentioned scenarios on its own.
           <!-- START DATE -->
           <div id="startContainer">
 
-            <t-date-picker value="{{_checkInDate}}" required auto-validate error-message="[[_resources.checkInError]]" class="suggestions" date-format="[[_searchOption.dateFormat]]"
-              id="checkInDate" label="[[_resources.checkin]]" min-date="[[_searchOption.minDateToday]]" max-date="[[_searchOption.maxDate]]">
+            <t-date-picker value="{{_checkInDate}}" required auto-validate error-message="[[_resources.checkInError]]" class="suggestions"
+              date-format="[[_searchOption.dateFormat]]" id="checkInDate" label="[[_resources.checkin]]" min="[[_searchOption.minDateToday]]"
+              max="[[_searchOption.maxDate]]">
 
             </t-date-picker>
 
@@ -171,8 +172,9 @@ The form handles below mentioned scenarios on its own.
 
           <!-- END DATE -->
           <div id="endContainer">
-            <t-date-picker value="{{_checkOutDate}}" required auto-validate error-message="[[resource.checkOutError]]" class="suggestions" id="checkOutdate" label="[[_resources.checkout]]"
-              date-format="[[_searchOption.dateFormat]]" on-tap="_openDatePicker"  min="[[_computeMinDate(_checkInDate)]]" max="[[_computeMaxDate(_checkInDate)]]"  initial-date="[[_computeInitialDate(_checkInDate)]]">
+            <t-date-picker value="{{_checkOutDate}}" required auto-validate error-message="[[resource.checkOutError]]" class="suggestions"
+              id="checkOutdate" label="[[_resources.checkout]]" date-format="[[_searchOption.dateFormat]]" on-tap="_openDatePicker"
+              min="[[_computeMinDate(_checkInDate)]]" max="[[_computeMaxDate(_checkInDate)]]" initial-date="[[_computeInitialDate(_checkInDate)]]">
 
             </t-date-picker>
 
@@ -293,8 +295,8 @@ The form handles below mentioned scenarios on its own.
 
               return {
                 "checkInAllowFromNow": 0,
-                "minDateToday": new Date(),
-                "maxDate": maxDate,
+                "minDateToday": this._formatDate(moment(new Date())),
+                "maxDate": this._formatDate(moment(maxDate)),
                 "maxRoomCount": 5,
                 "minAdultCount": 1,
                 "maxAdultCount": 8,
@@ -361,8 +363,8 @@ The form handles below mentioned scenarios on its own.
               }];
             }
           },
-          _checkInDate:{
-            type:String
+          _checkInDate: {
+            type: String
           }
 
         };
@@ -439,8 +441,8 @@ The form handles below mentioned scenarios on its own.
         if (!dateString) {
           return dateString;
         }
-        
-        return  this._addDayInDate(dateString,1);
+
+        return this._addDayInDate(dateString, 1);
 
       }
       _computeMaxDate(dateString) {
@@ -449,18 +451,22 @@ The form handles below mentioned scenarios on its own.
         }
         let day = this._searchOption.maxStayDuration;
 
-       return this._addDayInDate(dateString,day);
+        return this._addDayInDate(dateString, day);
 
       }
-      _computeInitialDate(dateString){
+      _computeInitialDate(dateString) {
         let day = this._searchOption.defaultStayDuration;
-        return this._addDayInDate(dateString,day);
+        return this._addDayInDate(dateString, day);
       }
-      _addDayInDate(dateString,day){       
+      _addDayInDate(dateString, day) {
 
-        return moment(dateString, this._searchOption.dateFormat).add(day, 'day').format("YYYY-MM-DD");
+        let newDate = moment(dateString, this._searchOption.dateFormat).add(day, 'day');
+        return this._formatDate(newDate);
       }
-     
+      _formatDate(momentDate) {
+        return momentDate.format("YYYY-MM-DD");
+      }
+
 
       _onTravelerSelected(e) {
 
@@ -942,7 +948,7 @@ The form handles below mentioned scenarios on its own.
           var searchModel = {
 
             destination: this.$.location.selectedItem,
-            checkIn:  moment(this._checkInDate, this._searchOption.dateFormat).format(outDateFormat) ,
+            checkIn: moment(this._checkInDate, this._searchOption.dateFormat).format(outDateFormat),
             checkOut: moment(this._checkOutDate, this._searchOption.dateFormat).format(outDateFormat),
             rooms: []
           }
