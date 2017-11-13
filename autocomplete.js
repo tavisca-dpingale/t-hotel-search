@@ -93,6 +93,16 @@ var AutoComplete = (function () {
                                 }
                                 var typeUL = domCreate("ul")
                                 var ul = domCreate("ul")
+
+                                //DIV FOR CLOSE BUTTON ON MOBILE
+                                var tclosediv = domCreate("div");
+                                //CLOSE ICON ON MOBILE
+                                tclosediv.innerHTML = '<iron-icon id="closeButton" on-tap="_closeSuggest" icon="icons:close" ></iron-icon>';
+                                //WRAPPER CLASS FOR CLOSE BUTTON
+                                tclosediv.classList.add("actions");
+                                //APPEND ACTION DIV
+                                ul.appendChild(tclosediv);
+
                                 var dataIndex = 0;
                                 for (var t = 0; t < typeArr2.length; t++) {
                                     for (var i = 0; i < groupedByType[typeArr2[t]].length; i++) {
@@ -132,6 +142,7 @@ var AutoComplete = (function () {
                                             p.innerHTML = response;
                                             tdiv.appendChild(p);
                                             ul.appendChild(tdiv);
+                                            
                                         },
                                         empty,
                                         i = 0,
