@@ -222,12 +222,12 @@
                 display: none;
             }
 
-            .item[largeDesktopView] .paperCard {
-                top: 110px !important;
-                right: 43px !important;
-                width: 36%;
-                min-width: 35%;
+            .item .paperCard {
+                top: 100%;
+                left: 0;
+                width: 465px;
                 max-height: 450px;
+                overflow-y: scroll;
                 @apply --paper-card;
             }
             
@@ -235,14 +235,14 @@
                 display: none;
             }
 
-            .item[desktopView] .paperCard {
+            /* .item .paperCard {
                 top: 110px !important;
                 right: 43px !important;
                 width: 36%;
                 min-width: 40%;
                 max-height: 450px;
                 @apply --paper-card;
-            }
+            } */
 
             .item[tabletView] paper-container {
                 position: fixed;
@@ -252,20 +252,20 @@
                 display: none;
             }
 
-            .item[tabletView] paper-card {
+            /* .item[tabletView] paper-card {
                 top: 147px !important;
                 left: 167px !important;
                 width: 61%;
                 max-height: 450px;
                 @apply --paper-card;
-            }
+            } */
 
-            .item[mobileView] paper-card {
+            /* .item[mobileView] paper-card {
                 top: 45px !important;
                 width: 100%;
                 height: 90%;
                 @apply --paper-card;
-            }
+            } */
 
             .item[mobileView] #start {
                 width: 100%;
@@ -408,6 +408,7 @@
             }
             #mainToolbar #travellField {
                 @apply --layout-flex-3;
+                position: relative;
             }
             [mobileview] #mainToolbar #travellField,
             [smallmobileview] #mainToolbar #travellField {

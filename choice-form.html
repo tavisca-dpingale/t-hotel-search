@@ -28,7 +28,17 @@ The form handles below mentioned scenarios on its own.
              :host {
                 display: block;
             }
-
+            form {
+                @apply --layout-horizontal;
+            }
+            form > * {
+                @apply --layout-flex-1;
+                margin-left: 15px;
+                max-width: 70px;
+            }
+            form>*:first-child {
+                margin-left: 0;
+            }
             paper-dropdown-menu {
                 --paper-input-container-color: lightgray;
                 --paper-input-container-focus-color: #4cb050;
@@ -64,13 +74,13 @@ The form handles below mentioned scenarios on its own.
             }
 
             @media (min-width:1024px) and (max-width:1200px) {
-                #Adult {
+                /* #Adult {
                     width: 16%;
                     float: left;
                     float: clear;
                     margin-left: 2%;
-                }
-                .childs {
+                } */
+                /* .childs {
                     width: 16%;
                     float: left;
                     margin-left: 2%;
@@ -85,18 +95,18 @@ The form handles below mentioned scenarios on its own.
                 .container1 {
                     width: 100%;
                     margin-left: 5px;
-                }
+                } */
             }
 
             @media (min-width:1200px) and (max-width:2200px) {
-                #Adult {
+                /* #Adult {
                     width: 16%;
                     float: left;
                     float: clear;
                     margin-top: -12px;
                     margin-left: 2%;
-                }
-                .childs {
+                } */
+                /* .childs {
                     width: 16%;
                     float: left;
                     margin-left: 2%;
@@ -113,17 +123,17 @@ The form handles below mentioned scenarios on its own.
                 .container1 {
                     width: 100%;
                     margin-left: 5px;
-                }
+                } */
             }
 
             @media (min-width:600px) and (max-width:1023px) {
-                #Adult {
+                /* #Adult {
                     width: 16%;
                     float: left;
                     float: clear;
                     margin-left: 2%;
-                }
-                .childs {
+                } */
+                /* .childs {
                     width: 16%;
                     float: left;
                     margin-left: 2%;
@@ -134,19 +144,19 @@ The form handles below mentioned scenarios on its own.
                     float: left;
                     margin-left: 2%;
                     float: clear;
-                }
-                .container1 {
+                } */
+                /* .container1 {
                     width: 100%;
                     margin-left: 5px;
-                }
+                } */
             }
 
             @media (max-width: 600px) {
-                .container1 {
+                /* .container1 {
                     width: 100%;
                     margin-left: 5px;
-                }
-                #Adult {
+                } */
+                /* #Adult {
                     width: 40%;
                     float: left;
                     float: clear;
@@ -162,12 +172,12 @@ The form handles below mentioned scenarios on its own.
                     float: left;
                     margin-left: 4px;
                     float: clear;
-                }
+                } */
             }
 
             @media screen and (-ms-high-contrast: active),
             (-ms-high-contrast: none) {
-                #Adult {
+                /* #Adult {
                     width: 70px;
                     float: left;
                     margin-left: 5px;
@@ -181,7 +191,7 @@ The form handles below mentioned scenarios on its own.
                     width: 90px;
                     float: left;
                     margin-left: 10px;
-                }
+                } */
                 .inputAdultCount {
                     width: 70px;
                     margin-left: 10px;
@@ -210,7 +220,7 @@ The form handles below mentioned scenarios on its own.
                 }
             }
         </style>
-        <div class="container1">
+
             <form is="iron-form" id="form" method="post" action="/form/handler">
                 <div id="Adult">
                     <paper-dropdown-menu label="{{adultLabel}}" id$="adult{{_displayId()}}" on-iron-select="_onCount" class="inputAdultCount"
@@ -253,7 +263,7 @@ The form handles below mentioned scenarios on its own.
                     </div>
                 </template>
             </form>
-        </div>
+
 
     </template>
     <script>

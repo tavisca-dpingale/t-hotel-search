@@ -1,4 +1,5 @@
 <link rel="import" href="../polymer/polymer.html">
+<link rel="import" href="../paper-button/paper-button.html">
 <link rel="import" href="choice-form.html">
 <!--
 This component is a form that fires an event with request object on click of dropdown option 'need more rooms or have children'.
@@ -23,6 +24,7 @@ The form handles below mentioned scenarios on its own.
         <style>
              :host {
                 display: block;
+                padding: 20px;
             }
 
             .hidden {
@@ -32,7 +34,9 @@ The form handles below mentioned scenarios on its own.
             .unhidden {
                 display: block;
             }
-
+            choice-form {
+                margin-bottom: 15px;
+            }
             #errfn {
                 color: red;
                 position: absolute;
@@ -47,36 +51,72 @@ The form handles below mentioned scenarios on its own.
                 display: none;
             }
 
-            #linePaper {
+            /* #linePaper {
                 width: 85%;
                 float: left;
-            }
+            } */
 
-            #paperMaterial {
+            /* #paperMaterial {
                 background-color: whitesmoke;
                 width: 500px;
-            }
+            } */
 
             #formDiv {
                 float: left;
                 width: 100%;
             }
 
-            #delButton {
-                height: 35px;
-                width: 35px;
-            }
-
             #btnAddRoom {
                 position: relative;
             }
+            .head {
+                margin-bottom: 5px;
+                @apply --layout-horizontal;
 
+                --paper-button: {
+                    padding: 5px;
+                    min-width: 40px;
+                    margin: 0;
+                }
+                ;
+            }
+
+            .head>* {
+                @apply --layout-flex-auto;
+            }
+            .head>#deleteButton {
+                max-width: 40px;
+            }
+            #deleteButton img {
+                height: 15px;
+                width: 15px;
+            }
+            .head paper-item {
+                padding: 0;
+            }
+            #linePaper {
+                position: relative;
+                @apply --layout-horizontal;
+                @apply --layout-center;
+            }
+            #linePaper >* {
+                @apply --layout-flex-auto;
+            }
+            #linePaper > span {
+                @apply --layout-flex-none;
+                padding-right: 10px;
+                background-color: var(--color-for-room, white);
+                font-size: 16px;
+                color: var(--room-line-title-text-color, #aaa);
+                white-space: nowrap;
+            }
+            #line {
+                border-bottom: 1px solid var(--room-line-title-text-color, #aaa);
+                height: 5px;
+            }
             @media (min-width: 768px) and (max-width: 1024px) {
-                .head {
-                    float: left;
+                /* .head {
                     width: 100%;
-                    margin-top: 20px;
-                    margin-left: 2%;
                     height: 40px;
                 }
                 .button {
@@ -100,38 +140,38 @@ The form handles below mentioned scenarios on its own.
                     display: block;
                     margin-right: 10px;
                     margin-top: 20px;
-                }
-                #line {
+                } */
+                /* #line {
                     width: 100%;
                     border-bottom: 1px solid silver;
                     height: 12px;
                     margin: -20px 0 10px 20px;
-                }
-                #line span {
+                } */
+                /* #line span {
                      background-color: var(--color-for-room, white);
                     padding: 10px;
                     font-size: 16px;
                     margin-left: -40px;
                     color: silver;
-                }
-                #deleteButton {
+                } */
+                /* #deleteButton {
                     float: right;
                     margin-right: -15px;
                     margin-top: -60px;
-                }
-                #linePaper {
+                } */
+                /* #linePaper {
                     width: 85%;
                     float: left;
-                }
+                } */
             }
 
             @media (max-width: 767px) {
-                .head {
+                /* .head {
                     float: left;
                     width: 100%;
                     margin-top: 20px;
-                }
-                .button {
+                } */
+                /* .button {
                     margin-top: -20px;
                     padding: 0px 0px;
                 }
@@ -140,38 +180,38 @@ The form handles below mentioned scenarios on its own.
                     position: initial;
                     margin-right: 10px;
                     margin-top: 20px;
-                }
-                #btnDone {
+                } */
+                /* #btnDone {
                     display: none;
-                }
-                #deleteButton {
+                } */
+                /* #deleteButton {
                     float: right;
                     margin-top: -50px;
                     margin-right: -35px;
-                }
-                #line {
+                } */
+                /* #line {
                     width: 100%;
                     border-bottom: 1px solid silver;
                     height: 12px;
                     margin: -20px 0 10px -13px;
-                }
-                #line span {
+                } */
+                /* #line span {
                      background-color: var(--color-for-room, white);
                     padding: 10px;
                     font-size: 16px;
                     margin-left: -10px;
                     color: silver;
-                }
+                } */
             }
 
             @media (min-width: 1024px) and (max-width:2200px) {
-                .head {
+                /* .head {
                     float: left;
                     width: 100%;
                     margin-top: 20px;
                     margin-left: 2%;
-                }
-                .button {
+                } */
+                /* .button {
                     margin-top: -20px;
                     margin-right: -20px;
                     padding: 0px 0px;
@@ -194,60 +234,28 @@ The form handles below mentioned scenarios on its own.
                     display: block;
                     margin-right: 10px;
                     margin-top: 20px;
-                }
-                #deleteButton {
+                } */
+                /* #deleteButton {
                     float: right;
                     margin-top: -50px;
-                }
-                #line {
+                } */
+                /* #line {
                     width: 100%;
                     border-bottom: 1px solid silver;
                     height: 12px;
                     margin: -20px 0 10px -13px;
-                }
-                #line span {
+                } */
+                /* #line span {
                      background-color: var(--color-for-room, white);
                     padding: 10px;
                     font-size: 16px;
                     margin-left: -10px;
                     color: silver;
-                }
+                } */
             }
 
-            @media all and (-ms-high-contrast:none) {
-                .head {
-                    float: left;
-                    width: 100%;
-                    margin-top: 20px;
-                }
-                #deleteButton {
-                    float: right;
-                    margin-top: -34px;
-                }
-                .button {
-                    margin-top: 4px;
-                    padding: 0px 0px;
-                }
-                #line {
-                    width: 100%;
-                    border-bottom: 1px solid silver;
-                    height: 12px;
-                    margin: 15px 0 10px -13px;
-                }
-                #line span {
-                    background-color: var(--color-for-room, white);
-                    padding: 10px;
-                    font-size: 16px;
-                    margin-left: -10px;
-                    color: silver;
-                }
-                #formDiv {
-                    margin-top: -15px;
-                }
-            }
         </style>
 
-        <paper-material id="paperMaterial">
             <div id="formDiv">
                 <form is="iron-form" id="form" method="post" action="/form/handler">
 
@@ -255,13 +263,14 @@ The form handles below mentioned scenarios on its own.
 
                         <div class="head">
                             <paper-item id="linePaper" disabled>
-                                <div id="line"><span>{{resources.room}}# {{_displayIndex(index)}}</span></div>
+                                <span>{{resources.room}}# {{_displayIndex(index)}}</span>
+                                <div id="line"></div>
                             </paper-item>
 
                             <paper-item id="deleteButton" on-keydown="_onkeyPress">
-                                <paper-button toggles hidden="[[_isDeleteHidden]]" class=button on-click="_deleteRoom" id="delButton">
+                                <paper-button toggles hidden="[[_isDeleteHidden]]" class="del-button" on-click="_deleteRoom">
                                     <img src="[[importPath]]trash.svg" height="15px" width="15px">
-                                    <iron-icon id="clearButton" icon="icons:delete"></iron-icon>
+                                    <!-- <iron-icon id="clearButton" icon="icons:delete"></iron-icon> -->
                                 </paper-button>
                             </paper-item>
 
@@ -279,10 +288,10 @@ The form handles below mentioned scenarios on its own.
                 </form>
             </div>
             <div class="buttons">
-                <paper-button id="btnAddRoom" toggles on-tap='_addRoom' style="position: relative">Add Room</paper-button>
+                <paper-button id="btnAddRoom" toggles on-tap='_addRoom'>Add Room</paper-button>
                 <paper-button id="btnDone" toggles on-click='_doneRoom' hidden$="{{showButton}}">Done</paper-button>
             </div>
-        </paper-material>
+     
 
     </template>
     <script>

@@ -196,6 +196,17 @@ The form handles below mentioned scenarios on its own.
             </paper-dropdown-menu>
 
             <input id="travellerInput" is="iron-input" type="hidden" bind-value="[[choice]]">
+
+            <div class="item" id="card" smallMobileView$="{{smallMobileView}}" MobileView$="{{mobileView}}" TabletView$="{{tabletView}}"
+            DesktopView$="{{desktopView}}" largeDesktopView$="{{largeDesktopView}}">
+            <paper-card hidden$="{{_hiddenTravelerCard}}" id="paperCard" class="paperCard">
+      
+                <choice-card id="choiceCard" rooms=[[_selectedTraveller]] search-option=[[_searchOption]] is-mobile="[[isMobile]]" resources=[[_resources]]
+                  on-traveler-selected="_onChoiceCardTravelerSelected"></choice-card>
+      
+            </paper-card>
+          </div>
+          
           </div>
 
           <!-- SEARCH BUTTON -->
@@ -207,15 +218,7 @@ The form handles below mentioned scenarios on its own.
 
     </div>
 
-    <div class="item" id="card" smallMobileView$="{{smallMobileView}}" MobileView$="{{mobileView}}" TabletView$="{{tabletView}}"
-      DesktopView$="{{desktopView}}" largeDesktopView$="{{largeDesktopView}}">
-      <paper-card hidden$="{{_hiddenTravelerCard}}" id="paperCard" class="paperCard">
-        <div>
-          <choice-card id="choiceCard" rooms=[[_selectedTraveller]] search-option=[[_searchOption]] is-mobile="[[isMobile]]" resources=[[_resources]]
-            on-traveler-selected="_onChoiceCardTravelerSelected"></choice-card>
-        </div>
-      </paper-card>
-    </div>
+
 
   </template>
 
