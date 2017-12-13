@@ -183,7 +183,7 @@ The form handles below mentioned scenarios on its own.
 
           <!-- ENTER TRAVELLER COUNT -->
           <div id="travellField">
-            <paper-dropdown-menu on-tap="_dismisCard" required auto-validate error-message="Required Field" id="travelerInput" label="[[_resources.travelers]]"
+            <paper-dropdown-menu on-tap="_dismisCard" horizontal-align="left" required auto-validate error-message="Required Field" id="travelerInput" label="[[_resources.travelers]]"
               readonly on-keydown="_tabPress">
               <paper-listbox slot="dropdown-content" class="dropdown-content" id="listbox" selected="{{choice}}">
                 <template is='dom-repeat' items='{{choices}}'>
@@ -206,7 +206,7 @@ The form handles below mentioned scenarios on its own.
       
             </paper-card>
           </div>
-          
+
           </div>
 
           <!-- SEARCH BUTTON -->

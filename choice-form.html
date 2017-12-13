@@ -1,5 +1,6 @@
 <link rel="import" href="../polymer/polymer.html">
 <link rel="import" href="../paper-dropdown-menu/paper-dropdown-menu.html">
+<link rel="import" href="../paper-menu-button/paper-menu-button.html">
 <link rel="import" href="../paper-listbox/paper-listbox.html">
 <link rel="import" href="../paper-item/paper-item.html">
 
@@ -27,18 +28,26 @@ The form handles below mentioned scenarios on its own.
         <style>
              :host {
                 display: block;
+
+                --paper-dropdown-menu: {
+
+                }
             }
+
             form {
                 @apply --layout-horizontal;
             }
+            
             form > * {
                 @apply --layout-flex-1;
                 margin-left: 15px;
                 max-width: 70px;
             }
+
             form>*:first-child {
                 margin-left: 0;
             }
+
             paper-dropdown-menu {
                 --paper-input-container-color: lightgray;
                 --paper-input-container-focus-color: #4cb050;
@@ -46,23 +55,16 @@ The form handles below mentioned scenarios on its own.
                 --paper-input-container-label-focus: lightgray;
             }
 
-            paper-input {
+            /* paper-input {
                 --paper-input-container-focus-color: #4cb050;
                 --paper-input-container-color: lightgray;
                 --paper-input-container-input-color: white;
                 --paper-input-container-label-focus: lightgray;
-            }
+            } */
 
-            .age {
+            .age,#size {
                 color: silver;
                 font-size: 11px;
-                font-family: Roboto;
-            }
-
-            #size {
-                font-size: 11px;
-                color: silver;
-                font-family: Roboto;
             }
 
             #listBox {
@@ -73,152 +75,6 @@ The form handles below mentioned scenarios on its own.
                 overflow-x: none;
             }
 
-            @media (min-width:1024px) and (max-width:1200px) {
-                /* #Adult {
-                    width: 16%;
-                    float: left;
-                    float: clear;
-                    margin-left: 2%;
-                } */
-                /* .childs {
-                    width: 16%;
-                    float: left;
-                    margin-left: 2%;
-                    float: clear;
-                }
-                .childs1 {
-                    width: 18%;
-                    float: left;
-                    margin-left: 2%;
-                    float: clear;
-                }
-                .container1 {
-                    width: 100%;
-                    margin-left: 5px;
-                } */
-            }
-
-            @media (min-width:1200px) and (max-width:2200px) {
-                /* #Adult {
-                    width: 16%;
-                    float: left;
-                    float: clear;
-                    margin-top: -12px;
-                    margin-left: 2%;
-                } */
-                /* .childs {
-                    width: 16%;
-                    float: left;
-                    margin-left: 2%;
-                    float: clear;
-                    margin-top: -12px;
-                }
-                .childs1 {
-                    width: 18%;
-                    float: left;
-                    margin-left: 2%;
-                    float: clear;
-                    margin-top: -12px;
-                }
-                .container1 {
-                    width: 100%;
-                    margin-left: 5px;
-                } */
-            }
-
-            @media (min-width:600px) and (max-width:1023px) {
-                /* #Adult {
-                    width: 16%;
-                    float: left;
-                    float: clear;
-                    margin-left: 2%;
-                } */
-                /* .childs {
-                    width: 16%;
-                    float: left;
-                    margin-left: 2%;
-                    float: clear;
-                }
-                .childs1 {
-                    width: 18%;
-                    float: left;
-                    margin-left: 2%;
-                    float: clear;
-                } */
-                /* .container1 {
-                    width: 100%;
-                    margin-left: 5px;
-                } */
-            }
-
-            @media (max-width: 600px) {
-                /* .container1 {
-                    width: 100%;
-                    margin-left: 5px;
-                } */
-                /* #Adult {
-                    width: 40%;
-                    float: left;
-                    float: clear;
-                }
-                .childs {
-                    width: 40%;
-                    float: left;
-                    margin-left: 18px;
-                    float: clear;
-                }
-                .childs1 {
-                    width: 30%;
-                    float: left;
-                    margin-left: 4px;
-                    float: clear;
-                } */
-            }
-
-            @media screen and (-ms-high-contrast: active),
-            (-ms-high-contrast: none) {
-                /* #Adult {
-                    width: 70px;
-                    float: left;
-                    margin-left: 5px;
-                }
-                .childs {
-                    width: 70px;
-                    float: left;
-                    margin-left: 10px;
-                }
-                .childs1 {
-                    width: 90px;
-                    float: left;
-                    margin-left: 10px;
-                } */
-                .inputAdultCount {
-                    width: 70px;
-                    margin-left: 10px;
-                    float: left;
-                }
-                .inputChildCount {
-                    width: 70px;
-                    margin-left: 10px;
-                    float: left;
-                }
-                .ageOfChild {
-                    width: 90px;
-                    margin-left: 10px;
-                    float: left;
-                }
-                #size {
-                    font-size: 12px;
-                    width: 70px;
-                    margin-left: 10px;
-                    color: silver;
-                }
-                .age {
-                    font-size: 12px;
-                    margin-left: 5px;
-                    font-family: Roboto;
-                }
-            }
         </style>
 
             <form is="iron-form" id="form" method="post" action="/form/handler">
@@ -236,7 +92,7 @@ The form handles below mentioned scenarios on its own.
                 </div>
 
                 <div class="childs">
-                    <paper-dropdown-menu label="{{childLabel}}" id="child" on-selected-item-changed='_onCount' class="inputChildCount" required
+                    <paper-dropdown-menu label="{{childLabel}}" id="child" dynamic-align on-selected-item-changed='_onCount' class="inputChildCount" required
                         auto-validate error-message="Enter Child Count">
                         <paper-listbox slot="dropdown-content" id="listBox" class="dropdown-content" selected="{{room.child}}" attr-for-selected="value">
                             <template is='dom-repeat' items='[[_getChildCountList(searchOption.minChildCount, searchOption.maxChildCount)]]'>
@@ -244,6 +100,7 @@ The form handles below mentioned scenarios on its own.
                             </template>
                         </paper-listbox>
                     </paper-dropdown-menu>
+                    
                     <div id="size">({{searchOption.minChildAge}}-{{searchOption.maxChildAge}} Years)</div>
                     <input is="iron-input" type="hidden" bind-value="[[room.child]]">
                 </div>
@@ -251,7 +108,7 @@ The form handles below mentioned scenarios on its own.
                 <template is='dom-repeat' items={{room.childAge}} as="data" id="childAge">
                       
                     <div class="childs1">
-                        <paper-dropdown-menu on-keydown="_tabPress" class="ageOfChild" required auto-validate error-message="Enter age" label="{{resources.child}} {{_childIndex(index)}}"
+                        <paper-dropdown-menu on-keydown="_tabPress" class="ageOfChild" dynamic-align required auto-validate error-message="Enter age" label="{{resources.child}} {{_childIndex(index)}}"
                             id="child{{_childID(index)}}" invalid="[[data.invalid]]">
                             <paper-listbox slot="dropdown-content" id="listBox" class="dropdown-content" selected="{{data.age}}" attr-for-selected="value">
                                 <template is='dom-repeat' items='[[_getChildAgeList(searchOption.minChildAge, searchOption.maxChildAge)]]'>
